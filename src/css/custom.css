@@ -1,30 +1,247 @@
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
-
-/* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #00C9A7;
+  --ifm-color-primary-dark: #00b596;
+  --ifm-color-primary-darker: #00ab8e;
+  --ifm-color-primary-darkest: #008d75;
+  --ifm-color-primary-light: #00ddb8;
+  --ifm-color-primary-lighter: #00e7c0;
+  --ifm-color-primary-lightest: #1fffd0;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-color-primary: #00C9A7;
+  --ifm-color-primary-dark: #00b596;
+  --ifm-color-primary-darker: #00ab8e;
+  --ifm-color-primary-darkest: #008d75;
+  --ifm-color-primary-light: #00ddb8;
+  --ifm-color-primary-lighter: #00e7c0;
+  --ifm-color-primary-lightest: #1fffd0;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Landing Page */
+.hero-section {
+  background: linear-gradient(135deg, #0D1117 0%, #161b22 100%);
+  padding: 80px 0 60px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 201, 167, 0.2);
+}
+
+.hero-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #00C9A7;
+  border: 1px solid rgba(0, 201, 167, 0.4);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+
+.hero-title {
+  font-size: 52px;
+  font-weight: 800;
+  color: #E6EDF3;
+  margin: 0 0 12px;
+  letter-spacing: -1px;
+}
+
+.hero-title span {
+  color: #00C9A7;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: #8B949E;
+  margin: 0 0 48px;
+}
+
+.notice-box {
+  display: inline-block;
+  background: rgba(0, 201, 167, 0.06);
+  border: 1px solid rgba(0, 201, 167, 0.25);
+  border-radius: 10px;
+  padding: 16px 28px;
+  max-width: 620px;
+  text-align: left;
+}
+
+.notice-box-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #00C9A7;
+  margin-bottom: 8px;
+}
+
+.notice-box-text {
+  font-size: 14px;
+  color: #8B949E;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.section {
+  padding: 64px 0;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8B949E;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.card-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.card-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.card-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 768px) {
+  .card-grid-3,
+  .card-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-title {
+    font-size: 36px;
+  }
+}
+
+.tech-card {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, transform 0.15s;
+  display: block;
+}
+
+.tech-card:hover {
+  border-color: #00C9A7;
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: inherit;
+}
+
+.tech-card-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.tech-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+  margin-bottom: 6px;
+}
+
+.tech-card-desc {
+  font-size: 13px;
+  color: #8B949E;
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.tech-card-result {
+  font-size: 12px;
+  font-weight: 600;
+  color: #00C9A7;
+}
+
+.project-card {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  padding: 24px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, transform 0.15s;
+  display: block;
+}
+
+.project-card:hover {
+  border-color: #00C9A7;
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: inherit;
+}
+
+.project-card-period {
+  font-size: 11px;
+  color: #8B949E;
+  font-family: monospace;
+  margin-bottom: 8px;
+}
+
+.project-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+  margin-bottom: 8px;
+}
+
+.project-card-desc {
+  font-size: 13px;
+  color: #8B949E;
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-size: 11px;
+  font-family: monospace;
+  background: rgba(0, 201, 167, 0.08);
+  color: #00C9A7;
+  border: 1px solid rgba(0, 201, 167, 0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  margin: 0;
+}
+
+.contact-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 40px 0;
+}
+
+.contact-link {
+  font-size: 14px;
+  color: #8B949E;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-link:hover {
+  color: #00C9A7;
 }
