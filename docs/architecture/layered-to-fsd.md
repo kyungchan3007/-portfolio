@@ -87,17 +87,22 @@ src/
 
 ```mermaid
 graph TD
-    pages --> widgets
-    widgets --> features
-    features --> entities
-    entities --> shared
-    pages --> features
-    pages --> entities
-    pages --> shared
+    pages -->|index.ts| widgets
+    widgets -->|index.ts| features
+    widgets -->|index.ts| entities
+    widgets -->|index.ts| shared
+    features -->|index.ts| entities
+    features -->|index.ts| shared
+    entities -->|index.ts| shared
 ```
 
-**상위 레이어만 하위 레이어를 import 가능.**
+**각 레이어는 index.ts를 통해서만 외부에 공개.**
+상위 레이어가 하위 레이어의 index.ts를 import하는 단방향 규칙.
 같은 레이어 간 직접 참조 금지 → 의존성 순환 제거.
+
+- `widgets`가 `features`, `entities`, `shared`를 조합해 화면 블록을 완성
+- `pages`는 `widgets`의 index.ts만 import — 도메인 세부 사항을 알 필요 없음
+- pages가 features/entities를 직접 참조하지 않아 레이어 경계가 더 엄격하게 유지됨
 
 ---
 
