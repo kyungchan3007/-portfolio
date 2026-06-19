@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkportfolio=self.webpackChunkportfolio||[]).push([["1668"],{6735(e,o,r){r.d(o,{createEventModelingServices:()=>s.g});var s=r(2968);r(9302)}}]);
