@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 title: 하네스 엔지니어링 — AGENTS.md · SKILL.md
+sidebar_label: 하네스 엔지니어링
 ---
 
 # 하네스 엔지니어링

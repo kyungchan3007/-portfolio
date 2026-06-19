@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 title: Agent 역할 분리 — Claude vs Codex
+sidebar_label: Agent 역할 분리
 ---
 
 # Agent 역할 분리 — Claude vs Codex

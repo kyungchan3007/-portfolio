@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 title: AWS IoT 제어 흐름 (공조기)
+sidebar_label: AWS IoT 제어 흐름
 ---
 
 # AWS IoT Core 기반 공조기 제어 시스템

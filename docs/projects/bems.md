@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 title: BEMS — Building Energy Management System
+sidebar_label: BEMS
 ---
 
 # BEMS — Building Energy Management System

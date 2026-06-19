@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 title: SSE vs 폴링 (BEMS)
+sidebar_label: SSE vs 폴링
 ---
 
 import Tabs from '@theme/Tabs';

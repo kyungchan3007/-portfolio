@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 title: Layered → FSD 전환 (BEMS)
+sidebar_label: Layered → FSD 전환
 ---
 
 import Tabs from '@theme/Tabs';

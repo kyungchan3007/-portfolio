@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 title: 멱등성 검증 & 중복 필터 (공조기)
+sidebar_label: 멱등성 & 중복 필터
 ---
 
 import Tabs from '@theme/Tabs';

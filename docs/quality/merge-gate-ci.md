@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 title: Merge Gate — CI 품질 자동화 (FMS)
+sidebar_label: Merge Gate CI
 ---
 
 import Tabs from '@theme/Tabs';

@@ -1,6 +1,7 @@
 ---
 sidebar_position: 2
 title: Layered → VSA 전환 (공조기)
+sidebar_label: Layered → VSA 전환
 ---
 
 import Tabs from '@theme/Tabs';

@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 title: OpenAPI → Zod 타입 자동화 (FMS)
+sidebar_label: OpenAPI → Zod
 ---
 
 import Tabs from '@theme/Tabs';

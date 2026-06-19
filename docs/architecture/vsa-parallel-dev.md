@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 title: VSA 병렬 개발 (FMS)
+sidebar_label: VSA 병렬 개발
 ---
 
 # FMS — Vertical Slice Architecture 적용

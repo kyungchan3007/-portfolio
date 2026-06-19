@@ -1,6 +1,7 @@
 ---
 sidebar_position: 3
 title: 공조기 자동제어 및 모니터링
+sidebar_label: 공조기 자동제어
 ---
 
 # 공조기 자동제어 및 모니터링

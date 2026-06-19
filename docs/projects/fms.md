@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 title: FMS — Facility Management System
+sidebar_label: FMS
 ---
 
 # FMS — Facility Management System
