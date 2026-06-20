@@ -21,14 +21,14 @@ sidebar_label: BEMS
 
 ## 성과 요약
 
-| 지표 | Before | After |
-|---|---|---|
-| 네트워크 요청 | 폴링 기반 | SSE 전환으로 **60% 감소** |
-| 화면 반영 지연 | 3~5초 | **1초 이내** |
-| 설비 트리 렌더링 | 전체 재렌더링 | React DevTools 기준 **60% 개선** |
-| UAT 버그 | 다수 | 자정 캐시 초기화로 **80% 감소** |
-| 초기 JS 로드 (예상) | 1.67MB gzip | lazy route 적용 시 **30~60% 절감 가능** |
-| page-service 직접 결합 | 184개 파일 | API 의존 분리 시 **60~75% 감소 가능** |
+| 발견 항목 | 문제 | 개선 방향 | 결과 |
+|---|---|---|---|
+| 네트워크 요청 | 폴링 기반으로 불필요한 요청 발생 | SSE 전환 | **60% 감소** |
+| 화면 반영 지연 | 폴링 주기로 3~5초 지연 | SSE 실시간 수신 | **1초 이내** |
+| 설비 트리 렌더링 | 노드 상태 변경 시 전체 트리 재렌더링 | 확장 서브트리만 상태 유지, 미노출 노드 조건부 unmount | React DevTools 기준 **60% 개선** |
+| 초기 JS 로드 | router 100개 페이지 직접 import (1.67MB gzip) | lazy route 전환 | **30~60% 절감 가능** |
+| API 레이어 역의존 | API client가 UI/상태 계층 직접 참조 (184개) | 의존성 주입 방식으로 분리 | **60~75% 감소 가능** |
+| 렌더링 비용 | theme/message 매 렌더마다 재생성 | `useMemo` / `useEffect` 적용 | 불필요한 렌더 비용 감소 |
 
 ---
 
@@ -118,12 +118,6 @@ React DevTools 기준 속도 60% 개선, 조작 반응 속도 30% 향상.
 
 코드 리뷰 기준이 명문화되어 있지 않아 번들 크기, 의존성 구조, 라우팅 안정성을 수동으로 점검해야 했습니다. AI Agent를 도입해 681개 소스 파일을 정적 분석하고 `MERGE: HOLD` 판정과 함께 주요 이슈를 발굴했습니다.
 
-| 발견 이슈 | 수치 | 심각도 |
-|---|---|---|
-| router 직접 import (번들 과다) | 100건 / JS 1.67MB gzip | High |
-| API 레이어 역의존 | page→service 직접 결합 184개 | Medium |
-| 렌더 흐름 내 theme/message 재생성 | App 렌더마다 1회 | Medium |
-
 ### 1. lazy route 전환 (번들 크기 개선)
 
 ```tsx
@@ -132,7 +126,7 @@ React DevTools 기준 속도 60% 개선, 조작 반응 속도 30% 향상.
 
 // After
 const UserManagement = lazy(
-  () => import("../../pages/public/user-management/user-menegement")
+  () => import("@/pages/user-management")
 );
 
 {
