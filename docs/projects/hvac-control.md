@@ -22,15 +22,171 @@ CloudWatch Alarm 연동으로 장애 대응 체계 확보.
 
 ## 성과 요약
 
-| 지표 | Before | After |
-|---|---|---|
-| 제어 응답 지연 | 23초 | **1초 이내** |
-| 실시간 메시지 전송 | 중복 포함 | 중복 필터링으로 **40% 감소** |
-| 초기 구동 시간 | 기준 | 우선 mount 처리로 **30% 개선** |
+| 발견 항목 | 문제 | 개선 방향 | 결과 |
+|---|---|---|---|
+| 제어 응답 지연 | 동일 메시지 중복 전달로 Lambda 중복 처리 | 메시지 ID 기반 멱등성 검증 | **23초 → 1초 이내** |
+| 소켓 연결 분산 | 화면마다 소켓 생성으로 연결 관리 복잡도 증가 | 공통 소켓 모듈로 통합 | 소켓 생성 지점 **3→1개 (66.7% 감소)** |
+| 메시지 리스너 cleanup 미적용 | `removeAllListeners` 강제 제거로 상태 갱신 누락 위험 | 화면 등록 리스너만 정확히 제거 | cleanup 적용률 **0%→100%** |
+| MQTT 브로드캐스트 구조 | 클라이언트 연결 시마다 리스너 재등록 | 서버에서 한 번 수신 후 전체 브로드캐스트 | `removeAllListeners` 사용 **4→0개** |
+| 메시지 수신 안정성 | DB 저장 리스너를 60초 루프 내 재등록 | 루프 밖 한 번만 등록 | 수신 성공률 **14.67%→100%**, 누락률 **0%** |
+| 화면 전환 소켓 준비 | 화면 전환 시마다 소켓 재연결로 상태 갱신 지연 | 공통 소켓 인스턴스 재사용 | 준비 시간 **0.706ms→0ms** |
 
 ---
 
-## 시스템 아키텍처
+## AI Agent
+
+AI를 활용해 Socket.IO + MQTT 기반 실시간 장비 상태 갱신 구조를 정적 분석하고, 소켓 연결 분산·메시지 리스너 cleanup 미적용·MQTT 브로드캐스트 구조·DB 저장 리스너 위치 등 4가지 구조적 문제를 발굴해 개선 보고서를 도출했습니다.
+
+로컬 Socket.IO 벤치마크(`performance.now()`, 300건, 2ms 간격)를 구성해 MQTT 메시지 발행 시점부터 클라이언트 수신까지 end-to-end latency를 실측했습니다.
+
+| 항목 | 개선 전 | 개선 후 |
+|---|---|---|
+| 메시지 수신 성공률 | 14.67% | **100%** |
+| 메시지 누락률 | 85.33% | **0%** |
+| p95 메시지 전달 latency | 0.184ms | **0.141ms** |
+| 화면 전환 소켓 준비 평균 시간 | 0.706ms | **0ms** |
+
+---
+
+## 주요 구현
+
+### 1. 소켓 생성 지점 통합
+
+화면마다 직접 Socket.IO 연결을 생성하던 구조를 공통 소켓 모듈로 통합했습니다.
+
+```js title="Before"
+socket = io('http://localhost:5000');
+
+socket.on('connect', () => {});
+
+return () => {
+  socket.disconnect();
+};
+```
+
+```js title="After"
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000';
+
+let socket;
+
+export const getSocket = () => {
+  if (!socket) {
+    socket = io(SOCKET_URL);
+    socket.on('connect', () => {});
+  }
+
+  return socket;
+};
+```
+
+### 2. 메시지 리스너 cleanup 적용
+
+전체 리스너를 강제 제거하던 방식에서 화면에서 등록한 리스너만 정확히 제거하도록 변경했습니다.
+
+```js title="Before"
+socket.removeAllListeners('message');
+
+socket.on('message', (data) => {
+  const parsedData = JSON.parse(data);
+  setDeviceData(parsedData);
+});
+```
+
+```js title="After"
+const handleMessage = (data) => {
+  const parsedData = JSON.parse(data);
+
+  if (parsedData.machineID === selectedZone.id) {
+    setDeviceData(() => ({ ...parsedData }));
+  }
+};
+
+socket.on('message', handleMessage);
+
+return () => {
+  clearInterval(intervalId);
+  socket.off('message', handleMessage);
+};
+```
+
+### 3. MQTT 브로드캐스트 구조 개선
+
+클라이언트 연결 시마다 MQTT 리스너를 재등록하던 구조를 서버에서 한 번 수신 후 전체 브로드캐스트하도록 변경했습니다.
+
+```js title="Before"
+mqtt.removeAllListeners('message');
+
+mqtt.on('message', (topic, message) => {
+  socket.emit('message', message.toString());
+});
+```
+
+```js title="After"
+export const messageProcess = (io, mqtt) => {
+  mqtt.on('message', (topic, message) => {
+    io.emit('message', message.toString());
+  });
+
+  io.on('connection', (socket) => {});
+};
+```
+
+### 4. DB 저장 리스너 위치 개선
+
+60초 주기 루프 내부에서 MQTT 리스너를 재등록하던 구조를 루프 밖에서 한 번만 등록하도록 변경했습니다.
+
+```js title="Before"
+setInterval(() => {
+  mqtt.removeAllListeners('message');
+
+  mqtt.on('message', (topic, message) => {
+    const parsedMessage = JSON.parse(message);
+    // DynamoDB 저장
+  });
+}, 60000);
+```
+
+```js title="After"
+const saveStatus = (topic, message) => {
+  const parsedMessage = JSON.parse(message);
+  const { machineID, status: { power, operation, air, auto } } = parsedMessage;
+
+  const param = {
+    TableName: 'igs_status',
+    Item: { DeviceID: machineID, Time: getCurrentDate(), power, operation, auto, air },
+  };
+
+  dynamoDB.put(param, (err) => {
+    if (err) console.log('저장 오류');
+  });
+};
+
+mqtt.on('message', saveStatus);
+```
+
+### 5. 핵심 데이터 우선 mount
+
+```tsx title="HvacDashboard.tsx"
+export function HvacDashboard() {
+  return (
+    <>
+      <Suspense fallback={<ControlPanelSkeleton />}>
+        <ControlPanel />
+      </Suspense>
+
+      <Suspense fallback={<ChartSkeleton />}>
+        <MonitoringChart />
+      </Suspense>
+
+      <Suspense fallback={<TableSkeleton />}>
+        <HistoryTable />
+      </Suspense>
+    </>
+  );
+}
+```
+
+### 6. 시스템 아키텍처
 
 ```mermaid
 sequenceDiagram
@@ -55,42 +211,7 @@ sequenceDiagram
 
 → 자세한 내용: [AWS IoT 제어 흐름](/realtime/aws-iot-control) · [멱등성 검증](/realtime/dedup-idempotency)
 
----
-
-## 주요 구현
-
-### 1. 아키텍처 전환 (Layered → VSA)
-
-Layered Architecture의 수정 영향 범위 문제 → Vertical Slice Architecture 전환으로 40% 축소.
-
-→ 자세한 내용: [Layered → VSA 전환](/architecture/layered-to-vsa)
-
-### 2. 핵심 데이터 우선 mount
-
-```tsx title="HvacDashboard.tsx"
-export function HvacDashboard() {
-  return (
-    <>
-      {/* 1순위: 제어 상태 패널 — 즉시 mount */}
-      <Suspense fallback={<ControlPanelSkeleton />}>
-        <ControlPanel />
-      </Suspense>
-
-      {/* 2순위: 모니터링 차트 — 지연 로드 */}
-      <Suspense fallback={<ChartSkeleton />}>
-        <MonitoringChart />
-      </Suspense>
-
-      {/* 3순위: 이력 테이블 — lazy import */}
-      <Suspense fallback={<TableSkeleton />}>
-        <HistoryTable />
-      </Suspense>
-    </>
-  );
-}
-```
-
-### 3. S3 + Athena 로그 분석 환경
+### 7. S3 + Athena 로그 분석 환경
 
 ```
 IoT Core → Lambda → S3 (Parquet 포맷)
@@ -101,22 +222,6 @@ IoT Core → Lambda → S3 (Parquet 포맷)
          중복 이벤트 구간 분석
 ```
 
-### 4. CloudWatch Alarm 연동
+### 8. CloudWatch Alarm 연동
 
 Lambda 오류율·처리 지연 임계값 설정 → SNS 알림으로 장애 즉시 감지.
-
----
-
-## Issue & Resolution
-
-:::danger 문제
-제어 명령 전송 후 화면 반영까지 23초 지연.
-:::
-
-**원인**: 동일 제어 메시지 중복 전달 → Lambda 중복 처리 및 DB 중복 저장 발생.
-
-**해결**: 메시지 ID 기반 멱등성 검증으로 중복 처리 제거. 프론트는 이벤트 ID 기준 중복 렌더링 필터링.
-
-:::tip 결과
-제어 지연 1초 이내 단축, DB 비용 절감, 오류율 20%+ 감소.
-:::
