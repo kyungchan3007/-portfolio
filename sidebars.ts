@@ -9,6 +9,7 @@ const sidebars: SidebarsConfig = {
         'projects/fms',
         'projects/bems',
         'projects/hvac-control',
+        'projects/pinhouse',
       ],
     },
   ],
