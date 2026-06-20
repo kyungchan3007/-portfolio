@@ -77,6 +77,12 @@ const config: Config = {
         },
         {
           type: 'docSidebar',
+          sidebarId: 'qualitySidebar',
+          position: 'left',
+          label: '품질',
+        },
+        {
+          type: 'docSidebar',
           sidebarId: 'aiWorkflowSidebar',
           position: 'left',
           label: 'AI Workflow',

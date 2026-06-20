@@ -35,6 +35,15 @@ const sidebars: SidebarsConfig = {
       ],
     },
   ],
+  qualitySidebar: [
+    {
+      type: 'category',
+      label: '품질',
+      items: [
+        'quality/merge-gate-ci',
+      ],
+    },
+  ],
   aiWorkflowSidebar: [
     {
       type: 'category',
