@@ -116,32 +116,15 @@ React DevTools 기준 속도 60% 개선, 조작 반응 속도 30% 향상.
 
 ## AI Agents 기반 코드 검증
 
-코드 리뷰 기준이 명문화되어 있지 않아 번들 크기, 의존성 구조, 라우팅 안정성을 수동으로 점검해야 했습니다. AI Agent를 도입해 681개 소스 파일을 정적 분석하고 `MERGE: HOLD` 판정과 함께 6개 이슈를 발굴했습니다.
+코드 리뷰 기준이 명문화되어 있지 않아 번들 크기, 의존성 구조, 라우팅 안정성을 수동으로 점검해야 했습니다. AI Agent를 도입해 681개 소스 파일을 정적 분석하고 `MERGE: HOLD` 판정과 함께 주요 이슈를 발굴했습니다.
 
 | 발견 이슈 | 수치 | 심각도 |
 |---|---|---|
-| 라우트 대소문자 불일치 | 1건 | High |
 | router 직접 import (번들 과다) | 100건 / JS 1.67MB gzip | High |
 | API 레이어 역의존 | page→service 직접 결합 184개 | Medium |
-| React Query 버전 혼재 (v3/v5) | 183개 파일 | Medium |
 | 렌더 흐름 내 theme/message 재생성 | App 렌더마다 1회 | Medium |
-| 운영 console.log 노출 | 22건 | Low |
 
-### 1. 라우트 대소문자 불일치
-
-```ts
-// Before
-NBSXB040: "/stdfacList"
-path: "/stdfaclist"
-
-// After
-NBSXB040: "/stdfaclist"
-path: "/stdfaclist"
-```
-
-메뉴 클릭 시 라우트 매칭 실패 및 권한 오판 위험 제거.
-
-### 2. lazy route 전환 (번들 크기 개선)
+### 1. lazy route 전환 (번들 크기 개선)
 
 ```tsx
 // Before
@@ -166,7 +149,7 @@ const UserManagement = lazy(
 
 초기 번들에 100개 페이지가 포함되던 구조를 화면별 lazy loading으로 전환. 초기 JS 로드 **30~60% 절감** 가능.
 
-### 3. API 레이어 역의존 해소
+### 2. API 레이어 역의존 해소
 
 ```ts
 // Before
@@ -193,19 +176,7 @@ export const createApiClient = ({ getAuthState, onAuthExpired, onError }) => {
 
 API client가 UI/상태 계층을 직접 참조하던 구조를 의존성 주입 방식으로 분리. page-service 직접 결합 **60~75% 감소** 가능.
 
-### 4. React Query 버전 통일
-
-```tsx
-// Before
-import { QueryClient, QueryClientProvider } from "react-query";
-
-// After
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-```
-
-의존성은 v5로 선언되어 있으나 183개 파일이 v3를 사용하는 혼재 상태를 단일 기준으로 통일.
-
-### 5. 렌더링 비용 개선
+### 3. 렌더링 비용 개선
 
 ```tsx
 // Before
@@ -222,14 +193,3 @@ const theme = useMemo(
 
 App 최상위 렌더마다 theme 객체와 메시지가 재생성되던 구조를 `useMemo` / `useEffect`로 개선.
 
-### 6. 운영 console.log 제거
-
-```js
-// Before
-console.log(error);
-
-// After
-reportClientError(error);
-```
-
-22건의 활성 `console.log`를 에러 수집 경로로 일원화해 운영 노이즈 및 민감 데이터 노출 가능성 감소.
