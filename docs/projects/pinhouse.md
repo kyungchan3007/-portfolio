@@ -24,13 +24,13 @@ Next.js App Router, React Query, Zustand, BFF API Route 구조를 활용해 SSR 
 
 ## 성과 요약
 
-| 지표 | Before | After |
-|---|---|---|
-| / First Load JS | 194 kB | **166 kB (약 14.4% 절감)** |
-| client page.tsx entry 수 | 17개 | **14개 (약 17.6% 감소)** |
-| 루트 진입 구조 | client-side redirect | **server redirect로 전환** |
-| 초기 진입 UX | Spinner hydration 후 이동 | **브라우저 JS 실행 전 라우팅 결정** |
-| React Query cache | 전역 singleton | **provider 인스턴스 단위 격리** |
+| 지표 | Before | After | 계기 |
+|---|---|---|---|
+| / First Load JS | 194 kB | **166 kB (약 14.4% 절감)** | AI Agents 코드 검증 후 개선 |
+| client page.tsx entry 수 | 17개 | **14개 (약 17.6% 감소)** | AI Agents 코드 검증 후 개선 |
+| 루트 진입 구조 | client-side redirect | **server redirect로 전환** | AI Agents 코드 검증 후 개선 |
+| 초기 진입 UX | Spinner hydration 후 이동 | **브라우저 JS 실행 전 라우팅 결정** | AI Agents 코드 검증 후 개선 |
+| React Query cache | 전역 singleton | **provider 인스턴스 단위 격리** | AI Agents 코드 검증 후 개선 |
 
 ---
 
