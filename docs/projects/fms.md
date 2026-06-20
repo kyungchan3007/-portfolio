@@ -36,10 +36,6 @@ Claude(UX/UI) + Codex(비즈니스 로직) 역할 분리, 구현·검증·리뷰
 
 → 자세한 내용: [Agent 역할 분리](/ai-workflow/agent-role-split) · [4단계 파이프라인](/ai-workflow/agent-pipeline)
 
----
-
-## 주요 구현
-
 ### 1. OpenAPI → Zod 타입 자동화
 
 HeyAPI(openapi-ts)로 타입·클라이언트 자동 생성, Zod로 런타임 API 계약 검증.
