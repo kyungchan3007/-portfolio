@@ -9,8 +9,6 @@ import TabItem from '@theme/TabItem';
 
 # Merge Gate — 심각도 기반 병합 차단
 
-**적용 프로젝트: FMS · BEMS**
-
 ---
 
 :::info 개요
