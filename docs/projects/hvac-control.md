@@ -35,20 +35,7 @@ CloudWatch Alarm 연동으로 장애 대응 체계 확보.
 
 ## AI Agent
 
-AI를 활용해 Socket.IO + MQTT 기반 실시간 장비 상태 갱신 구조를 정적 분석하고, 소켓 연결 분산·메시지 리스너 cleanup 미적용·MQTT 브로드캐스트 구조·DB 저장 리스너 위치 등 4가지 구조적 문제를 발굴해 개선 보고서를 도출했습니다.
-
-로컬 Socket.IO 벤치마크(`performance.now()`, 300건, 2ms 간격)를 구성해 MQTT 메시지 발행 시점부터 클라이언트 수신까지 end-to-end latency를 실측했습니다.
-
-| 항목 | 개선 전 | 개선 후 |
-|---|---|---|
-| 메시지 수신 성공률 | 14.67% | **100%** |
-| 메시지 누락률 | 85.33% | **0%** |
-| p95 메시지 전달 latency | 0.184ms | **0.141ms** |
-| 화면 전환 소켓 준비 평균 시간 | 0.706ms | **0ms** |
-
----
-
-## 주요 구현
+AI를 활용해 Socket.IO + MQTT 기반 실시간 장비 상태 갱신 구조를 정적 분석하고, 소켓 연결 분산·메시지 리스너 cleanup 미적용·MQTT 브로드캐스트 구조·DB 저장 리스너 위치 등 4가지 구조적 문제를 발굴하고 개선했습니다.
 
 ### 1. 소켓 생성 지점 통합
 
@@ -164,7 +151,11 @@ const saveStatus = (topic, message) => {
 mqtt.on('message', saveStatus);
 ```
 
-### 5. 핵심 데이터 우선 mount
+---
+
+## 주요 구현
+
+### 1. 핵심 데이터 우선 mount
 
 ```tsx title="HvacDashboard.tsx"
 export function HvacDashboard() {
@@ -186,7 +177,7 @@ export function HvacDashboard() {
 }
 ```
 
-### 6. 시스템 아키텍처
+### 2. 시스템 아키텍처
 
 ```mermaid
 sequenceDiagram
@@ -211,7 +202,7 @@ sequenceDiagram
 
 → 자세한 내용: [AWS IoT 제어 흐름](/realtime/aws-iot-control) · [멱등성 검증](/realtime/dedup-idempotency)
 
-### 7. S3 + Athena 로그 분석 환경
+### 3. S3 + Athena 로그 분석 환경
 
 ```
 IoT Core → Lambda → S3 (Parquet 포맷)
@@ -222,6 +213,6 @@ IoT Core → Lambda → S3 (Parquet 포맷)
          중복 이벤트 구간 분석
 ```
 
-### 8. CloudWatch Alarm 연동
+### 4. CloudWatch Alarm 연동
 
 Lambda 오류율·처리 지연 임계값 설정 → SNS 알림으로 장애 즉시 감지.
