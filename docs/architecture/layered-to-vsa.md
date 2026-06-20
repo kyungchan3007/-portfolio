@@ -21,32 +21,6 @@ Layered Architecture에서 공조기 제어 기능 하나를 수정하면
 
 ---
 
-## 핵심 차이: 레이어 vs 슬라이스
-
-```mermaid
-graph LR
-    subgraph Layered["Layered Architecture"]
-        direction TB
-        C[components/]
-        H[hooks/]
-        S[services/]
-        ST[store/]
-    end
-
-    subgraph VSA["Vertical Slice Architecture"]
-        direction TB
-        CTRL["control/\n  ui/\n  model/\n  api/"]
-        MON["monitoring/\n  ui/\n  model/\n  api/"]
-        ALARM["alarm/\n  ui/\n  model/\n  api/"]
-    end
-```
-
-**Layered**: 기술 역할로 분리 → 기능 하나가 여러 레이어에 흩어짐
-
-**VSA**: 기능(슬라이스)으로 분리 → 기능 하나가 한 폴더 안에 응집
-
----
-
 ## Before — Layered Architecture
 
 ```
