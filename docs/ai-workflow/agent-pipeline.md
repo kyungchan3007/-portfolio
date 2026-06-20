@@ -5,8 +5,6 @@ title: 4단계 Agent 파이프라인
 
 # 4단계 Agent 파이프라인
 
-**적용 프로젝트: FMS · SAJU:ME**
-
 ---
 
 :::info 개요

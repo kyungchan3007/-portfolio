@@ -68,8 +68,6 @@
     font-size: 18px; font-weight: 700; color: var(--mint); letter-spacing: -1px;
   }
 
-
-
   .name-block { text-align: center; }
   .name-block .name { font-family: 'Pretendard', monospace; font-size: 15px; font-weight: 700; color: var(--text-on-dark); }
   .name-block .name-en { font-size: 11px; color: var(--text-muted-dark); margin-top: 2px; font-family: 'Pretendard', monospace; }
@@ -94,7 +92,7 @@
   .lang-item { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted-dark); }
   .lang-level { font-size: 10px; color: var(--mint); font-family: 'Pretendard', monospace; }
 
-  /* ── MAIN (page 1) ── */
+  /* ── MAIN ── */
   .main {
     flex: 1;
     padding: 30px 28px 30px 26px;
@@ -114,16 +112,6 @@
   }
   .section-head::after { content: ''; flex: 1; height: 0.5px; background: var(--border); }
 
-  .exp-item { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; }
-  .exp-company { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
-  .exp-period { font-size: 11px; color: var(--text-muted); font-family: 'Pretendard', monospace; white-space: nowrap; text-align: right; }
-  .exp-role { font-size: 12px; color: var(--mint); font-weight: 500; }
-
-  .exp-bullets { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 3px; margin-top: 5px; }
-  .exp-bullet { display: flex; gap: 6px; font-size: 12px; color: var(--text-secondary); line-height: 1.65; }
-  .bullet-dot { color: var(--mint); flex-shrink: 0; font-size: 9px; margin-top: 4px; }
-
-  .exp-tags { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
   .tag {
     font-size: 10px; font-family: 'Pretendard', monospace;
     background: var(--tag-bg); color: var(--tag-text);
@@ -134,8 +122,6 @@
     background: rgba(0,201,167,0.1); color: var(--mint);
     padding: 3px 7px; border-radius: 3px; border: 0.5px solid var(--mint-border);
   }
-
-  .exp-divider { border: none; border-top: 0.5px dashed var(--border); margin: 5px 0 3px; grid-column: 1 / -1; }
 
   .edu-item { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; }
   .edu-school { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
@@ -148,13 +134,22 @@
   .act-desc { font-size: 11.5px; color: var(--text-secondary); flex: 1; text-align: center; }
   .act-date { font-size: 11px; color: var(--text-muted); font-family: 'Pretendard', monospace; white-space: nowrap; }
 
-  /* ── PAGE 2: PROJECT DETAIL ── */
+  /* ── SLIM SIDEBAR ── */
+  .sidebar-slim {
+    width: 66mm; min-width: 66mm;
+    background: var(--bg-sidebar);
+    padding: 30px 20px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .sidebar-slim .s-name { font-family: 'Pretendard', monospace; font-size: 14px; font-weight: 700; color: var(--text-on-dark); }
+  .sidebar-slim .s-role { font-size: 10.5px; color: var(--mint); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
+
+  /* ── PROJ PAGE ── */
   .proj-page-main {
     flex: 1;
     padding: 30px 28px 30px 26px;
-    display: flex; flex-direction: column; gap: 22px;
+    display: flex; flex-direction: column; gap: 20px;
   }
-
   .proj-page-title {
     font-family: 'Pretendard', monospace;
     font-size: 12px; font-weight: 700; color: var(--text-primary);
@@ -164,149 +159,26 @@
   }
   .proj-page-title span { color: var(--mint); }
 
-  /* project detail card */
-  .pcard {
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .pcard-header {
-    background: #FAFAFA;
-    border-bottom: 0.5px solid var(--border);
-    padding: 10px 14px;
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  }
-
-  .pcard-title-wrap { display: flex; flex-direction: column; gap: 2px; }
-  .pcard-name { font-size: 13.5px; font-weight: 700; color: var(--text-primary); }
-  .pcard-sub { font-size: 13px; color: var(--text-muted); font-family: 'Pretendard', monospace; }
-
-  .pcard-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
-  .pcard-period { font-size: 10.5px; color: var(--text-muted); font-family: 'Pretendard', monospace; white-space: nowrap; }
-  .pcard-role-badge {
-    font-size: 10px; font-family: 'Pretendard', monospace;
-    background: var(--mint-dim); color: var(--mint);
-    padding: 2px 8px; border-radius: 10px; border: 0.5px solid var(--mint-border);
-    white-space: nowrap;
-  }
-
-  .pcard-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
-
-  .pcard-overview {
-    font-size: 12px; color: var(--text-secondary); line-height: 1.7;
-    border-left: 2px solid var(--mint); padding-left: 10px;
-  }
-
-  .pcard-stack { display: flex; flex-wrap: wrap; gap: 4px; }
-
-  .pcard-sections { display: flex; flex-direction: column; gap: 8px; }
-
-  .pcard-group { display: flex; flex-direction: column; gap: 4px; }
-  .pcard-group-label {
-    font-size: 9.5px; font-family: 'Pretendard', monospace;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--text-muted); font-weight: 600;
-  }
-
-  .pcard-list { display: flex; flex-direction: column; gap: 3px; }
-  .pcard-item { display: flex; gap: 6px; font-size: 11.5px; color: var(--text-secondary); line-height: 1.65; }
-  .pcard-dot { color: var(--mint); flex-shrink: 0; font-size: 9px; margin-top: 4px; }
-
-  .issue-box {
-    background: #F4F4FB;
-    border: 1px solid rgba(58,58,170,0.15);
-    border-radius: 6px;
-    padding: 10px 12px;
-    display: flex; flex-direction: column; gap: 6px;
-  }
-  .issue-label {
-    font-size: 10px; font-family: 'Pretendard', monospace;
-    letter-spacing: 0.08em; text-transform: uppercase; color: #4040AA; font-weight: 700;
-    margin-bottom: 2px;
-  }
-  .issue-grid { display: grid; grid-template-columns: 36px 1fr; gap: 4px 10px; align-items: start; }
-  .issue-key {
-    font-size: 10px; color: #6060BB; font-weight: 700;
-    font-family: 'Pretendard', monospace;
-    white-space: nowrap; padding-top: 1px;
-  }
-  .issue-val { font-size: 11.5px; color: var(--text-primary); line-height: 1.6; }
-
-  .result-badge {
-    display: inline-block;
-    font-size: 11.5px; color: #006650; font-weight: 700;
-    background: #D4F5EC;
-    border: 1px solid #A0DDD0;
-    padding: 3px 10px; border-radius: 4px;
-    letter-spacing: 0.01em;
-  }
-
-  /* ── SIDEBAR (page 2) — slim version ── */
-  .sidebar-slim {
-    width: 66mm; min-width: 66mm;
-    background: var(--bg-sidebar);
-    padding: 30px 20px;
-    display: flex; flex-direction: column; gap: 20px;
-  }
-
-  .sidebar-slim .s-name {
-    font-family: 'Pretendard', monospace; font-size: 14px; font-weight: 700; color: var(--text-on-dark);
-  }
-  .sidebar-slim .s-role { font-size: 10.5px; color: var(--mint); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
-
-  .proj-index { display: flex; flex-direction: column; gap: 6px; }
-  .proj-index-item {
-    display: flex; flex-direction: column; gap: 2px;
-    padding: 8px 10px; border-radius: 5px;
-    border: 0.5px solid rgba(139,148,158,0.15);
-  }
-  .proj-index-name { font-size: 15px; font-weight: 600; color: var(--text-on-dark); }
-  .proj-index-period { font-size: 13px; color: var(--text-muted-dark); font-family: 'Pretendard', monospace; }
-  .proj-index-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
-  .proj-index-tag { font-size: 11px; font-family: 'Pretendard', monospace; background: rgba(0,201,167,0.1); color: var(--mint); padding: 2px 6px; border-radius: 2px; }
-
   /* ── PDF BUTTON ── */
   .pdf-btn-wrap {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
+    position: fixed; bottom: 32px; right: 32px; z-index: 999;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
   }
-
   .pdf-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #0D1117;
-    color: #00C9A7;
-    border: 1.5px solid rgba(0,201,167,0.4);
-    border-radius: 10px;
-    padding: 12px 20px;
-    font-family: 'Pretendard', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    background: #0D1117; color: #00C9A7;
+    border: 1.5px solid rgba(0,201,167,0.4); border-radius: 10px;
+    padding: 12px 20px; font-family: 'Pretendard', monospace;
+    font-size: 13px; font-weight: 700; cursor: pointer;
     box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    transition: background 0.15s, transform 0.1s;
-    letter-spacing: 0.03em;
+    transition: background 0.15s, transform 0.1s; letter-spacing: 0.03em;
   }
   .pdf-btn:hover { background: #161b22; transform: translateY(-1px); }
   .pdf-btn:active { transform: scale(0.97); }
-
   .pdf-hint {
-    font-size: 10px;
-    color: #888;
-    font-family: 'Pretendard', monospace;
-    background: white;
-    padding: 4px 10px;
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: none;
+    font-size: 10px; color: #888; font-family: 'Pretendard', monospace;
+    background: white; padding: 4px 10px; border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none;
   }
   .pdf-btn-wrap:hover .pdf-hint { display: block; }
 
@@ -318,12 +190,90 @@
     .pdf-btn-wrap { display: none; }
     @page { size: A4; margin: 0; }
   }
+
+  /* ── NEW: Compact Work Experience Styles ── */
+  .company-block { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
+  .company-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .company-name-lg { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+  .company-period-sm { font-size: 11px; color: var(--text-muted); font-family: 'Pretendard', monospace; white-space: nowrap; }
+  .company-role-sm { font-size: 12px; color: var(--mint); font-weight: 500; }
+  .company-impact-line {
+    font-size: 11.5px; color: var(--text-secondary); line-height: 1.65;
+    background: var(--mint-dim); border-left: 2px solid var(--mint);
+    padding: 5px 10px; border-radius: 0 4px 4px 0; margin-top: 4px;
+  }
+
+  .work-proj { border: 0.5px solid var(--border); border-radius: 6px; overflow: hidden; margin-top: 8px; }
+  .work-proj-head {
+    background: #FAFAFA; border-bottom: 0.5px solid var(--border);
+    padding: 7px 12px; display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 8px;
+  }
+  .work-proj-title-wrap { display: flex; flex-direction: column; gap: 2px; }
+  .work-proj-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+  .work-proj-sub { font-size: 11px; color: var(--text-muted); }
+  .work-proj-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+  .work-proj-period { font-size: 10.5px; color: var(--text-muted); font-family: 'Pretendard', monospace; white-space: nowrap; }
+
+  .work-proj-body { padding: 8px 12px; display: flex; flex-direction: column; gap: 5px; }
+  .work-proj-overview { font-size: 11.5px; color: var(--text-secondary); line-height: 1.6; }
+  .work-proj-stack { display: flex; flex-wrap: wrap; gap: 3px; }
+  .work-proj-bullets { display: flex; flex-direction: column; gap: 2px; }
+  .work-proj-bullet { display: flex; gap: 5px; font-size: 11px; color: var(--text-secondary); line-height: 1.6; }
+  .work-proj-dot { color: var(--mint); flex-shrink: 0; font-size: 9px; margin-top: 3px; }
+  .work-proj-result {
+    font-size: 11px; color: #006650; font-weight: 600;
+    background: #D4F5EC; border: 1px solid #A0DDD0;
+    padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 2px;
+  }
+
+  /* ── PCARD (Tech Summary) ── */
+  .pcard { border: 0.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .pcard-header {
+    background: #FAFAFA; border-bottom: 0.5px solid var(--border);
+    padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .pcard-title-wrap { display: flex; flex-direction: column; gap: 2px; }
+  .pcard-name { font-size: 13.5px; font-weight: 700; color: var(--text-primary); }
+  .pcard-sub { font-size: 13px; color: var(--text-muted); font-family: 'Pretendard', monospace; }
+  .pcard-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+  .pcard-period { font-size: 10.5px; color: var(--text-muted); font-family: 'Pretendard', monospace; white-space: nowrap; }
+  .pcard-role-badge {
+    font-size: 10px; font-family: 'Pretendard', monospace;
+    background: var(--mint-dim); color: var(--mint);
+    padding: 2px 8px; border-radius: 10px; border: 0.5px solid var(--mint-border); white-space: nowrap;
+  }
+  .pcard-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+  .pcard-overview { font-size: 12px; color: var(--text-secondary); line-height: 1.7; border-left: 2px solid var(--mint); padding-left: 10px; }
+  .pcard-stack { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pcard-sections { display: flex; flex-direction: column; gap: 8px; }
+  .pcard-group { display: flex; flex-direction: column; gap: 4px; }
+  .pcard-group-label { font-size: 9.5px; font-family: 'Pretendard', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+  .pcard-list { display: flex; flex-direction: column; gap: 3px; }
+  .pcard-item { display: flex; gap: 6px; font-size: 11.5px; color: var(--text-secondary); line-height: 1.65; }
+  .pcard-dot { color: var(--mint); flex-shrink: 0; font-size: 9px; margin-top: 4px; }
+
+  /* ── PROJ INDEX (Tech Summary Sidebar) ── */
+  .proj-index { display: flex; flex-direction: column; gap: 6px; }
+  .proj-index-item { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 5px; border: 0.5px solid rgba(139,148,158,0.15); }
+  .proj-index-name { font-size: 15px; font-weight: 600; color: var(--text-on-dark); }
+  .proj-index-period { font-size: 13px; color: var(--text-muted-dark); font-family: 'Pretendard', monospace; }
+  .proj-index-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
+  .proj-index-tag { font-size: 11px; font-family: 'Pretendard', monospace; background: rgba(0,201,167,0.1); color: var(--mint); padding: 2px 6px; border-radius: 2px; }
+
+  /* ── ISSUE BOX ── */
+  .issue-box { background: #F4F4FB; border: 1px solid rgba(58,58,170,0.15); border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .issue-label { font-size: 10px; font-family: 'Pretendard', monospace; letter-spacing: 0.08em; text-transform: uppercase; color: #4040AA; font-weight: 700; margin-bottom: 2px; }
+  .issue-grid { display: grid; grid-template-columns: 36px 1fr; gap: 4px 10px; align-items: start; }
+  .issue-key { font-size: 10px; color: #6060BB; font-weight: 700; font-family: 'Pretendard', monospace; white-space: nowrap; padding-top: 1px; }
+  .issue-val { font-size: 11.5px; color: var(--text-primary); line-height: 1.6; }
+  .result-badge { display: inline-block; font-size: 11.5px; color: #006650; font-weight: 700; background: #D4F5EC; border: 1px solid #A0DDD0; padding: 3px 10px; border-radius: 4px; letter-spacing: 0.01em; }
 </style>
 </head>
 <body>
 
 <!-- ════════════════════════════════════════
-     PAGE 1 · 기본 이력서
+     PAGE 1 · TSM Technology
 ════════════════════════════════════════ -->
 <div class="page">
 
@@ -351,13 +301,19 @@
       <div class="skill-row"><div class="skill-name">TanStack Query / Zustand</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:85%"></div></div></div>
       <div class="skill-row"><div class="skill-name">AWS (EC2, S3, IoT Core)</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:75%"></div></div></div>
       <div class="skill-row"><div class="skill-name">Vitest / Playwright</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:72%"></div></div></div>
-      <div class="skill-row"><div class="skill-name">Node.js / Docker</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:65%"></div></div></div>
     </div>
 
     <div class="sidebar-section">
-      <div class="sidebar-label">Tools & Infra</div>
+      <div class="sidebar-label">Tools &amp; Infra</div>
       <div class="skill-row"><div class="skill-name">Git / GitHub / GitLab</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:88%"></div></div></div>
       <div class="skill-row"><div class="skill-name">Cloudflare Workers</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:70%"></div></div></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Portfolio</div>
+      <a href="https://kyungchan3007.github.io/-portfolio/projects/fms" target="_blank" class="contact-item" style="text-decoration:none;color:var(--mint);"><span class="contact-icon">🔗</span>FMS</a>
+      <a href="https://kyungchan3007.github.io/-portfolio/projects/bems" target="_blank" class="contact-item" style="text-decoration:none;color:var(--mint);"><span class="contact-icon">🔗</span>BEMS</a>
+      <a href="https://kyungchan3007.github.io/-portfolio/projects/hvac-control" target="_blank" class="contact-item" style="text-decoration:none;color:var(--mint);"><span class="contact-icon">🔗</span>공조기 제어</a>
     </div>
   </div>
 
@@ -365,91 +321,216 @@
     <div class="main-header">
       <div class="main-name">박경찬</div>
       <div class="main-title">Front-end Engineer · 약 4년 경력 · 팀 리딩 경험</div>
-      <div class="summary-text">IoT 기반 제어 시스템부터 복잡한 에너지 관리 도메인까지 다양한 웹 서비스를 개발해온 프론트엔드 개발자입니다. 새로운 기술을 공부하고 실무에 시도하는 과정을 반복하며 개발 생산성과 품질을 높여왔고, 컨퍼런스 참여를 통해 기술 흐름을 꾸준히 따라가고 있습니다.</div>
+      <div class="summary-text">IoT 기반 제어 시스템부터 복잡한 에너지 관리 도메인까지 다양한 웹 서비스를 개발해온 프론트엔드 개발자입니다. AI Agent 워크플로우를 팀에 도입해 개발 생산성을 끌어 올렸고, 프로젝트 특성에 맞는 아키텍처 선택과 Next.js 서버 최적화로 코드 품질과 성능을 높여왔습니다. 새로운 기술을 빠르게 습득해 실무에 적용하는 것을 강점으로 삼고 있습니다.</div>
     </div>
 
-    <!-- EXPERIENCE -->
     <div class="section">
       <div class="section-head">Work Experience</div>
 
-      <div class="exp-item">
-        <div class="exp-company">㈜티에스엠테크놀로지 (TSM Technology)</div>
-        <div class="exp-period">2022.10 — 재직중</div>
-        <div class="exp-role">Front-end 개발자 · 과장 · 팀 리더</div>
-      
-        <div class="exp-bullets">
-          <div class="exp-bullet"><span class="bullet-dot">▸</span><span>FMS·BEMS·공조기 제어 등 대규모 산업용 웹 서비스 프론트엔드 개발 및 팀 리딩</span></div>
-          <div class="exp-bullet"><span class="bullet-dot">▸</span><span>AI Agent 워크플로우(구현·검증·리뷰 파이프라인) 설계 및 팀 내 도입 — 개발 인원 3→2명에도 전 도메인 커버리지 유지</span></div>
-          <div class="exp-bullet"><span class="bullet-dot">▸</span><span>SSE 도입으로 폴링 대비 네트워크 요청 60% 감소, 화면 반영 지연 3~5초 → 1초 이내 단축</span></div>
-          <div class="exp-bullet"><span class="bullet-dot">▸</span><span>AWS IoT Core·Lambda·WebSocket 기반 제어 시스템 구축, 제어 응답 지연 40% 감소</span></div>
-          <div class="exp-bullet"><span class="bullet-dot">▸</span><span>클라이언트 요구사항 회의·일정 조율, UAT 2단계 분리로 버그 80% 감소 및 일정 내 인수 완료</span></div>
+      <!-- TSM Company Header -->
+      <div class="company-block">
+        <div class="company-row">
+          <div class="company-name-lg">㈜티에스엠테크놀로지 (TSM Technology)</div>
+          <div class="company-period-sm">2022.10 — 재직중</div>
         </div>
-        <div class="exp-tags">
-          <span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span>
-          <span class="tag">TanStack Query</span><span class="tag">Zustand</span><span class="tag">Redux</span>
-          <span class="tag">AWS IoT</span><span class="tag">SSE / WebSocket</span><span class="tag">FSD</span>
-          <span class="tag">Vitest</span><span class="tag">Playwright</span><span class="tag">Storybook</span>
+        <div class="company-role-sm">Front-end 개발자 · 과장 · 팀 리더</div>
+        <div class="company-impact-line">
+          AI Agent 워크플로우 팀 도입 → 개발 생산성 50%+ 향상<br/>
+          낭비 시간 25% 감소, 검증·정리 사이클 확보로 품질 2배 개선
         </div>
       </div>
 
-      <hr class="exp-divider">
-
-      <div class="exp-item">
-        <div class="exp-company">기흥그룹 HarleyDavidson-Korea</div>
-        <div class="exp-period">2020.12 — 2022.03</div>
-        <div class="exp-role">ERP 개발자 · 사원</div>
-        <div class="exp-bullets">
-          <div class="exp-bullet"><span class="bullet-dot">▸</span><span>ERP 시스템 유지보수 및 개발 — Oracle SQL·프로시저 운영, JavaScript UI/UX 개발</span></div>
-          <div class="exp-bullet"><span class="bullet-dot">▸</span><span>회계 프로세스 개선 및 중고차 거래 플랫폼 개발</span></div>
+      <!-- FMS -->
+      <div class="work-proj">
+        <div class="work-proj-head">
+          <div class="work-proj-title-wrap">
+            <div class="work-proj-name">FMS — Facility Management System</div>
+            <div class="work-proj-sub">시설물 유지보수 업무 디지털화 웹 애플리케이션</div>
+          </div>
+          <div class="work-proj-meta">
+            <div class="work-proj-period">2026.01 — 재직중</div>
+            <span class="tag-dark">FE 개발 · 팀 리딩</span>
+          </div>
         </div>
-        <div class="exp-tags">
-          <span class="tag">JavaScript</span><span class="tag">Oracle SQL</span><span class="tag">ERP</span>
+        <div class="work-proj-body">
+          <div class="work-proj-stack">
+            <span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">TanStack Query</span><span class="tag">Zustand</span><span class="tag">Zod</span><span class="tag">Vitest</span><span class="tag">Playwright</span><span class="tag">Storybook</span>
+          </div>
+          <div class="work-proj-bullets">
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>VSA 기반 Agent 도메인 독립 할당으로 30+ 라우트 병렬 개발</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>OpenAPI → Zod 타입 자동화로 백엔드 소통 비용 감소, 타입 불일치 버그 제거</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>Vitest 단위 + Playwright E2E + Storybook UI 3중 품질 커버리지 확보</span></div>
+          </div>
+          <span class="work-proj-result">하네스 엔지니어링 도입 → 프롬프트 재작업 감소, 구현·검증·배포 사이클 단축</span>
         </div>
       </div>
-    </div>
 
-    <!-- EDUCATION -->
-    <div class="section">
-      <div class="section-head">Education</div>
-      <div class="edu-item">
-        <div class="edu-school">학점은행제</div>
-        <div class="edu-period">2012.03 — 2019.09</div>
-        <div class="edu-major">작곡 전공 학사 · 세종대학교(서울) 졸업</div>
+      <!-- BEMS -->
+      <div class="work-proj">
+        <div class="work-proj-head">
+          <div class="work-proj-title-wrap">
+            <div class="work-proj-name">BEMS — Building Energy Management System</div>
+            <div class="work-proj-sub">건물 에너지 데이터 실시간 수집·시각화 및 설비 조회 분석 시스템</div>
+          </div>
+          <div class="work-proj-meta">
+            <div class="work-proj-period">2023.08 — 2025.08</div>
+            <span class="tag-dark">FE 개발 · 팀 리딩</span>
+          </div>
+        </div>
+        <div class="work-proj-body">
+          <div class="work-proj-stack">
+            <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Redux</span><span class="tag">SSE</span><span class="tag">react-query</span><span class="tag">Styled-components</span><span class="tag">Sonar</span>
+          </div>
+          <div class="work-proj-bullets">
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>SSE 도입으로 폴링 대비 네트워크 요청 60% 감소, 화면 반영 지연 3~5초 → 1초 이내</span></div>
+<div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>Layered → FSD 전환으로 deep import 74~84% 감소, page 계층 API 직접 의존 73% 이상 축소</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>AI 엔지니어링 기반 코드 리뷰로 라우트 버그·번들 과다·API 역의존 사전 탐지 </span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>배포 전 품질 기준 확보 및 검증 시간 75% 단축</span></div>
+          </div>
+          <span class="work-proj-result">코드 리뷰 자동화 → 라우트 버그·API 역의존 배포 차단, 초기 JS 30~60% 절감</span>
+        </div>
       </div>
-    </div>
 
-    <!-- ACTIVITIES -->
-    <div class="section">
-      <div class="section-head">Activities</div>
-      <div class="act-item">
-        <span class="act-name">AWS Summit</span>
-        <span class="act-desc">컨퍼런스</span>
-        <span class="act-date">2026.04</span>
+      <!-- 공조기 -->
+      <div class="work-proj">
+        <div class="work-proj-head">
+          <div class="work-proj-title-wrap">
+            <div class="work-proj-name">공조기 자동제어 및 모니터링</div>
+            <div class="work-proj-sub">AWS IoT Core 기반 공조기 원격 제어 및 실시간 모니터링 시스템</div>
+          </div>
+          <div class="work-proj-meta">
+            <div class="work-proj-period">2024.08 — 2025.12</div>
+            <span class="tag-dark">FE 개발 · AWS 서버 구축</span>
+          </div>
+        </div>
+        <div class="work-proj-body">
+          <div class="work-proj-stack">
+            <span class="tag">React</span><span class="tag">Node.js</span><span class="tag">TypeScript</span><span class="tag">AWS IoT Core</span><span class="tag">Lambda</span><span class="tag">WebSocket</span><span class="tag">DynamoDB</span><span class="tag">S3</span><span class="tag">Athena</span>
+          </div>
+          <div class="work-proj-bullets">
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>AI 코드 리뷰로 분산 소켓 구조 탐지 → 공통 모듈 통합, 소켓 생성 지점 66.7% 감소</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>MQTT removeAllListeners 구조 개선, 리스너 cleanup 0%→100%, 누락률 85.33%→0%</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>S3 + Athena 분석 환경 구성, CloudWatch Alarm 연동으로 장애 대응 체계 확보</span></div>
+          </div>
+          <span class="work-proj-result">메시지 수신 성공률 14.67% → 100%, 화면 전환 소켓 준비 시간 0ms로 단축</span>
+        </div>
       </div>
-      <div class="act-item">
-        <span class="act-name">Claude Code 판교 밋업</span>
-        <span class="act-desc">Anthropic 공식 지원</span>
-        <span class="act-date">2026.04</span>
+
+      <!-- 기흥그룹 compact -->
+      <hr style="border:none;border-top:0.5px dashed var(--border);margin:6px 0 2px;">
+      <div class="company-block" style="margin-bottom:0;">
+        <div class="company-row">
+          <div class="company-name-lg">기흥그룹 HarleyDavidson-Korea</div>
+          <div class="company-period-sm">2020.12 — 2022.03</div>
+        </div>
+        <div class="company-role-sm">ERP 개발자 · 사원</div>
+        <div class="work-proj-bullets" style="margin-top:6px;">
+          <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span><strong>중고차 거래 전산 시스템</strong> — 첫 개발 담당자로 설계·개발·배포·운영 전 과정 단독 수행, SQL 프로시저 최적화로 데이터 처리 속도 70%+ 개선, 소유주 이전·비대면 계약 자동화</span></div>
+          <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span><strong>카드 매출 통계 시스템</strong> — 전국 매장 카드 결제 데이터 전산화, 매출 전표 자동 생성으로 주당 30시간+ 업무시간 절감</span></div>
+        </div>
       </div>
-      <div class="act-item">
-        <span class="act-name">핀하우스 공모전</span>
-        <span class="act-desc">모두의 아이디어 우수참여자 선정</span>
-        <span class="act-date">2026.03</span>
-      </div>
-      <div class="act-item">
-        <span class="act-name">BlueShift</span>
-        <span class="act-desc">외주 프론트엔드 개발</span>
-        <span class="act-date">2026.02</span>
-      </div>
+
     </div>
   </div>
 </div>
 
 
+<!-- ════════════════════════════════════════
+     PAGE 2 · Side Projects
+════════════════════════════════════════ -->
+
+<!-- ════════════════════════════════════════
+     PAGE 3 · Side Projects
+════════════════════════════════════════ -->
+<div class="page">
+  <div class="sidebar-slim">
+    <div>
+      <div class="s-name">박경찬</div>
+      <div class="s-role">Side Projects</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Core Skills</div>
+      <div class="skill-row"><div class="skill-name">Next.js / React</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:90%"></div></div></div>
+      <div class="skill-row"><div class="skill-name">TypeScript</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:92%"></div></div></div>
+      <div class="skill-row"><div class="skill-name">TanStack Query / Zustand / Zod</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:85%"></div></div></div>
+      <div class="skill-row"><div class="skill-name">Cloudflare Workers</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:70%"></div></div></div>
+      <div class="skill-row"><div class="skill-name">Vitest / Playwright / Storybook</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:72%"></div></div></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Links</div>
+      <a href="https://saju-me.com" target="_blank" class="contact-item" style="text-decoration:none;color:var(--mint);"><span class="contact-icon">🌐</span>saju-me.com</a>
+      <a href="https://docs.saju-me.com" target="_blank" class="contact-item" style="text-decoration:none;color:var(--mint);"><span class="contact-icon">📄</span>docs.saju-me.com</a>
+      <a href="https://kyungchan3007.github.io/-portfolio/projects/pinhouse/" target="_blank" class="contact-item" style="text-decoration:none;color:var(--mint);"><span class="contact-icon">🔗</span>PinHouse</a>
+    </div>
+  </div>
+
+  <div class="proj-page-main">
+    <div class="proj-page-title">Side Projects</div>
+
+    <div class="section">
+
+      <!-- SAJU:ME -->
+      <div class="work-proj">
+        <div class="work-proj-head">
+          <div class="work-proj-title-wrap">
+            <div class="work-proj-name">SAJU:ME — 사주 분석 콘텐츠 플랫폼</div>
+            <div class="work-proj-sub">생년월일시 기반 사주·운세·궁합 콘텐츠 웹앱 서비스</div>
+          </div>
+          <div class="work-proj-meta">
+            <div class="work-proj-period">2026.04 — 2026.06</div>
+            <span class="tag-dark">FE 개발 · AI Agent 설계</span>
+          </div>
+        </div>
+        <div class="work-proj-body">
+          <div class="work-proj-stack">
+            <span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">Tailwind CSS</span><span class="tag">Zustand</span><span class="tag">TanStack Query</span><span class="tag">Zod</span><span class="tag">Cloudflare Workers</span><span class="tag">Vitest</span><span class="tag">Playwright</span><span class="tag">Storybook</span><span class="tag">Chromatic</span>
+          </div>
+          <div class="work-proj-bullets">
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>OpenNext.js + Cloudflare Workers로 Next.js Edge 서버리스 배포</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>npm workspaces 모노레포 — web / admin / ui / design-tokens 패키지 책임 분리</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>Claude(UX/UI) + Codex(비즈니스 로직) 역할 분리, 구현·검증·리뷰·배포 4-Agent 파이프라인 운영</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>FSD 아키텍처 + BFF Pattern + OpenAPI → Zod + Merge Gate(CI) 적용</span></div>
+          </div>
+          <span class="work-proj-result">하네스 엔지니어링 도입 → Agent 정확도 100%, 오탐·미탐 0건으로 프롬프트 안정성 확보</span>
+        </div>
+      </div>
+
+      <!-- PinHouse -->
+      <div class="work-proj">
+        <div class="work-proj-head">
+          <div class="work-proj-title-wrap">
+            <div class="work-proj-name">PinHouse — 공공 임대주택 맞춤 탐색 서비스</div>
+            <div class="work-proj-sub">핀하우스 공모전 · 우수참여자 선정</div>
+          </div>
+          <div class="work-proj-meta">
+            <div class="work-proj-period">2025.10 — 2026.03</div>
+            <span class="tag-dark">FE 개발 · AI Agent 설계</span>
+          </div>
+        </div>
+        <div class="work-proj-body">
+          <div class="work-proj-stack">
+            <span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">Tailwind CSS</span><span class="tag">Zustand</span><span class="tag">TanStack Query</span><span class="tag">Zod</span><span class="tag">Vitest</span><span class="tag">Playwright</span><span class="tag">Storybook</span>
+          </div>
+          <div class="work-proj-bullets">
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>GPT 챗봇 — 의도 분류·슬롯 추출로 임대매물·시세·용어·정책 대화형 제공</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>인증 진입점을 서버 리다이렉트로 전환해 spinner hydration 제거 및 초기 라우팅 성능 개선</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>route params 서버 처리로 client boundary 축소, 브라우저 JS 실행 전 인증 라우팅 결정</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>client route → server shell 전환 + 인증 서버 리다이렉트로 First Load JS 14.4% 감소 (194→166kB)</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>React Query provider 인스턴스 단위 생성으로 SSR 캐시 오염 리스크 제거</span></div>
+          </div>
+          <span class="work-proj-result">client page entry 17개 → 14개 (17.6% 감소), 루트 진입 spinner hydration 제거</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 
 <!-- ════════════════════════════════════════
-     PAGE 2 · 기술 & 성과 요약 (1/2)
+     PAGE 4 · Tech & Impact Summary
 ════════════════════════════════════════ -->
 <div class="page">
   <div class="sidebar-slim">
@@ -470,166 +551,6 @@
         </div>
         <div class="proj-index-item">
           <div class="proj-index-name" style="color:var(--mint);">API Integration</div>
-          <div class="proj-index-period">API 단일화 · BFF</div>
-        </div>
-        <div class="proj-index-item">
-          <div class="proj-index-name">OpenAPI → Zod</div>
-          <div class="proj-index-period">타입 계약 자동화</div>
-        </div>
-        <div class="proj-index-item">
-          <div class="proj-index-name">Merge Gate (CI)</div>
-          <div class="proj-index-period">품질 검증 자동화</div>
-        </div>
-        <div class="proj-index-item">
-          <div class="proj-index-name">Cloudflare Edge</div>
-          <div class="proj-index-period">Edge 서버리스 배포</div>
-        </div>
-      </div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">적용 프로젝트</div>
-      <div style="display:flex;flex-direction:column;gap:4px;margin-top:2px;">
-        <div class="proj-index-tag" style="padding:3px 8px;">FMS</div>
-        <div class="proj-index-tag" style="padding:3px 8px;">SAJU:ME</div>
-        <div class="proj-index-tag" style="padding:3px 8px;">공조기 제어</div>
-        <div class="proj-index-tag" style="padding:3px 8px;">PinHouse</div>
-      </div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">링크</div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-top:2px;">
-        <a href="https://docs.saju-me.com/ai-workflow/harness-engineering" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 하네스 엔지니어링</a>
-        <a href="https://docs.saju-me.com/ai-workflow/agent-role-split" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 Agent 역할 분리</a>
-        <a href="https://docs.saju-me.com/architecture/layered-to-fsd" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 Layered → FSD</a>
-        <a href="https://docs.saju-me.com/architecture/layered-to-vsa" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 Layered → VSA</a>
-        <a href="https://docs.saju-me.com/architecture/vsa-parallel-dev" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 VSA 병렬 개발</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="proj-page-main">
-    <div class="proj-page-title">Tech &amp; Impact Summary <span>1 / 2</span></div>
-
-    <!-- AI Agent Workflow — 첫 번째 배치 -->
-    <div class="pcard">
-      <div class="pcard-header">
-        <div class="pcard-title-wrap">
-          <div class="pcard-name">AI Agent Workflow</div>
-          <div class="pcard-sub">AGENT.MD · SKILL.md 기반 하네스 엔지니어링</div>
-        </div>
-        <div class="pcard-meta">
-          <div class="pcard-role-badge">FMS · SAJU:ME · PinHouse</div>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <div class="pcard-sections">
-          <div class="pcard-group">
-            <div class="pcard-group-label">설계 원칙</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>단순 프롬프트 방식 → AGENT.MD · SKILL.md 기반 하네스 엔지니어링으로 전환</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Agent별 행동 범위·책임 경계 문서화로 컨텍스트 오염 방지</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>도메인별 reference 파일 설계·작성, Skill 선택 로드 구조로 컨텍스트 오염 방지</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>3계층 온톨로지 구조로 복잡한 도메인에서도 Agent 컨텍스트 최소화</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">파이프라인</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>구현·검증·리뷰·배포 4단계 파이프라인으로 분리 운영</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">역할 분리</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>UX/UI + 비즈니스 로직 역할 분리로 Agent 정확도 95% 달성</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>초기 프롬프트 오해 빈발 → 하네스 엔지니어링 도입 후 재작업 사이클 제거</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">검증 Skill</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>코드 품질·디자인·React 패턴 기준을 Reviewer Agent가 선택 로드해 판정</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>도메인별 검증 일관성 확보 및 기준 외 구현 자동 차단</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FSD Architecture -->
-    <div class="pcard">
-      <div class="pcard-header">
-        <div class="pcard-title-wrap">
-          <div class="pcard-name">Architecture</div>
-          <div class="pcard-sub">Layered · Vertical Slice · FSD · 적용</div>
-        </div>
-        <div class="pcard-meta">
-          <div class="pcard-role-badge">FMS · SAJU:ME · PinHouse</div>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <div class="pcard-sections">
-          <div class="pcard-list">
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>Layered · Vertical Slice · FSD 를 비교 학습 후 프로젝트 특성에 맞게 선택 적용</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>BEMS — Layered Architecture 레이어 비대화 한계 → FSD 전환으로 도메인별 책임 분리</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>공조기 — Layered Architecture → Vertical Slice Architecture 전환, 수정 영향 범위 40% 축소</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>FMS — Vertical Slice Architecture 적용, 기능 단위 독립 개발로 병렬 작업</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>SAJU:ME · PinHouse — FSD / FSD Hybrid 구조로 도메인 책임 분리</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- BFF Pattern -->
-    <div class="pcard">
-      <div class="pcard-header">
-        <div class="pcard-title-wrap">
-          <div class="pcard-name">API Integration</div>
-          <div class="pcard-sub">Backend For Frontend</div>
-          <div class="pcard-sub">Next.js Route Handler 기반 API 단일화</div>
-        </div>
-        <div class="pcard-meta">
-          <div class="pcard-role-badge">FMS · SAJU:ME · PinHouse</div>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <div class="pcard-sections">
-          <div class="pcard-list">
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>Next.js Route Handler를 BFF로 활용해 외부 API 호출을 단일 창구로 집중</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>프론트엔드가 직접 외부 서비스에 의존하는 구조 제거</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>OAuth state 타이밍 공격 방지를 위해 node:crypto 적용</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>Edge Runtime 환경에서 nodejs_compat 플래그로 호환 처리</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-
-<!-- ════════════════════════════════════════
-     PAGE 3 · 기술 & 성과 요약 (2/2)
-════════════════════════════════════════ -->
-<div class="page">
-  <div class="sidebar-slim">
-    <div>
-      <div class="s-name">박경찬</div>
-      <div class="s-role">Tech Summary</div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">핵심 기술 6가지</div>
-      <div class="proj-index">
-        <div class="proj-index-item">
-          <div class="proj-index-name">AI Agent Workflow</div>
-          <div class="proj-index-period">개발 자동화</div>
-        </div>
-        <div class="proj-index-item">
-          <div class="proj-index-name">Architecture</div>
-          <div class="proj-index-period">도메인 책임 분리</div>
-        </div>
-        <div class="proj-index-item">
-          <div class="proj-index-name">API Integration</div>
           <div class="proj-index-period">API 단일화 · BFF</div>
         </div>
         <div class="proj-index-item">
@@ -658,35 +579,86 @@
     <div class="sidebar-section">
       <div class="sidebar-label">링크</div>
       <div style="display:flex;flex-direction:column;gap:6px;margin-top:2px;">
-        <a href="https://docs.saju-me.com/quality/openapi-to-zod" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 OpenAPI → Zod</a>
-        <a href="https://docs.saju-me.com/quality/merge-gate-ci" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 Merge Gate CI</a>
+        <a href="https://kyungchan3007.github.io/-portfolio/ai-workflow/harness-engineering" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 하네스 엔지니어링</a>
+        <a href="https://kyungchan3007.github.io/-portfolio/architecture/layered-to-fsd" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 Layered → FSD</a>
+        <a href="https://kyungchan3007.github.io/-portfolio/architecture/layered-to-vsa" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 Layered → VSA</a>
+        <a href="https://kyungchan3007.github.io/-portfolio/quality/openapi-to-zod" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 OpenAPI → Zod</a>
+        <a href="https://kyungchan3007.github.io/-portfolio/quality/merge-gate-ci" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 Merge Gate CI</a>
       </div>
     </div>
   </div>
 
   <div class="proj-page-main">
-    <div class="proj-page-title">Tech &amp; Impact Summary <span>2 / 2</span></div>
+    <div class="proj-page-title">Tech &amp; Impact Summary</div>
+
+    <!-- AI Agent Workflow -->
+    <div class="pcard">
+      <div class="pcard-header">
+        <div class="pcard-title-wrap">
+          <div class="pcard-name">AI Agent Workflow</div>
+          <div class="pcard-sub">AGENT.MD · SKILL.md 기반 하네스 엔지니어링</div>
+        </div>
+        <div class="pcard-meta"><div class="pcard-role-badge">FMS · SAJU:ME · PinHouse</div></div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-list">
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>AGENT.MD · SKILL.md 기반 하네스 엔지니어링으로 Agent 행동 범위·책임 경계 명세화</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>3계층 온톨로지로 컨텍스트 오염 방지</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>구현·검증·리뷰·배포 4단계 파이프라인 + UX/UI · 비즈니스 로직 역할 분리로 Agent 정확도 95%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Architecture -->
+    <div class="pcard">
+      <div class="pcard-header">
+        <div class="pcard-title-wrap">
+          <div class="pcard-name">Architecture</div>
+          <div class="pcard-sub">AI 기반 · Layered · Vertical Slice · FSD 선택 적용</div>
+        </div>
+        <div class="pcard-meta"><div class="pcard-role-badge">FMS · BEMS · 공조기 · SAJU:ME</div></div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-list">
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>Layered · VSA · FSD 비교 학습 후 프로젝트 특성에 맞게 선택 적용</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>BEMS(Layered→FSD 도메인 분리), 공조기(Layered→VSA 수정 영향 40% 축소)</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>FMS(VSA 병렬 개발), SAJU:ME·PinHouse(FSD)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Integration / BFF -->
+    <div class="pcard">
+      <div class="pcard-header">
+        <div class="pcard-title-wrap">
+          <div class="pcard-name">API Integration</div>
+          <div class="pcard-sub">AI 기반 · Backend For Frontend · Next.js Route Handler</div>
+        </div>
+        <div class="pcard-meta"><div class="pcard-role-badge">FMS · SAJU:ME · PinHouse</div></div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-list">
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>Next.js Route Handler를 BFF로 활용해 외부 API 호출을 단일 창구로 집중</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>OAuth state 타이밍 공격 방지(node:crypto)</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>Edge Runtime nodejs_compat 플래그로 호환 처리</span></div>
+        </div>
+      </div>
+    </div>
 
     <!-- OpenAPI → Zod -->
     <div class="pcard">
       <div class="pcard-header">
         <div class="pcard-title-wrap">
           <div class="pcard-name">OpenAPI → Zod</div>
-          <div class="pcard-sub">HeyAPI(openapi-ts) · API 타입 자동생성 → 계약 일원화</div>
+          <div class="pcard-sub">AI 기반 · HeyAPI(openapi-ts) · 타입 자동생성 → 계약 일원화</div>
         </div>
-        <div class="pcard-meta">
-          <div class="pcard-role-badge">FMS · SAJU:ME</div>
-        </div>
+        <div class="pcard-meta"><div class="pcard-role-badge">FMS · SAJU:ME</div></div>
       </div>
       <div class="pcard-body">
-        <div class="pcard-sections">
-          <div class="pcard-list">
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>백엔드 OpenAPI 스펙을 HeyAPI(openapi-ts)로 타입·클라이언트 자동 생성</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>수동 타입 정의 제거 — 백엔드 스펙 변경 시 프론트 자동 반영</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>자동 생성된 타입에 Zod 스키마 검증 추가 → 런타임 API 계약 위반 즉시 감지</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>백엔드와의 소통 비용 및 타입 불일치로 인한 버그 감소</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>PR 머지 시 스펙 기반 타입 자동 반영 — 별도 커뮤니케이션 없이 API 계약을 코드로 관리</span></div>
-          </div>
+        <div class="pcard-list">
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>HeyAPI(openapi-ts)로 백엔드 OpenAPI 스펙 → 타입·클라이언트 자동 생성</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>수동 타입 정의 및 백엔드 소통 비용 제거</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>Zod 스키마 검증으로 런타임 API 계약 위반 즉시 감지, PR 머지 시 스펙 기반 타입 자동 반영</span></div>
         </div>
       </div>
     </div>
@@ -696,164 +668,34 @@
       <div class="pcard-header">
         <div class="pcard-title-wrap">
           <div class="pcard-name">Merge Gate (CI)</div>
-          <div class="pcard-sub">심각도 기반 병합 차단 · 자동 품질 검증 파이프라인</div>
+          <div class="pcard-sub">AI 기반 · 심각도 기반 병합 차단 · 자동 품질 검증 파이프라인</div>
         </div>
-        <div class="pcard-meta">
-          <div class="pcard-role-badge">FMS · SAJU:ME · PinHouse</div>
-        </div>
+        <div class="pcard-meta"><div class="pcard-role-badge">FMS · SAJU:ME · PinHouse</div></div>
       </div>
       <div class="pcard-body">
-        <div class="pcard-sections">
-          <div class="pcard-list">
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>Critical · Major · Minor 심각도 판정 기반 머지 게이트 운영</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>Critical/Major 미해결 시 병합 자동 차단으로 품질 기준 강제화</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>Reviewer Agent MERGE: PASS / HOLD 판정으로 머지 게이트 운영</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>수정 후 변경 부분만 delta-only 재검증 루프 적용으로 검증 효율 확보</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>Vitest · Playwright · Storybook + Chromatic으로 단위·E2E·UI 품질 3중 검증</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>코드·흐름·UI 전 영역 커버리지 확보</span></div>
-          </div>
+        <div class="pcard-list">
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>Critical/Major/Minor 심각도 판정 기반 병합 자동 차단</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>Reviewer Agent MERGE: PASS/HOLD 운영</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>Vitest · Playwright · Storybook + Chromatic으로 단위·E2E·UI 품질 3중 검증</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>delta-only 재검증으로 효율 확보</span></div>
         </div>
       </div>
     </div>
 
-    <!-- Cloudflare Edge 배포 -->
+    <!-- Cloudflare Edge -->
     <div class="pcard">
       <div class="pcard-header">
         <div class="pcard-title-wrap">
           <div class="pcard-name">Cloudflare Edge 배포</div>
           <div class="pcard-sub">OpenNext.js + Cloudflare Workers · Edge 서버리스 환경</div>
         </div>
-        <div class="pcard-meta">
-          <div class="pcard-role-badge">SAJU:ME · PinHouse</div>
-        </div>
+        <div class="pcard-meta"><div class="pcard-role-badge">SAJU:ME</div></div>
       </div>
       <div class="pcard-body">
-        <div class="pcard-sections">
-          <div class="pcard-list">
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>OpenNext.js + Cloudflare Workers로 Next.js를 Edge 서버리스 환경에서 서빙</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>nodejs_compat 플래그 적용으로 Edge Runtime과 Node.js API 의존 모듈 호환 처리</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>Cloudflare Turnstile 봇 방지 적용으로 서비스 보안 강화</span></div>
-            <div class="pcard-item"><span class="pcard-dot">▸</span><span>기존 서버 기반 배포 대비 Cold Start 없이 글로벌 엣지에서 즉시 응답</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════
-     PAGE 3 · 프로젝트 상세 — FMS
-════════════════════════════════════════ -->
-<div class="page">
-  <div class="sidebar-slim">
-    <div>
-      <div class="s-name">박경찬</div>
-      <div class="s-role">Project Details</div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">성과 요약</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:2px;">
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:13px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">라우트 병렬 개발</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">30+</div>
-          <div style="font-size:13px;color:var(--text-muted-dark);margin-top:2px;">Agent 도메인 독립 할당</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:13px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">개발 인원</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">3→2명</div>
-          <div style="font-size:13px;color:var(--text-muted-dark);margin-top:2px;">커버리지 유지</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:13px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">백엔드 소통 비용
-            감소</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;padding-left:20px;">↓</div>
-          <div style="font-size:13px;color:var(--text-muted-dark);margin-top:2px;">OpenAPI→Zod 자동화</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Projects</div>
-      <div class="proj-index">
-        <div class="proj-index-item">
-          <div class="proj-index-name">FMS</div>
-          <div class="proj-index-period">2026.01 — 2026.06</div>
-          <div class="proj-index-tags"><span class="proj-index-tag">TSM Technology</span><span class="proj-index-tag">팀리딩</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">기술 패턴</div>
-      <div style="display:flex;flex-direction:column;gap:5px;margin-top:2px;">
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;"> Layered Architecture</div>
-        <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;text-align: center">↓</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">Vertical Slice Architecture</div>
-        <div class="sidebar-label"></div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">AI Agent Workflow</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">BFF Pattern</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">OpenAPI → Zod</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">Merge Gate (CI)</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="proj-page-main">
-    <div class="proj-page-title">Project Details <span>01 / 09</span></div>
-
-    <!-- FMS -->
-    <div class="pcard">
-      <div class="pcard-header">
-        <div class="pcard-title-wrap">
-          <div class="pcard-name">FMS — Facility Management System</div>
-          <div class="pcard-sub">㈜TSM Technology · 개발팀 · 과장</div>
-        </div>
-        <div class="pcard-meta">
-          <div class="pcard-period">2026.01 — 2026.06</div>
-          <div class="pcard-role-badge">FE 개발 · 팀 리딩</div>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <div class="pcard-overview">시설물 유지보수 업무를 디지털화한 웹 애플리케이션. <br/>AI Agent 파이프라인으로 전체 도메인 커버리지를 유지하고 개발 속도를 향상시켰습니다.</div>
-
-        <div class="pcard-stack">
-          <span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Tailwind CSS</span><span class="tag">Zustand</span><span class="tag">TanStack Query</span><span class="tag">Zod</span><span class="tag">Vitest</span><span class="tag">Playwright</span><span class="tag">Storybook</span>
-        </div>
-
-        <div class="pcard-sections">
-          <div class="pcard-group">
-            <div class="pcard-group-label">AI Agent 워크플로우</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Agent 행동 범위·책임 경계 문서화</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>구현(Frontend) · 검증 · 리뷰 3단계 파이프라인 설계 및 팀 내 도입·전파</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">서비스 · 아키텍처</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Agent별 도메인 독립 할당으로 라우트 병렬 개발</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span> UI / design-tokens 패키지 분리, 공용 UI·디자인 토큰을 독립 패키지로 관리</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span> UI · 디자인 토큰 패키지를 Changesets로 버전 관리, major · minor · patch 기준 수립</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">품질 검증</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Vitest 단위 테스트로 모델 유틸, API Route Handler, 인증 흐름, 도메인 로직 커버리지 확보</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Playwright E2E로 Desktop 사용자 흐름 검증</span></div>
-            </div>
-          </div>
-          <div class="issue-box">
-            <div class="issue-label">Issue &amp; Resolution</div>
-            <div class="issue-grid">
-              <div class="issue-key">문제</div><div class="issue-val">단순 프롬프트 방식의 컨텍스트 누적으로 AI 오해 발생<br/> 검증·수정 시간이 구현 시간 초과</div>
-              <div class="issue-key">원인</div><div class="issue-val">단일 채팅 내 도메인 무관 정보 혼재로 Agent가 요청 의도를 오해, 재작업 반복</div>
-              <div class="issue-key">해결</div><div class="issue-val">하네스 엔지니어링 도입, 도메인별 reference 파일로 Agent 행동 범위 명세화</div>
-              <div class="issue-key">결과</div><div class="issue-val"><span class="result-badge">프롬프트 오해 및 재작업 감소, 구현·검증·배포 사이클 단축으로 생산성 향상</span></div>
-            </div>
-          </div>
+        <div class="pcard-list">
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>OpenNext.js + Cloudflare Workers로 Next.js Edge 서버리스 배포</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>Cold Start 없이 글로벌 즉시 응답</span></div>
+          <div class="pcard-item"><span class="pcard-dot">▸</span><span>nodejs_compat 플래그로 Edge Runtime 호환 처리, Cloudflare Turnstile 봇 방지 적용</span></div>
         </div>
       </div>
     </div>
@@ -863,449 +705,54 @@
 
 
 <!-- ════════════════════════════════════════
-     PAGE 3 · 프로젝트 상세 — SAJU:ME
+     PAGE 5 · Education + Activities
 ════════════════════════════════════════ -->
 <div class="page">
   <div class="sidebar-slim">
     <div>
       <div class="s-name">박경찬</div>
-      <div class="s-role">Project Details</div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">SAJU:ME 성과</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:2px;">
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:13px;color:var(--text-muted-dark);font-family:'Pretendard',monospace;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">Agent 정확도</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Pretendard',monospace;">95%</div>
-          <div style="font-size:13px;color:var(--text-muted-dark);margin-top:2px;">하네스 엔지니어링 도입</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:13px;color:var(--text-muted-dark);font-family:'Pretendard',monospace;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">배포 환경</div>
-          <div style="font-size:13px;font-weight:700;color:var(--mint);font-family:'Pretendard',monospace;">Edge</div>
-          <div style="font-size:13px;color:var(--text-muted-dark);margin-top:2px;">Cloudflare Workers</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:13px;color:var(--text-muted-dark);font-family:'Pretendard',monospace;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">품질 게이트</div>
-          <div style="font-size:13px;font-weight:700;color:var(--mint);font-family:'Pretendard',monospace;">4-Agent</div>
-          <div style="font-size:13px;color:var(--text-muted-dark);margin-top:2px;">구현·검증·리뷰·배포</div>
-        </div>
-      </div>
-      <div class="sidebar-label">Projects</div>
-      <div class="proj-index">
-        <div class="proj-index-item">
-          <div class="proj-index-name">SAJU:ME</div>
-          <div class="proj-index-period">2026.04 — 2026.06</div>
-          <div class="proj-index-tags"><span class="proj-index-tag">사이드</span><span class="proj-index-tag">Edge배포</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">링크</div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-top:2px;">
-        <a href="https://saju-me.com" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">🌐 saju-me.com</a>
-        <a href="https://docs.saju-me.com" target="_blank" style="font-size:13px;color:var(--mint);text-decoration:none;display:block;">📄 docs.saju-me.com</a>
-      </div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">기술 패턴</div>
-      <div style="display:flex;flex-direction:column;gap:5px;margin-top:2px;">
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">FSD Architecture</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">AI Agent Workflow</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">BFF Pattern</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">OpenAPI → Zod</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">Merge Gate (CI)</div>
-      </div>
+      <div class="s-role">Education &amp; Activities</div>
     </div>
   </div>
 
   <div class="proj-page-main">
-    <div class="proj-page-title">Project Details <span>02 / 09</span></div>
+    <div class="proj-page-title">Education &amp; Activities</div>
 
-    <!-- SAJU:ME -->
-    <div class="pcard">
-      <div class="pcard-header">
-        <div class="pcard-title-wrap">
-          <div class="pcard-name">SAJU:ME — 사주 분석 콘텐츠 플랫폼</div>
-          <div class="pcard-sub">사이드 프로젝트 · saju-me.com · docs.saju-me.com</div>
-        </div>
-        <div class="pcard-meta">
-          <div class="pcard-period">2026.04 — 2026.06</div>
-          <div class="pcard-role-badge">FE 개발 · AI Agent 설계</div>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <div class="pcard-overview">생년월일시 기반 사주 분석 서비스. 일운·연운·궁합·성격 <br/>프로필 등 운세 콘텐츠와 커뮤니티·알림 기능을 포함한 웹앱 서비스.</div>
-
-        <div class="pcard-stack">
-          <span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Tailwind CSS</span><span class="tag">Zustand</span><span class="tag">TanStack Query</span><span class="tag">Zod</span><span class="tag">Cloudflare Workers</span><span class="tag">Vitest</span><span class="tag">Playwright</span><span class="tag">Storybook</span><span class="tag">Chromatic</span>
-        </div>
-
-        <div class="pcard-sections">
-          <div class="pcard-group">
-            <div class="pcard-group-label">AI Agent 워크플로우</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Claude(UX/UI) + Codex(비즈니스 로직) 역할 분리로 Agent별 책임 경계 정의</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>구현 · 검증 · 리뷰 · 배포 4개 Agent로 작업 파이프라인 분리, 단계별 품질 게이트 운영</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Agent 행동 범위 명세화</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">서비스 · 아키텍처</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>npm workspaces 모노레포로 web / admin / ui / design-tokens 패키지 책임 분리</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>UI · 디자인 토큰 패키지를 Changesets로 버전 관리, major · minor · patch 기준 수립</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">인프라 · 배포</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>OpenNext.js + Cloudflare Workers로 Next.js를 Edge 서버리스 환경에서 서빙</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>App Router Server Component로 서버 사이드 인증 상태 확인·리다이렉트 처리</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">품질 검증</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Vitest 단위 테스트로 모델 유틸, API Route Handler, 인증 흐름, 도메인 로직 커버리지 확보</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Playwright E2E로 Desktop · Mobile 사용자 흐름 검증</span></div>
-            </div>
-          </div>
-          <div class="issue-box">
-            <div class="issue-label">Issue &amp; Resolution</div>
-            <div class="issue-grid">
-              <div class="issue-key">문제</div><div class="issue-val">자연어 프롬프트만으로는 Agent가 의도와 다른 방향으로 구현하는 경우 반복 발생</div>
-              <div class="issue-key">원인</div><div class="issue-val">컨텍스트 없이 매번 새로운 지시를 주는 방식은 일관성 유지 불가</div>
-              <div class="issue-key">해결</div><div class="issue-val">AGENTS.md로 Agent별 행동 범위·금지 행동 명세, SKILL.md로 도메인별 참조 문서 구조화, 하네스 엔지니어링으로 Agent 실행 환경 제약</div>
-              <div class="issue-key">결과</div><div class="issue-val"><span class="result-badge">정확도 100% 달성, 오탐·미탐 0건으로 프롬프트 안정성 확보</span></div>
-            </div>
-          </div>
-        </div>
+    <div class="section">
+      <div class="section-head">Education</div>
+      <div class="edu-item">
+        <div class="edu-school">학점은행제</div>
+        <div class="edu-period">2012.03 — 2019.09</div>
+        <div class="edu-major">작곡 전공 학사 · 세종대학교(서울) 졸업</div>
       </div>
     </div>
 
-  </div>
-</div>
-
-
-<!-- ════════════════════════════════════════
-     PAGE 5 · 공조기 자동제어 및 모니터링
-════════════════════════════════════════ -->
-<div class="page">
-  <div class="sidebar-slim">
-    <div>
-      <div class="s-name">박경찬</div>
-      <div class="s-role">Project Details</div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">성과 요약</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:2px;">
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:11px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">제어 지연</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">23s→1s</div>
-          <div style="font-size:11px;color:var(--text-muted-dark);margin-top:2px;">공조기 제어 응답</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:11px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">메시지 전송</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">-40%</div>
-          <div style="font-size:11px;color:var(--text-muted-dark);margin-top:2px;">중복 이벤트 필터링</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:11px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">초기 구동</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">-30%</div>
-          <div style="font-size:11px;color:var(--text-muted-dark);margin-top:2px;">우선 mount 처리</div>
-        </div>
+    <div class="section">
+      <div class="section-head">Activities</div>
+      <div class="act-item">
+        <span class="act-name">AWS Summit</span>
+        <span class="act-desc">컨퍼런스</span>
+        <span class="act-date">2026.04</span>
       </div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Projects</div>
-      <div class="proj-index">
-        <div class="proj-index-item">
-          <div class="proj-index-name">공조기 제어</div>
-          <div class="proj-index-period">2024.08 — 2025.12</div>
-          <div class="proj-index-tags"><span class="proj-index-tag">TSM</span><span class="proj-index-tag">AWS IoT</span></div>
-        </div>
+      <div class="act-item">
+        <span class="act-name">Claude Code 판교 밋업</span>
+        <span class="act-desc">Anthropic 공식 지원</span>
+        <span class="act-date">2026.04</span>
       </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">기술 패턴</div>
-      <div style="display:flex;flex-direction:column;gap:5px;margin-top:2px;">
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;"> Layered Architecture</div>
-        <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;text-align: center">↓</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">Vertical Slice Architecture</div>
-        <div class="sidebar-label"></div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">AWS IoT Core</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">WebSocket / SSE</div>
+      <div class="act-item">
+        <span class="act-name">핀하우스 공모전</span>
+        <span class="act-desc">모두의 아이디어 우수참여자 선정</span>
+        <span class="act-date">2026.03</span>
       </div>
-    </div>
-  </div>
-
-  <div class="proj-page-main">
-    <div class="proj-page-title">Project Details <span>03 / 09</span></div>
-    <div class="pcard">
-      <div class="pcard-header">
-        <div class="pcard-title-wrap">
-          <div class="pcard-name">공조기 자동제어 및 모니터링</div>
-          <div class="pcard-sub">㈜TSM Technology · 개발팀 · 과장</div>
-        </div>
-        <div class="pcard-meta">
-          <div class="pcard-period">2024.08 — 2025.12</div>
-          <div class="pcard-role-badge">FE 개발 · AWS 서버 구축</div>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <div class="pcard-overview">AWS IoT Core 기반 공조기 장비 원격 제어 및 실시간 모니터링 시스템.<br/> MQTT·WebSocket 기반 제어 흐름 정리로 제어 응답 지연 40% 감소 <br/> CloudWatch Alarm 연동으로 장애 대응 체계 확보</div>
-        <div class="pcard-stack">
-          <span class="tag">React</span><span class="tag">Node.js</span><span class="tag">TypeScript</span><span class="tag">Redux</span><span class="tag">SSE</span><span class="tag">WebSocket</span><span class="tag">AWS IoT Core</span><span class="tag">Lambda</span><span class="tag">DynamoDB</span><span class="tag">S3</span><span class="tag">Athena</span>
-        </div>
-        <div class="pcard-sections">
-          <div class="pcard-group">
-            <div class="pcard-group-label">Front-end</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>WebSocket 제어 상태 실시간 반영, UI 지연 1초 이내 유지</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>핵심 데이터 영역 우선 mount로 초기 구동 시간 30% 개선</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>styled-components → Tailwind CSS 전환 및 독립 패키지 분리로 스타일 중복 25% 감소</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">AWS IoT 이벤트 처리</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>장비 MQTT → IoT Core·Lambda 1초 이내 처리</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>동일 타임스탬프 기준 중복 이벤트 필터링으로 실시간 메시지 전송 약 40% 감소</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>이벤트 데이터를 DynamoDB에 저장해 상태 조회·이력 확인 동시 처리</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>S3 로그 적재 + Athena 쿼리 기반 분석 환경 구성</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>시간대별 요청 패턴 및 중복 이벤트 구간 분석</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>CloudWatch Alarm 연동으로 배포 안정성 및 장애 대응 체계 확보</span></div>
-            </div>
-          </div>
-          <div class="issue-box">
-            <div class="issue-label">Issue &amp; Resolution — 제어 메시지 중복 처리</div>
-            <div class="issue-grid">
-              <div class="issue-key">문제</div><div class="issue-val">제어 명령 전송 후 반영까지 23초 지연</div>
-              <div class="issue-key">원인</div><div class="issue-val">동일 제어 메시지 중복 전달 → Lambda 중복 처리 및 DB 중복 저장 발생</div>
-              <div class="issue-key">해결</div><div class="issue-val">메시지 ID 기반 멱등성 검증으로 중복 처리 제거, 프론트는 이벤트 ID 기준 중복 렌더링 필터링</div>
-              <div class="issue-key">결과</div><div class="issue-val"><span class="result-badge">제어 지연 1초 이내 단축, DB 비용 절감, 오류율 20%+ 감소</span></div>
-            </div>
-          </div>
-        </div>
+      <div class="act-item">
+        <span class="act-name">BlueShift</span>
+        <span class="act-desc">외주 프론트엔드 개발</span>
+        <span class="act-date">2026.02</span>
       </div>
     </div>
   </div>
 </div>
 
-
-<!-- ════════════════════════════════════════
-     PAGE 6 · BEMS
-════════════════════════════════════════ -->
-<div class="page">
-  <div class="sidebar-slim">
-    <div>
-      <div class="s-name">박경찬</div>
-      <div class="s-role">Project Details</div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">성과 요약</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:2px;">
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:11px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">UAT 버그</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">-80%</div>
-          <div style="font-size:11px;color:var(--text-muted-dark);margin-top:2px;">캐시 초기화 전략</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:11px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">렌더링 속도</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">+60%</div>
-          <div style="font-size:11px;color:var(--text-muted-dark);margin-top:2px;">설비 트리 최적화</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:11px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">네트워크 요청</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">-60%</div>
-          <div style="font-size:11px;color:var(--text-muted-dark);margin-top:2px;">SSE 전환</div>
-        </div>
-      </div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Projects</div>
-      <div class="proj-index">
-        <div class="proj-index-item">
-          <div class="proj-index-name">BEMS</div>
-          <div class="proj-index-period">2023.08 — 2025.08</div>
-          <div class="proj-index-tags"><span class="proj-index-tag">TSM</span><span class="proj-index-tag">실시간</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">기술 패턴</div>
-      <div style="display:flex;flex-direction:column;gap:5px;margin-top:2px;">
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;"> Layered Architecture</div>
-        <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;text-align: center">↓</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">FSD Architecture</div>
-        <div class="sidebar-label"></div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">SSE 실시간 통신</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">React Query 캐시</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">Container-Presenter</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="proj-page-main">
-    <div class="proj-page-title">Project Details <span>04 / 09</span></div>
-    <div class="pcard">
-      <div class="pcard-header">
-        <div class="pcard-title-wrap">
-          <div class="pcard-name">BEMS — Building Energy Management System</div>
-          <div class="pcard-sub">㈜TSM Technology · 개발팀 · 과장</div>
-        </div>
-        <div class="pcard-meta">
-          <div class="pcard-period">2023.08 — 2025.08</div>
-          <div class="pcard-role-badge">FE 개발 · 팀 리딩</div>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <div class="pcard-overview">건물 에너지 사용 데이터 실시간 수집·시각화 <br/> 설비 조회 및 집계 분석 제공 시스템 <br/>UAT 버그 약 80% 감소, 일정 내 완료<br/>클라이언트 요구사항 회의·일정 조율 및 팀 리딩·직접 개발 병행 </div>
-        <div class="pcard-stack">
-          <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Redux</span><span class="tag">SSE</span><span class="tag">react-query</span><span class="tag">Styled-components</span><span class="tag">SCSS</span><span class="tag">Sonar</span>
-        </div>
-        <div class="pcard-sections">
-          <div class="pcard-group">
-            <div class="pcard-group-label">실시간 통신</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>HTTPS EventSource 기반 SSE 적용 — 폴링 대비 네트워크 요청 약 60% 감소</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>이벤트 수신 시 Redux 일부 상태만 갱신해 불필요한 전체 상태 갱신 제거</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>화면 반영 지연 3~5초 → 1초 이내 단축</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>snapshot 재동기화로 상태 불일치 방지</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">UI · 성능</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>설비 조회 화면을 필터 영역과 결과 영역으로 분리</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Container-Presenter 패턴으로 화면 로직과 UI 책임 분리</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>styled-components 기반 공통 테마·레이아웃 모듈화로 스타일 중복 코드 약 25% 감소</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>반응형 레이아웃·조건부 렌더링으로 가시 영역 최대 20% 확대</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>자정 기준 React Query 캐시 초기화로 UAT 버그 약 80% 감소</span></div>
-            </div>
-          </div>
-          <div class="issue-box">
-            <div class="issue-label">Issue &amp; Resolution — 대규모 설비 트리 렌더링</div>
-            <div class="issue-grid">
-              <div class="issue-key">문제</div><div class="issue-val">10만+ 설비 트리에서 노드 상태 변경 시 전체 트리가 재렌더링되어 화면 조작 지연 발생</div>
-              <div class="issue-key">원인</div><div class="issue-val">단일 상태 변경이 부모→자식 전체 계층으로 전파되는 구조</div>
-              <div class="issue-key">해결</div><div class="issue-val">확장된 서브트리만 상태 유지, 미노출 하위 노드 조건부 unmount로 렌더링 범위 제한</div>
-              <div class="issue-key">결과</div><div class="issue-val"><span class="result-badge">React DevTools 기준 속도 60% 개선, 조작 반응 속도 30% 향상</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ════════════════════════════════════════
-     PAGE 7 · PinHouse
-════════════════════════════════════════ -->
-<div class="page">
-  <div class="sidebar-slim">
-    <div>
-      <div class="s-name">박경찬</div>
-      <div class="s-role">Project Details</div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">성과 요약</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:2px;">
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:11px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">API 호출</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">-50%</div>
-          <div style="font-size:11px;color:var(--text-muted-dark);margin-top:2px;">debounce 검색</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:11px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">재렌더링</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">-40%</div>
-          <div style="font-size:11px;color:var(--text-muted-dark);margin-top:2px;">컴포넌트 분리</div>
-        </div>
-        <div style="padding:8px 10px;border-radius:5px;border:0.5px solid rgba(139,148,158,0.15);">
-          <div style="font-size:11px;color:var(--text-muted-dark);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">중복 요청</div>
-          <div style="font-size:20px;font-weight:700;color:var(--mint);font-family:'Fira Code',monospace;">-30%</div>
-          <div style="font-size:11px;color:var(--text-muted-dark);margin-top:2px;">SSR Hydration</div>
-        </div>
-      </div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Projects</div>
-      <div class="proj-index">
-        <div class="proj-index-item">
-          <div class="proj-index-name">PinHouse</div>
-          <div class="proj-index-period">2025.10 — 2026.04</div>
-          <div class="proj-index-tags"><span class="proj-index-tag">공모전</span><span class="proj-index-tag">우수참여</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">기술 패턴</div>
-      <div style="display:flex;flex-direction:column;gap:5px;margin-top:2px;">
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">FSD Architecture</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">AI Agent Workflow</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">BFF Pattern</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">Cloudflare Edge</div>
-        <div class="tag-dark" style="text-align:center; font-size:13px; padding:4px 6px;">Merge Gate (CI)</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="proj-page-main">
-    <div class="proj-page-title">Project Details <span>05 / 09</span></div>
-    <div class="pcard">
-      <div class="pcard-header">
-        <div class="pcard-title-wrap">
-          <div class="pcard-name">PinHouse — 공공 임대주택 맞춤 탐색 서비스</div>
-          <div class="pcard-sub">공모전 프로젝트 · 우수참여자 선정</div>
-        </div>
-        <div class="pcard-meta">
-          <div class="pcard-period">2025.10 — 2026.03</div>
-          <div class="pcard-role-badge">FE 개발 · AI Agent 설계</div>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <div class="pcard-overview">맞춤형 공공 임대주택 탐색 서비스. <br/>AI Agent 워크플로우(AGENT.MD · SKILL.md 하네스 엔지니어링) 기반 개발</div>
-        <div class="pcard-stack">
-          <span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Tailwind CSS</span><span class="tag">Zustand</span><span class="tag">TanStack Query</span><span class="tag">Zod</span><span class="tag">Vitest</span><span class="tag">Playwright</span><span class="tag">Storybook</span>
-        </div>
-        <div class="pcard-sections">
-          <div class="pcard-group">
-            <div class="pcard-group-label">성능 최적화</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>App Router Server Component로 서버 사이드 인증 상태 확인·리다이렉트 처리</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>IntersectionObserver 무한 스크롤로 체감 로딩 30% 단축</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>debounce 기반 검색 입력 처리로 연속 API 호출 약 50% 감소</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>필터/결과 컴포넌트 분리로 재렌더링 약 40% 감소</span></div>
-            </div>
-          </div>
-          <div class="pcard-group">
-            <div class="pcard-group-label">도메인 구현</div>
-            <div class="pcard-list">
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Axios 공통 클라이언트에 401 재시도·큐 처리 로직 구현</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>인증 만료 시 토큰 재발급 후 재요청으로 사용자 흐름 중단 제거</span></div>
-              <div class="pcard-item"><span class="pcard-dot">▸</span><span>Zustand + TanStack Query로 UI/서버 상태 분리</span></div>
-            </div>
-          </div>
-          <div class="issue-box">
-            <div class="issue-label">Issue &amp; Resolution — 복잡한 도메인에서의 Agent 컨텍스트 설계</div>
-            <div class="issue-grid">
-              <div class="issue-key">문제</div><div class="issue-val">전국 지역·도시 매핑 등 중첩 도메인으로 Agent 컨텍스트 과소비 및 프롬프트 오해 빈발</div>
-              <div class="issue-key">원인</div><div class="issue-val">단일 reference 파일에 정보가 집중되어 Agent가 도메인 간 의도를 혼동, 재작업 반복</div>
-              <div class="issue-key">해결</div><div class="issue-val">대도메인 → 소도메인 → 기능 단위 3계층으로 독립 .md 파일 분리, 기능 개발·수정 시 해당 도메인 파일만 선택 로드하는 온톨로지 구조 구축</div>
-              <div class="issue-key">결과</div><div class="issue-val"><span class="result-badge">컨텍스트 소비 최소화, 도메인 간 간섭 제거로 병렬 개발 가능</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- PDF 다운로드 버튼 -->
 <div class="pdf-btn-wrap">

@@ -6,8 +6,6 @@ sidebar_label: 하네스 엔지니어링
 
 # 하네스 엔지니어링
 
-**적용 프로젝트: FMS · SAJU:ME**
-
 ---
 
 :::danger 문제

@@ -40,7 +40,6 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '품질',
       items: [
-        'quality/openapi-to-zod',
         'quality/merge-gate-ci',
       ],
     },
@@ -50,7 +49,6 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'AI Workflow',
       items: [
-        'ai-workflow/agent-role-split',
         'ai-workflow/harness-engineering',
         'ai-workflow/agent-pipeline',
       ],
