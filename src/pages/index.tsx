@@ -33,13 +33,6 @@ const TECH_CARDS = [
     link: '/projects/fms',
   },
   {
-    icon: '🚦',
-    title: 'Merge Gate (CI)',
-    desc: 'Critical / Major / Minor 심각도 판정 기반 병합 자동 차단.',
-    result: 'Vitest · Playwright · Chromatic 3중 검증',
-    link: '/quality/merge-gate-ci',
-  },
-  {
     icon: '🤖',
     title: 'AI Agent Workflow',
     desc: 'Claude(UX/UI) + Codex(비즈니스 로직) 역할 분리. AGENTS.md · SKILL.md 하네스 엔지니어링.',
