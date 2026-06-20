@@ -32,89 +32,7 @@ sidebar_label: BEMS
 
 ---
 
-## 아키텍처 전환
-
-**Layered Architecture → FSD(Feature-Sliced Design)**
-
-레이어 비대화 한계 도달 후 도메인별 책임 분리를 위해 FSD로 전환.
-
-→ 자세한 내용: [Layered → FSD 전환](/architecture/layered-to-fsd)
-
----
-
-## 주요 구현
-
-### 1. SSE 실시간 통신
-
-폴링 방식에서 SSE로 전환해 네트워크 요청 60% 감소, 화면 반영 지연 1초 이내 단축.
-
-→ 자세한 내용: [SSE vs 폴링](/realtime/sse-vs-polling)
-
-### 2. 10만+ 설비 트리 렌더링 최적화
-
-```
-문제: 노드 상태 변경 시 전체 트리 재렌더링 → 화면 조작 지연
-해결: 확장된 서브트리만 상태 유지, 미노출 하위 노드 조건부 unmount
-```
-
-### 3. Container-Presenter 패턴
-
-설비 조회 화면을 필터 영역(Container)과 결과 영역(Presenter)으로 분리, 화면 로직과 UI 책임 분리.
-
-```tsx title="FacilityPage (Container)"
-export function FacilityPage() {
-  const { filters, setFilter } = useFacilityFilters();
-  const { data, isLoading } = useFacilityQuery(filters);
-
-  return (
-    <FacilityLayout>
-      <FacilityFilterPanel filters={filters} onChange={setFilter} />
-      <FacilityResultPanel data={data} isLoading={isLoading} />
-    </FacilityLayout>
-  );
-}
-```
-
-### 4. React Query 자정 캐시 초기화
-
-```ts title="useMidnightCacheReset.ts"
-export function useMidnightCacheReset() {
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const now = new Date();
-    const midnight = new Date(now);
-    midnight.setHours(24, 0, 0, 0);
-    const msUntilMidnight = midnight.getTime() - now.getTime();
-
-    const timer = setTimeout(() => {
-      queryClient.invalidateQueries();
-    }, msUntilMidnight);
-
-    return () => clearTimeout(timer);
-  }, [queryClient]);
-}
-```
-
----
-
-## Issue & Resolution
-
-:::danger 문제
-10만+ 설비 트리에서 노드 상태 변경 시 전체 트리가 재렌더링되어 화면 조작 지연 발생.
-:::
-
-**원인**: 단일 상태 변경이 부모→자식 전체 계층으로 전파되는 구조.
-
-**해결**: 확장된 서브트리만 상태 유지, 미노출 하위 노드 조건부 unmount로 렌더링 범위 제한.
-
-:::tip 결과
-React DevTools 기준 속도 60% 개선, 조작 반응 속도 30% 향상.
-:::
-
----
-
-## AI Agents 기반 코드 검증
+## AI Agent
 
 코드 리뷰 기준이 명문화되어 있지 않아 번들 크기, 의존성 구조, 라우팅 안정성을 수동으로 점검해야 했습니다. AI Agent를 도입해 681개 소스 파일을 정적 분석하고 `MERGE: HOLD` 판정과 함께 주요 이슈를 발굴했습니다.
 
@@ -182,3 +100,64 @@ const theme = useMemo(
 
 App 최상위 렌더마다 theme 객체와 메시지가 재생성되던 구조를 `useMemo` / `useEffect`로 개선.
 
+---
+
+## 주요 구현
+
+### 1. SSE 실시간 통신
+
+폴링 방식에서 SSE로 전환해 네트워크 요청 60% 감소, 화면 반영 지연 1초 이내 단축.
+
+→ 자세한 내용: [SSE vs 폴링](/realtime/sse-vs-polling)
+
+### 2. 10만+ 설비 트리 렌더링 최적화
+
+```
+문제: 노드 상태 변경 시 전체 트리 재렌더링 → 화면 조작 지연
+해결: 확장된 서브트리만 상태 유지, 미노출 하위 노드 조건부 unmount
+```
+
+### 3. Container-Presenter 패턴
+
+설비 조회 화면을 필터 영역(Container)과 결과 영역(Presenter)으로 분리, 화면 로직과 UI 책임 분리.
+
+```tsx title="FacilityPage (Container)"
+export function FacilityPage() {
+  const { filters, setFilter } = useFacilityFilters();
+  const { data, isLoading } = useFacilityQuery(filters);
+
+  return (
+    <FacilityLayout>
+      <FacilityFilterPanel filters={filters} onChange={setFilter} />
+      <FacilityResultPanel data={data} isLoading={isLoading} />
+    </FacilityLayout>
+  );
+}
+```
+
+### 4. React Query 자정 캐시 초기화
+
+```ts title="useMidnightCacheReset.ts"
+export function useMidnightCacheReset() {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    const msUntilMidnight = midnight.getTime() - now.getTime();
+
+    const timer = setTimeout(() => {
+      queryClient.invalidateQueries();
+    }, msUntilMidnight);
+
+    return () => clearTimeout(timer);
+  }, [queryClient]);
+}
+```
+
+### 5. 아키텍처 전환 (Layered → FSD)
+
+레이어 비대화 한계 도달 후 도메인별 책임 분리를 위해 FSD로 전환.
+
+→ 자세한 내용: [Layered → FSD 전환](/architecture/layered-to-fsd)
