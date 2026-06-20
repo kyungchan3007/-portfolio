@@ -128,8 +128,6 @@ React DevTools 기준 속도 60% 개선, 조작 반응 속도 30% 향상.
 
 ```tsx
 // Before
-import UserManagement from "../../pages/public/user-management/user-menegement";
-
 { path: "/usermanagement", element: <UserManagement /> }
 
 // After
@@ -153,9 +151,6 @@ const UserManagement = lazy(
 
 ```ts
 // Before
-import { createNotify } from "../../../components/notify/custom-notify";
-import store from "../../../store/store/store";
-
 const state = store.getState();
 createNotify(...);
 
