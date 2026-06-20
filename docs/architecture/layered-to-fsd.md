@@ -97,13 +97,7 @@ graph TD
     entities -->|index.ts| shared
 ```
 
-**각 레이어는 index.ts를 통해서만 외부에 공개.**
-상위 레이어가 하위 레이어의 index.ts를 import하는 단방향 규칙.
-같은 레이어 간 직접 참조 금지 → 의존성 순환 제거.
-
-- `widgets`가 `features`, `entities`, `shared`를 조합해 화면 블록을 완성
-- `pages`는 `widgets`의 index.ts만 import — 도메인 세부 사항을 알 필요 없음
-- pages가 features/entities를 직접 참조하지 않아 레이어 경계가 더 엄격하게 유지됨
+각 레이어는 `index.ts`를 통해서만 외부에 공개하며, 상위 레이어가 하위 레이어의 `index.ts`를 import하는 단방향 구조를 적용했습니다.
 
 ---
 
