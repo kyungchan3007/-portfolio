@@ -241,3 +241,20 @@ export const QueryProvider = ({ children }: QueryProviderProps) => {
 `.agents` 디렉터리와 루트 `AGENTS.md`를 도입해 구현/검증/기록 역할을 분리하고, 프롬프트에 따라 필요한 검증 스킬이 자동으로 선택되도록 구성했습니다. `code-review-guard`, `codex-review-workflow`, `next-best-practices`, `vercel-react-best-practices` 기준을 연결해 변경분을 `MERGE: PASS / HOLD` 형태로 검증할 수 있게 만들었습니다.
 
 이를 통해 SSR 경계, React Query 캐시, 인증 리다이렉트, 타입 안정성, 렌더링 성능을 일관된 기준으로 점검하는 리뷰 체계를 구축했습니다.
+
+**도입 후 발견 및 개선 사항**
+
+검증 결과 다음 세 가지 문제를 발견하고 순차적으로 개선했습니다.
+
+| 발견 항목 | 문제 | 개선 방향 |
+|---|---|---|
+| Root 인증 라우팅 | client-side Spinner hydration 후 redirect | 서버 쿠키 기반 `redirect()` 로 전환 |
+| Dynamic Route page | `useParams()` 의존으로 route entry가 Client Component | Server Component shell + Client Component UI 분리 |
+| React Query Provider | 전역 singleton cache로 SSR 요청 간 오염 리스크 | `useState` 기반 provider 인스턴스 단위 생성으로 전환 |
+
+**개선 결과**
+
+- `/ First Load JS` **194 kB → 166 kB**, 약 14.4% 절감
+- client `page.tsx` entry 수 **17개 → 14개**, 약 17.6% 감소
+- 루트 진입 경로의 불필요한 Spinner hydration 및 client-side redirect 제거
+- SSR 환경의 사용자 간 cache contamination 리스크 완화
