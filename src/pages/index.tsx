@@ -30,7 +30,7 @@ const TECH_CARDS = [
     title: 'OpenAPI → Zod',
     desc: 'HeyAPI로 타입 자동생성. Zod 런타임 검증으로 API 계약 위반 즉시 감지.',
     result: '수동 타입 정의 제거',
-    link: '/quality/openapi-to-zod',
+    link: '/projects/fms',
   },
   {
     icon: '🚦',
@@ -44,7 +44,7 @@ const TECH_CARDS = [
     title: 'AI Agent Workflow',
     desc: 'Claude(UX/UI) + Codex(비즈니스 로직) 역할 분리. AGENTS.md · SKILL.md 하네스 엔지니어링.',
     result: 'Agent 정확도 95% 달성',
-    link: '/ai-workflow/agent-role-split',
+    link: '/ai-workflow/agent-pipeline',
   },
 ];
 

@@ -19,9 +19,9 @@ title: 소개
 | [아키텍처 전환](/architecture/layered-to-fsd) | Layered → FSD / VSA 선택 적용 | FMS · BEMS · 공조기 |
 | [SSE 실시간 통신](/realtime/sse-vs-polling) | 폴링 → SSE, 네트워크 요청 60% 감소 | BEMS |
 | [AWS IoT 제어](/realtime/aws-iot-control) | MQTT → Lambda → WebSocket, 제어 지연 23s→1s | 공조기 |
-| [OpenAPI → Zod](/quality/openapi-to-zod) | 타입 자동생성 + 런타임 계약 검증 | FMS |
+| [OpenAPI → Zod](/projects/fms) | 타입 자동생성 + 런타임 계약 검증 | FMS |
 | [Merge Gate (CI)](/quality/merge-gate-ci) | 심각도 기반 병합 차단 자동화 | FMS · BEMS |
-| [AI Agent Workflow](/ai-workflow/agent-role-split) | Claude/Codex 역할 분리 + 4단계 파이프라인 | FMS |
+| [AI Agent Workflow](/ai-workflow/agent-pipeline) | Claude/Codex 역할 분리 + 4단계 파이프라인 | FMS |
 
 ---
 
