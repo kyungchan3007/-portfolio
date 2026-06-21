@@ -20,6 +20,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'projects/bems',
             'architecture/layered-to-fsd',
+            'realtime/sse-vs-polling',
           ],
         },
         {
@@ -28,20 +29,11 @@ const sidebars: SidebarsConfig = {
           items: [
             'projects/hvac-control',
             'architecture/layered-to-vsa',
+            'realtime/aws-iot-control',
+            'realtime/dedup-idempotency',
           ],
         },
         'projects/pinhouse',
-      ],
-    },
-  ],
-  realtimeSidebar: [
-    {
-      type: 'category',
-      label: '실시간 통신',
-      items: [
-        'realtime/sse-vs-polling',
-        'realtime/aws-iot-control',
-        'realtime/dedup-idempotency',
       ],
     },
   ],
