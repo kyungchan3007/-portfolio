@@ -65,12 +65,6 @@ const config: Config = {
         },
         {
           type: 'docSidebar',
-          sidebarId: 'architectureSidebar',
-          position: 'left',
-          label: '아키텍처',
-        },
-        {
-          type: 'docSidebar',
           sidebarId: 'realtimeSidebar',
           position: 'left',
           label: '실시간 통신',

@@ -6,21 +6,31 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '프로젝트',
       items: [
-        'projects/fms',
-        'projects/bems',
-        'projects/hvac-control',
+        {
+          type: 'category',
+          label: 'FMS',
+          items: [
+            'projects/fms',
+            'architecture/vsa-parallel-dev',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'BEMS',
+          items: [
+            'projects/bems',
+            'architecture/layered-to-fsd',
+          ],
+        },
+        {
+          type: 'category',
+          label: '공조기',
+          items: [
+            'projects/hvac-control',
+            'architecture/layered-to-vsa',
+          ],
+        },
         'projects/pinhouse',
-      ],
-    },
-  ],
-  architectureSidebar: [
-    {
-      type: 'category',
-      label: '아키텍처',
-      items: [
-        'architecture/layered-to-fsd',
-        'architecture/layered-to-vsa',
-        'architecture/vsa-parallel-dev',
       ],
     },
   ],
