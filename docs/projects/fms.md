@@ -38,49 +38,6 @@ Claude(UX/UI) + Codex(비즈니스 로직) 역할 분리, 구현·검증·리뷰
 
 → 자세한 내용: [4단계 파이프라인](/ai-workflow/agent-pipeline)
 
-### Agent 역할 분리 구조
-
-```mermaid
-graph TD
-    subgraph Claude["Claude — UX/UI 담당"]
-        C1[web-design-guidelines]
-        C2[ui-ux-pro-max-skill]
-    end
-
-    subgraph Codex["Codex — 비즈니스 로직 담당"]
-        D1[next-best-practices]
-        D2[caveman-review]
-        D3[vercel-react-best-practices]
-    end
-
-    Claude -->|컴포넌트 결과물| Merge
-    Codex -->|로직 결과물| Merge
-    Merge[통합] --> Review[Reviewer Agent\n품질 판정]
-```
-
-**Claude — UX/UI 담당**
-
-| Skill | 역할 |
-|---|---|
-| `web-design-guidelines` | 디자인 시스템 기준 참조, Tailwind 클래스 선택 기준 |
-| `ui-ux-pro-max-skill` | 고품질 UI 컴포넌트·레이아웃 구현 기준 |
-
-담당 영역: 컴포넌트 구조·레이아웃, Tailwind CSS 클래스 선택, 접근성(a11y), 반응형 디자인, 애니메이션·트랜지션
-
-**Codex — 비즈니스 로직 담당**
-
-| Skill | 역할 |
-|---|---|
-| `next-best-practices` | Next.js Route Handler, Server Component, App Router 패턴 |
-| `caveman-review` | 코드 품질 판정 (Critical/Major/Minor 심각도) |
-| `vercel-react-best-practices` | TanStack Query, Zustand, React 패턴 구현 |
-
-담당 영역: API Route Handler(BFF 패턴), TanStack Query 훅, Zustand 스토어, Zod 스키마 검증, 도메인 로직·유틸
-
-**역할 분리 효과**
-
-단일 Agent에게 요청하면 UI 스타일과 비즈니스 로직이 하나의 컴포넌트에 뒤섞여 수정 시 서로 영향을 줬습니다. 역할 분리 후 Claude는 UI만, Codex는 로직만 담당해 각자의 수정이 상대 영역에 영향을 주지 않으며, 하네스 엔지니어링 도입 후 Agent 정확도 95% 달성했습니다.
-
 ### 1. OpenAPI → Zod 타입 자동화
 
 백엔드 API가 변경될 때마다 프론트엔드에서 타입을 수동으로 업데이트해야 했습니다. 누락이 잦았고, 런타임에서야 타입 불일치 버그를 발견하는 경우가 반복되었습니다.
