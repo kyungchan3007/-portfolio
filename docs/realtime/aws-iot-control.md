@@ -1,19 +1,17 @@
 ---
 sidebar_position: 2
-title: AWS IoT 제어 흐름 (공조기)
+title: AWS IoT 제어 흐름
 sidebar_label: AWS IoT 제어 흐름
 ---
 
-# AWS IoT Core 기반 공조기 제어 시스템
+# AWS IoT Core 기반 원격 제어 시스템
 
-**적용 프로젝트: 공조기 자동제어**
+
 
 ---
 
-:::info 개요
-공조기 장비를 웹에서 원격 제어하는 시스템.
+현장 장비를 웹에서 원격 제어하는 시스템.
 MQTT 프로토콜로 장비와 통신하고, AWS IoT Core → Lambda → WebSocket으로 상태를 실시간 반영합니다.
-:::
 
 ---
 
@@ -26,7 +24,7 @@ graph LR
     IoT[AWS IoT Core]
     Lambda[AWS Lambda]
     DDB[DynamoDB]
-    Device[공조기 장비]
+    Device[현장 장비]
     S3[S3]
     Athena[Athena]
 
@@ -47,20 +45,20 @@ graph LR
 
 ### 1단계 — 프론트엔드: 제어 명령 전송
 
-```ts title="features/control/api/controlApi.ts"
+```ts title="domainAApi.ts"
 import { v4 as uuidv4 } from 'uuid';
 
-interface ControlCommand {
-  deviceId: string;
-  action: 'power_on' | 'power_off' | 'set_temperature';
+interface DomainACommand {
+  entityId: string;
+  operation: 'start' | 'stop' | 'update';
   payload?: Record<string, unknown>;
 }
 
-export async function sendControlCommand(command: ControlCommand) {
+export async function sendDomainACommand(command: DomainACommand) {
   const messageId = uuidv4(); // 멱등성 키 생성
 
   return wsClient.send({
-    type: 'CONTROL_COMMAND',
+    type: 'DOMAIN_A_COMMAND',
     messageId,              // Lambda에서 중복 검증에 사용
     timestamp: Date.now(),
     ...command,
@@ -70,32 +68,21 @@ export async function sendControlCommand(command: ControlCommand) {
 
 ### 2단계 — AWS IoT Core Rule
 
-```json title="IoT Rule (SQL)"
-{
-  "sql": "SELECT * FROM 'hvac/control/+'",
-  "actions": [
-    {
-      "lambda": {
-        "functionArn": "arn:aws:lambda:ap-northeast-2:...:function:hvac-control-handler"
-      }
-    }
-  ]
-}
-```
+MQTT 토픽 패턴을 기준으로 AWS IoT Core Rule을 구성하고, Rule Action으로 Lambda를 실행했습니다.
 
 ### 3단계 — Lambda: 멱등성 검증 + 상태 처리
 
-```ts title="lambda/hvac-control-handler.ts"
+```ts title="domainAHandler.ts"
 import { DynamoDBClient, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
 
 const db = new DynamoDBClient({ region: 'ap-northeast-2' });
 
 export async function handler(event: IoTEvent) {
-  const { messageId, deviceId, action, payload } = event;
+  const { messageId, entityId, operation, payload } = event;
 
   // 멱등성 검증 — 이미 처리한 messageId 확인
   const existing = await db.send(new GetItemCommand({
-    TableName: 'hvac-control-idempotency',
+    TableName: 'domain-a-idempotency',
     Key: { messageId: { S: messageId } },
   }));
 
@@ -106,19 +93,19 @@ export async function handler(event: IoTEvent) {
 
   // 신규 메시지 처리
   await db.send(new PutItemCommand({
-    TableName: 'hvac-control-idempotency',
+    TableName: 'domain-a-idempotency',
     Item: {
       messageId: { S: messageId },
-      deviceId: { S: deviceId },
-      action: { S: action },
+      entityId: { S: entityId },
+      operation: { S: operation },
       processedAt: { S: new Date().toISOString() },
       ttl: { N: String(Math.floor(Date.now() / 1000) + 86400) }, // 24시간 TTL
     },
   }));
 
   // 장비 상태 업데이트 및 WebSocket 전파
-  await updateDeviceState(deviceId, action, payload);
-  await broadcastToClients(deviceId, { action, status: 'applied' });
+  await updateDomainAState(entityId, operation, payload);
+  await broadcastToClients(entityId, { operation, status: 'applied' });
 
   return { statusCode: 200, body: 'processed' };
 }
@@ -126,29 +113,29 @@ export async function handler(event: IoTEvent) {
 
 ### 4단계 — 프론트엔드: WebSocket 상태 동기화
 
-```ts title="features/control/model/useControlSync.ts"
-export function useControlSync(deviceId: string) {
+```ts title="useDomainASync.ts"
+export function useDomainASync(entityId: string) {
   const dispatch = useDispatch();
   const processedIds = useRef(new Set<string>());
 
   useEffect(() => {
     const unsubscribe = wsClient.subscribe(
-      `control:${deviceId}`,
-      (message: ControlMessage) => {
+      `domain-a:${entityId}`,
+      (message: DomainAMessage) => {
         // 프론트 중복 렌더링 방지
         if (processedIds.current.has(message.messageId)) return;
         processedIds.current.add(message.messageId);
 
-        dispatch(applyControlState({
-          deviceId: message.deviceId,
+        dispatch(applyDomainAState({
+          entityId: message.entityId,
           status: message.status,
-          action: message.action,
+          operation: message.operation,
         }));
       }
     );
 
     return unsubscribe;
-  }, [deviceId, dispatch]);
+  }, [entityId, dispatch]);
 }
 ```
 
@@ -157,10 +144,10 @@ export function useControlSync(deviceId: string) {
 ## CloudWatch Alarm 설정
 
 ```yaml title="cloudwatch-alarms.yaml"
-HvacLambdaErrorAlarm:
+DomainALambdaErrorAlarm:
   Type: AWS::CloudWatch::Alarm
   Properties:
-    AlarmName: hvac-control-lambda-errors
+    AlarmName: domain-a-lambda-errors
     MetricName: Errors
     Namespace: AWS/Lambda
     Statistic: Sum
@@ -171,10 +158,10 @@ HvacLambdaErrorAlarm:
     AlarmActions:
       - !Ref AlertSNSTopic  # SNS → 슬랙 알림
 
-HvacLambdaDurationAlarm:
+DomainALambdaDurationAlarm:
   Type: AWS::CloudWatch::Alarm
   Properties:
-    AlarmName: hvac-control-lambda-duration
+    AlarmName: domain-a-lambda-duration
     MetricName: Duration
     Namespace: AWS/Lambda
     Statistic: Average
@@ -188,8 +175,6 @@ HvacLambdaDurationAlarm:
 
 ---
 
-:::tip 결과
 - 제어 응답 지연 23초 → **1초 이내**
 - 중복 메시지 처리 제거로 DB 비용 절감
 - CloudWatch Alarm으로 장애 즉시 감지 체계 확보
-:::

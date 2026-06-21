@@ -25,7 +25,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: '공조기',
+          label: '원격 제어 시스템',
           items: [
             'projects/hvac-control',
             'architecture/layered-to-vsa',

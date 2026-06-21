@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: SSE vs 폴링 (BEMS)
+title: SSE vs 폴링
 sidebar_label: SSE vs 폴링
 ---
 
@@ -9,16 +9,13 @@ import TabItem from '@theme/TabItem';
 
 # SSE 도입으로 실시간 통신 개선
 
-**적용 프로젝트: BEMS**
 
 ---
 
-:::danger 문제
-BEMS는 건물 에너지 데이터를 실시간으로 보여줘야 합니다.
+BEMS는 운영 지표 데이터를 실시간으로 보여줘야 합니다.
 초기에는 3초마다 API를 반복 호출하는 **폴링 방식**을 사용했는데,
 이벤트가 없어도 요청이 계속 나가 불필요한 네트워크 비용이 발생했습니다.
 또한 화면 반영 지연이 3~5초에 달했습니다.
-:::
 
 ---
 
@@ -27,14 +24,14 @@ BEMS는 건물 에너지 데이터를 실시간으로 보여줘야 합니다.
 <Tabs>
   <TabItem value="polling-hook" label="폴링 훅">
 
-```ts title="hooks/useEnergyPolling.ts"
-export function useEnergyPolling() {
+```ts title="useMetricPolling.ts"
+export function useMetricPolling() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await energyApi.getCurrent();
-      dispatch(setEnergyData(data));  // 전체 상태 교체
+      const data = await metricApi.getCurrent();
+      dispatch(setMetricData(data));  // 전체 상태 교체
     };
 
     fetchData(); // 즉시 실행
@@ -68,7 +65,7 @@ export function useEnergyPolling() {
 <Tabs>
   <TabItem value="sse-hook" label="useSSEConnection 훅">
 
-```ts title="hooks/useSSEConnection.ts"
+```ts title="useSSEConnection.ts"
 interface SSEOptions {
   url: string;
   onMessage: (event: MessageEvent) => void;
@@ -106,18 +103,18 @@ export function useSSEConnection({ url, onMessage, onError }: SSEOptions) {
   </TabItem>
   <TabItem value="sse-redux" label="Redux 부분 갱신">
 
-```ts title="store/energySlice.ts"
-const energySlice = createSlice({
-  name: 'energy',
+```ts title="/metricSlice.ts"
+const metricSlice = createSlice({
+  name: 'metric',
   initialState,
   reducers: {
     // ❌ 전체 상태 교체 (폴링 방식)
-    setEnergyData(state, action) {
+    setMetricData(state, action) {
       return action.payload;
     },
 
     // ✅ 변경된 필드만 갱신 (SSE 방식)
-    patchEnergyData(state, action: PayloadAction<Partial<EnergyData>>) {
+    patchMetricData(state, action: PayloadAction<Partial<MetricData>>) {
       Object.assign(state, action.payload);
     },
   },
@@ -127,28 +124,28 @@ const energySlice = createSlice({
   </TabItem>
   <TabItem value="sse-snapshot" label="snapshot 재동기화">
 
-```ts title="hooks/useEnergySSE.ts"
-export function useEnergySSE() {
+```ts title="useMetricSSE.ts"
+export function useMetricSSE() {
   const dispatch = useDispatch();
 
   // 초기 연결 시 최신 snapshot 로드
   useEffect(() => {
-    energyApi.getSnapshot().then((snapshot) => {
-      dispatch(setEnergyData(snapshot));
+    metricApi.getSnapshot().then((snapshot) => {
+      dispatch(setMetricData(snapshot));
     });
   }, []);
 
   // SSE로 이후 변경사항만 수신
   useSSEConnection({
-    url: '/api/energy/stream',
+    url: '/api/metrics/stream',
     onMessage: (event) => {
-      const patch = JSON.parse(event.data) as Partial<EnergyData>;
-      dispatch(patchEnergyData(patch)); // 변경된 필드만 갱신
+      const patch = JSON.parse(event.data) as Partial<MetricData>;
+      dispatch(patchMetricData(patch)); // 변경된 필드만 갱신
     },
     onError: () => {
       // 재연결 후 snapshot 재동기화
-      energyApi.getSnapshot().then((snapshot) => {
-        dispatch(setEnergyData(snapshot));
+      metricApi.getSnapshot().then((snapshot) => {
+        dispatch(setMetricData(snapshot));
       });
     },
   });
@@ -167,13 +164,13 @@ sequenceDiagram
     participant FE as 프론트엔드
     participant BE as 백엔드 (SSE)
 
-    FE->>BE: GET /api/energy/stream (EventSource 연결)
+    FE->>BE: GET /api/metrics/stream (EventSource 연결)
     BE-->>FE: snapshot (초기 전체 데이터)
     FE->>FE: Redux 전체 상태 초기화
 
     loop 실시간 이벤트
         BE-->>FE: data: {"buildingId":"A","power":120}
-        FE->>FE: Redux 해당 필드만 patchEnergyData
+        FE->>FE: Redux 해당 필드만 patchMetricData
     end
 
     Note over FE,BE: 연결 끊김 시
@@ -184,8 +181,6 @@ sequenceDiagram
 
 ---
 
-:::tip 결과
 - 네트워크 요청 **60% 감소** (이벤트 발생 시에만 전송)
 - 화면 반영 지연 3~5초 → **1초 이내** 단축
 - Redux 부분 갱신으로 불필요한 리렌더링 제거
-:::

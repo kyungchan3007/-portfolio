@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: Merge Gate — CI 품질 자동화 (FMS)
+title: Merge Gate — CI 품질 자동화
 sidebar_label: Merge Gate CI
 ---
 
@@ -11,10 +11,8 @@ import TabItem from '@theme/TabItem';
 
 ---
 
-:::info 개요
 PR 병합 전에 코드 품질을 자동으로 검증하고,
 Critical/Major 이슈가 미해결 상태일 때 병합을 자동 차단하는 시스템입니다.
-:::
 
 ---
 
@@ -59,7 +57,7 @@ graph LR
 <Tabs>
   <TabItem value="ci" label="CI 파이프라인">
 
-```yaml title=".github/workflows/ci.yml"
+```yaml title="ci.yml"
 name: CI — Merge Gate
 
 on:
@@ -119,7 +117,7 @@ jobs:
   </TabItem>
   <TabItem value="gate" label="Merge Gate 판정">
 
-```yaml title=".github/workflows/merge-gate.yml"
+```yaml title="merge-gate.yml"
 name: Merge Gate
 
 on:
@@ -182,27 +180,27 @@ jobs:
 
 ## Vitest 테스트 예시
 
-```ts title="features/inspection/model/inspection.schema.test.ts"
+```ts title="entity.schema.test.ts"
 import { describe, it, expect } from 'vitest';
-import { InspectionSchema } from './inspection.schema';
+import { EntitySchema } from './entity.schema';
 
-describe('InspectionSchema', () => {
-  it('유효한 점검 데이터를 파싱한다', () => {
+describe('EntitySchema', () => {
+  it('유효한 도메인 데이터를 파싱한다', () => {
     const valid = {
-      id: '550e8400-e29b-41d4-a716-446655440000',
-      facilityId: 'facility-001',
+      id: '*********************',
+      entityId: 'entity-001',
       status: 'pending',
       scheduledAt: '2026-06-01T09:00:00Z',
       completedAt: null,
-      inspector: { id: 'user-001', name: '홍길동' },
+      assignee: { id: 'user-001', name: '홍길동' },
     };
 
-    expect(InspectionSchema.safeParse(valid).success).toBe(true);
+    expect(EntitySchema.safeParse(valid).success).toBe(true);
   });
 
   it('잘못된 status 값을 거부한다', () => {
     const invalid = { ...validData, status: 'unknown' };
-    const result = InspectionSchema.safeParse(invalid);
+    const result = EntitySchema.safeParse(invalid);
 
     expect(result.success).toBe(false);
     expect(result.error?.issues[0].path).toContain('status');
@@ -210,7 +208,7 @@ describe('InspectionSchema', () => {
 
   it('completedAt은 null을 허용한다', () => {
     const withNull = { ...validData, completedAt: null };
-    expect(InspectionSchema.safeParse(withNull).success).toBe(true);
+    expect(EntitySchema.safeParse(withNull).success).toBe(true);
   });
 });
 ```
@@ -221,7 +219,7 @@ describe('InspectionSchema', () => {
 
 수정 후 변경된 부분만 재검증해 검증 효율을 확보합니다.
 
-```yaml title=".github/workflows/delta-check.yml"
+```yaml title="delta-check.yml"
 - name: Get changed files
   id: changed
   uses: tj-actions/changed-files@v44
@@ -244,8 +242,6 @@ describe('InspectionSchema', () => {
 
 ---
 
-:::tip 결과
 - Critical/Major 미해결 시 병합 자동 차단으로 품질 기준 강제화
 - Vitest · Playwright · Storybook + Chromatic 3중 검증으로 코드·흐름·UI 전 영역 커버
 - delta-only 재검증으로 검증 효율 확보
-:::

@@ -51,22 +51,22 @@ const TECH_CARDS = [
 const PROJECTS = [
   {
     period: '2026.01 — 2026.06',
-    title: 'FMS — Facility Management System',
-    desc: '시설물 유지보수 업무 디지털화. AI Agent 파이프라인으로 개발 인원 3→2명에도 전 도메인 커버리지 유지.',
+    title: 'FMS',
+    desc: '복합 업무 프로세스 디지털화. AI Agent 파이프라인으로 개발 인원 3→2명에도 전 도메인 커버리지 유지.',
     tags: ['Next.js', 'TypeScript', 'Zustand', 'TanStack Query', 'Zod', 'Vitest', 'Playwright'],
     link: '/projects/fms',
   },
   {
     period: '2023.08 — 2025.08',
-    title: 'BEMS — Building Energy Management System',
-    desc: '건물 에너지 데이터 실시간 수집·시각화. SSE 도입으로 네트워크 요청 60% 감소.',
+    title: 'BEMS',
+    desc: '운영 지표 데이터 실시간 수집·시각화. SSE 도입으로 네트워크 요청 60% 감소.',
     tags: ['React', 'TypeScript', 'Redux', 'SSE', 'react-query', 'Styled-components'],
     link: '/projects/bems',
   },
   {
     period: '2024.08 — 2025.12',
-    title: '공조기 자동제어 및 모니터링',
-    desc: 'AWS IoT Core 기반 공조기 원격 제어. 멱등성 검증으로 제어 지연 23초 → 1초.',
+    title: '원격 제어 및 모니터링',
+    desc: 'AWS IoT Core 기반 현장 장비 원격 제어. 멱등성 검증으로 응답 지연 23초 → 1초.',
     tags: ['React', 'TypeScript', 'Redux', 'WebSocket', 'AWS IoT Core', 'Lambda', 'DynamoDB'],
     link: '/projects/hvac-control',
   },
@@ -82,11 +82,9 @@ export default function Home() {
         <div className="container">
           <div className="hero-badge">Frontend Engineer · 약 4년 경력</div>
           <h1 className="hero-title">
-            박경찬<span>.</span>
+            박경찬
           </h1>
-          <p className="hero-subtitle">
-            이력서에 적힌 내용을 코드로 증명하는 포트폴리오
-          </p>
+
           <div className="notice-box">
             <div className="notice-box-label">📌 안내</div>
             <p className="notice-box-text">

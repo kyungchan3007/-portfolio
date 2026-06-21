@@ -1,17 +1,15 @@
 ---
 sidebar_position: 2
-title: BEMS — Building Energy Management System
+title: BEMS
 sidebar_label: BEMS
 ---
 
-# BEMS — Building Energy Management System
+# BEMS
 
 **2023.08 – 2025.08 · ㈜TSM Technology · 과장 · FE 개발 · 팀 리딩**
 
-:::info 개요
-건물 에너지 사용 데이터 실시간 수집·시각화 및 설비 조회·집계 분석 시스템.
-클라이언트 요구사항 회의·일정 조율과 팀 리딩·직접 개발을 병행했습니다.
-:::
+운영 지표 데이터 실시간 수집·시각화 및 계층형 데이터 조회·집계 분석 시스템.
+<br/>클라이언트 요구사항 회의·일정 조율과 팀 리딩·직접 개발을 병행했습니다.
 
 ## 기술 스택
 
@@ -23,12 +21,12 @@ sidebar_label: BEMS
 
 | 발견 항목 | 문제 | 개선 방향 | 결과 |
 |---|---|---|---|
-| 네트워크 요청 | 폴링 기반으로 불필요한 요청 발생 | SSE 전환 | **60% 감소** |
+| 네트워크 요청 | 불필요한 폴링 요청 | SSE 전환 | **60% 감소** |
 | 화면 반영 지연 | 폴링 주기로 3~5초 지연 | SSE 실시간 수신 | **1초 이내** |
-| 설비 트리 렌더링 | 노드 상태 변경 시 전체 트리 재렌더링 | 확장 서브트리만 상태 유지, 미노출 노드 조건부 unmount | React DevTools 기준 **60% 개선** |
-| 초기 JS 로드 | router 전체 페이지 직접 import (1.67MB gzip) | lazy route 전환 | **30~60% 절감 가능** |
-| API 레이어 역의존 | API client가 UI/상태 계층 직접 참조 | 의존성 주입 방식으로 분리 | **60~75% 감소 가능** |
-| 렌더링 비용 | theme/message 매 렌더마다 재생성 | `useMemo` / `useEffect` 적용 | 불필요한 렌더 비용 감소 |
+| 트리 렌더링 | 전체 트리 재렌더링 | 서브트리 상태 유지 | **60% 개선** |
+| 초기 JS 로드 | 전체 페이지 직접 import | lazy route 전환 | **30~60% 절감 가능** |
+| API 역의존 | API client의 UI/상태 참조 | 의존성 주입 분리 | **60~75% 감소 가능** |
+| 렌더링 비용 | theme/message 재생성 | 메모이제이션 적용 | 불필요 렌더 감소 |
 
 ---
 
@@ -99,4 +97,3 @@ const theme = useMemo(
 ```
 
 App 최상위 렌더마다 theme 객체와 메시지가 재생성되던 구조를 `useMemo` / `useEffect`로 개선.
-

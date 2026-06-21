@@ -90,7 +90,7 @@ const config: Config = {
           items: [
             { label: 'FMS', to: '/projects/fms' },
             { label: 'BEMS', to: '/projects/bems' },
-            { label: '공조기 제어', to: '/projects/hvac-control' },
+            { label: '원격 제어 시스템', to: '/projects/hvac-control' },
             { label: 'PinHouse', to: '/projects/pinhouse' },
           ],
         },

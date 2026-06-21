@@ -1,20 +1,18 @@
 ---
 sidebar_position: 1
-title: FMS — Facility Management System
+title: FMS
 sidebar_label: FMS
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# FMS — Facility Management System
+# FMS
 
 **2026.01 – 2026.06 · ㈜TSM Technology · 과장 · FE 개발 · 팀 리딩**
 
-:::info 개요
-시설물 유지보수 업무를 디지털화한 웹 애플리케이션.
-AI Agent 파이프라인으로 2인 체제에서도 전 도메인 커버리지를 유지하고 개발 속도를 향상시켰습니다.
-:::
+복합 업무 프로세스를 디지털화한 웹 애플리케이션.
+<br/>AI Agent 파이프라인으로 2인 체제에서도 전 도메인 커버리지를 유지하고 개발 속도를 향상시켰습니다.
 
 ## 기술 스택
 
@@ -72,39 +70,39 @@ export default defineConfig({
   <TabItem value="generated" label="자동생성 타입">
 
 ```ts title="types.gen.ts"
-export type Inspection = {
+export type Entity = {
   id: string;
-  facilityId: string;
+  entityId: string;
   status: 'pending' | 'in_progress' | 'completed' | 'failed';
   scheduledAt: string;
   completedAt: string | null;
-  inspector: { id: string; name: string };
+  assignee: { id: string; name: string };
 };
 ```
 
   </TabItem>
   <TabItem value="zod-wrapper" label="Zod 런타임 검증">
 
-```ts title="inspection.schema.ts"
-export const InspectionSchema = z.object({
+```ts title="entity.schema.ts"
+export const EntitySchema = z.object({
   id: z.string().uuid(),
-  facilityId: z.string().min(1),
+  entityId: z.string().min(1),
   status: z.enum(['pending', 'in_progress', 'completed', 'failed']),
   scheduledAt: z.string().datetime(),
   completedAt: z.string().datetime().nullable(),
-  inspector: z.object({ id: z.string(), name: z.string().min(1) }),
-}) satisfies z.ZodType<Inspection>;
+  assignee: z.object({ id: z.string(), name: z.string().min(1) }),
+}) satisfies z.ZodType<Entity>;
 ```
 
   </TabItem>
   <TabItem value="usage" label="API 호출 시 검증">
 
-```ts title="inspectionApi.ts"
-export async function getInspectionList(params: GetInspectionListData) {
-  const response = await client.getInspectionList({ query: params.query });
+```ts title="entityApi.ts"
+export async function getEntityList(params: GetEntityListData) {
+  const response = await client.getEntityList({ query: params.query });
 
   const validated = response.data.items.map((item) => {
-    const result = InspectionSchema.safeParse(item);
+    const result = EntitySchema.safeParse(item);
     if (!result.success) throw new Error(`API 스키마 불일치: ${result.error.message}`);
     return result.data;
   });

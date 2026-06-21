@@ -7,10 +7,8 @@ title: 4단계 Agent 파이프라인
 
 ---
 
-:::info 개요
 구현 → 검증 → 리뷰 → 배포의 4단계를 각각 독립된 Agent가 담당합니다.
 단계별 품질 게이트를 통과해야만 다음 단계로 진행됩니다.
-:::
 
 ---
 
@@ -112,7 +110,7 @@ MERGE: HOLD  → Critical/Major 미해결 시 병합 차단
 
 Reviewer Agent가 `MERGE: PASS` 판정 시 배포 Agent가 GitHub Actions를 트리거합니다.
 
-```yaml title=".github/workflows/deploy.yml"
+```yaml title="deploy.yml"
 name: Deploy
 
 on:
@@ -151,9 +149,7 @@ HOLD 판정 → 수정 →
 
 ## 파이프라인 효과
 
-:::tip 결과
 - 구현·검증·배포 사이클 단축으로 생산성 향상
 - 단계별 책임 분리로 Agent 정확도 95% 달성
 - delta-only 재검증으로 검증 효율 확보
 - Critical/Major 자동 차단으로 품질 기준 강제화
-:::

@@ -8,12 +8,10 @@ sidebar_label: 하네스 엔지니어링
 
 ---
 
-:::danger 문제
 단순 자연어 프롬프트 방식으로 AI Agent를 사용하면:
 - 컨텍스트가 누적될수록 Agent가 이전 지시와 충돌하는 결과를 냄
 - 도메인 무관 정보가 혼재해 의도를 오해하고 재작업 반복
 - 검증·수정 시간이 구현 시간을 초과
-:::
 
 ---
 
@@ -40,7 +38,7 @@ Agent가 **어떻게 행동해야 하는지**를 문서로 명세해,
 # Agent 행동 규칙
 
 ## 역할
-너는 FMS 프로젝트의 **UI 구현 Agent**다.
+너는 FMS의 **UI 구현 Agent**다.
 UI 컴포넌트 작성과 레이아웃 구성만 담당한다.
 
 ## 허용 행동
@@ -70,14 +68,14 @@ UI 컴포넌트 작성과 레이아웃 구성만 담당한다.
 
 ## SKILL.md — 도메인별 참조 문서
 
-```markdown title="skills/inspection-domain.md (예시)"
-# 점검 도메인 SKILL
+```markdown title="skills/domain-a.md (예시)"
+# Domain A SKILL
 
 ## 데이터 모델
 \`\`\`ts
-type Inspection = {
+type Entity = {
   id: string;
-  facilityId: string;
+  entityId: string;
   status: 'pending' | 'in_progress' | 'completed' | 'failed';
   scheduledAt: string;
   completedAt: string | null;
@@ -85,20 +83,20 @@ type Inspection = {
 \`\`\`
 
 ## API 엔드포인트
-- GET  /api/inspections       — 목록 조회
-- GET  /api/inspections/:id   — 상세 조회
-- POST /api/inspections       — 생성
-- PATCH /api/inspections/:id  — 상태 변경
+- GET  /api/domain-a       — 목록 조회
+- GET  /api/domain-a/:id   — 상세 조회
+- POST /api/domain-a       — 생성
+- PATCH /api/domain-a/:id  — 상태 변경
 
 ## UI 컴포넌트 목록
-- InspectionList: 목록 테이블
-- InspectionDetail: 상세 모달
-- InspectionStatusBadge: 상태 배지
+- EntityList: 목록 테이블
+- EntityDetail: 상세 모달
+- EntityStatusBadge: 상태 배지
 
 ## 비즈니스 규칙
 - completed 상태에서는 수정 불가
 - scheduledAt이 과거면 pending → failed 자동 전환
-- inspector는 현재 로그인 사용자로 자동 설정
+- assignee는 현재 로그인 사용자로 자동 설정
 ```
 
 ---
@@ -112,14 +110,14 @@ type Inspection = {
 skills/
 ├── 00-project-overview.md       ← 대도메인: 프로젝트 전체 개요
 │
-├── facility/                    ← 소도메인: 설비 관련
-│   ├── 00-facility-overview.md
-│   ├── inspection.md            ← 기능: 점검
-│   ├── maintenance.md           ← 기능: 유지보수
-│   └── equipment.md             ← 기능: 장비
+├── domain-a/                    ← 소도메인 A
+│   ├── 00-domain-a-overview.md
+│   ├── entity-list.md           ← 기능: 목록
+│   ├── entity-detail.md         ← 기능: 상세
+│   └── entity-status.md         ← 기능: 상태
 │
-├── energy/                      ← 소도메인: 에너지 관련
-│   ├── 00-energy-overview.md
+├── domain-b/                    ← 소도메인 B
+│   ├── 00-domain-b-overview.md
 │   ├── monitoring.md
 │   └── analysis.md
 │
@@ -131,10 +129,10 @@ skills/
 
 **기능 개발 시 로드 순서:**
 ```
-점검 기능 개발 →
+Domain A 목록 기능 개발 →
   skills/00-project-overview.md (대도메인)
-  skills/facility/00-facility-overview.md (소도메인)
-  skills/facility/inspection.md (기능)
+  skills/domain-a/00-domain-a-overview.md (소도메인)
+  skills/domain-a/entity-list.md (기능)
   — 나머지 파일은 로드 안 함 → 컨텍스트 최소화
 ```
 
@@ -142,9 +140,7 @@ skills/
 
 ## 도입 효과
 
-:::tip 결과
 - 프롬프트 오해 및 재작업 감소
 - Agent 정확도 95% 달성
 - 3계층 온톨로지로 컨텍스트 소비 최소화
 - 도메인 간 간섭 제거로 병렬 개발 가능
-:::
