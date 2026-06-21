@@ -71,7 +71,7 @@ export default defineConfig({
 <Tabs>
   <TabItem value="generated" label="자동생성 타입">
 
-```ts title="src/shared/api/generated/types.gen.ts"
+```ts title="types.gen.ts"
 export type Inspection = {
   id: string;
   facilityId: string;
@@ -85,7 +85,7 @@ export type Inspection = {
   </TabItem>
   <TabItem value="zod-wrapper" label="Zod 런타임 검증">
 
-```ts title="features/inspection/model/inspection.schema.ts"
+```ts title="inspection.schema.ts"
 export const InspectionSchema = z.object({
   id: z.string().uuid(),
   facilityId: z.string().min(1),
@@ -99,7 +99,7 @@ export const InspectionSchema = z.object({
   </TabItem>
   <TabItem value="usage" label="API 호출 시 검증">
 
-```ts title="features/inspection/api/inspectionApi.ts"
+```ts title="inspectionApi.ts"
 export async function getInspectionList(params: GetInspectionListData) {
   const response = await client.getInspectionList({ query: params.query });
 

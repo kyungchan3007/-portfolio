@@ -139,7 +139,7 @@ const saveStatus = (topic, message) => {
   const { machineID, status: { power, operation, air, auto } } = parsedMessage;
 
   const param = {
-    TableName: 'igs_status',
+    TableName: 'device_status',
     Item: { DeviceID: machineID, Time: getCurrentDate(), power, operation, auto, air },
   };
 
