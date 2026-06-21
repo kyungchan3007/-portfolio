@@ -16,7 +16,7 @@ import TabItem from '@theme/TabItem';
 
 ## 기술 스택
 
-`Next.js` `React` `TypeScript` `Tailwind CSS` `Zustand` `TanStack Query` `Zod` `Vitest` `Playwright` `Storybook`
+`Next.js` `React` `TypeScript` `Tailwind CSS` `Zustand` `TanStack Query` `Zod` `Design Tokens` `Vitest` `Playwright` `Storybook`
 
 ---
 
@@ -124,6 +124,45 @@ apps/
 packages/
   ui/           ← 공용 컴포넌트
   design-tokens/← 색상·타이포·간격 토큰
+```
+
+```ts title="packages/design-tokens/src/index.ts"
+export const colors = {
+  brand: {
+    primary: "#5956E9",
+    accent: "#A5A3F7",
+    border: "#E0DAFF",
+    tint: "#EDE9FF",
+  },
+  surface: {
+    card: "#FFFFFF",
+    page: "#FAFAFA",
+    border: "#E5E7EB",
+  },
+  content: {
+    primary: "#111827",
+    secondary: "#374151",
+    muted: "#6B7280",
+  },
+  status: {
+    danger: "#EF4444",
+    success: "#16A34A",
+    warning: "#F59E0B",
+  },
+} as const;
+
+export const radii = {
+  sm: "0.375rem",
+  md: "0.5rem",
+  lg: "0.75rem",
+  full: "999px",
+} as const;
+
+export const shadows = {
+  sm: "0 1px 4px rgba(89,86,233,0.10)",
+  md: "0 2px 12px rgba(89,86,233,0.12)",
+  lg: "0 8px 32px rgba(89,86,233,0.20)",
+} as const;
 ```
 
 Changesets로 major · minor · patch 기준 수립, 패키지 버전 독립 관리.

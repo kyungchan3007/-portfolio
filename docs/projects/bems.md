@@ -13,7 +13,7 @@ sidebar_label: BEMS
 
 ## 기술 스택
 
-`React` `TypeScript` `Redux` `SSE` `react-query` `Styled-components` `SCSS` `Sonar`
+`React` `TypeScript` `Redux` `SSE` `react-query` `Styled-components` `Sonar`
 
 ---
 
