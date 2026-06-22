@@ -40,11 +40,13 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
+
         },
         blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
+
       } satisfies Preset.Options,
     ],
   ],
@@ -92,6 +94,7 @@ const config: Config = {
             { label: 'BEMS', to: '/projects/bems' },
             { label: '원격 제어 시스템', to: '/projects/hvac-control' },
             { label: 'PinHouse', to: '/projects/pinhouse' },
+            { label: 'SAJU:ME', to: '/projects/saju' },
           ],
         },
         {

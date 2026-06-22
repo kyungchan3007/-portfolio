@@ -70,6 +70,20 @@ const PROJECTS = [
     tags: ['React', 'TypeScript', 'Redux', 'WebSocket', 'AWS IoT Core', 'Lambda', 'DynamoDB'],
     link: '/projects/hvac-control',
   },
+  {
+    period: '2025.10 — 2026.03',
+    title: 'PinHouse',
+    desc: '맞춤형 주거 탐색 서비스. SSR 경계와 인증 라우팅 개선으로 First Load JS 14.4% 절감.',
+    tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Zod', 'Playwright'],
+    link: '/projects/pinhouse',
+  },
+  {
+    period: '2026.03 — 2026.06',
+    title: 'SAJU:ME',
+    desc: '한국식 운세 추천 서비스. Admin Dashboard와 Cloudflare Edge 배포로 운영·배포 효율 개선.',
+    tags: ['Next.js 15', 'TypeScript', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Cloudflare'],
+    link: '/projects/saju',
+  },
 ];
 
 export default function Home() {

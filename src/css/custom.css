@@ -212,7 +212,7 @@
   gap: 6px;
 }
 
-.tag {
+.tag-list .tag {
   font-size: 11px;
   font-family: monospace;
   background: rgba(0, 201, 167, 0.08);

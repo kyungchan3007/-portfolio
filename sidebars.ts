@@ -34,6 +34,7 @@ const sidebars: SidebarsConfig = {
           ],
         },
         'projects/pinhouse',
+        'projects/saju',
       ],
     },
   ],

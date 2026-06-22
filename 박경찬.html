@@ -322,9 +322,9 @@
     <div class="main-header">
       <div class="main-name">박경찬</div>
       <div class="main-title">Front-end Engineer · 약 4년 경력 · 팀 리딩 경험</div>
-      <div class="summary-text">IoT 기반 제어 시스템부터 복잡한 운영 관리 도메인까지 다양한 웹 서비스를 개발해온 프론트엔드 개발자입니다.
-        AI 하네스·도메인 온톨로지 기반 엔지니어링으로 Agent의 책임 경계를 구조화하고, OpenAPI → Zod 타입 계약 자동화로 백엔드 소통 비용과 타입 불일치 리스크를 줄였습니다.
-        구현·검증·리뷰·배포 전 과정에 AI 엔지니어링을 적용해 개발 생산성과 품질을 함께 개선했습니다.</div>
+      <div class="summary-text">IoT 기반 제어 시스템부터 복잡한 운영 관리 도메인까지 구축하며 제품 요구사항을 웹 서비스로 구현해온 프론트엔드 개발자입니다.
+        AI 검증 구조와 OpenAPI 타입 계약 자동화를 통해 Agent별 책임 경계, 도메인 검증 흐름, 백엔드 연동 기준을 체계화하고 타입 불일치 리스크를 줄였습니다.
+        <br/>구현·검증·리뷰·배포 전 과정에 AI 엔지니어링을 적용해 개발 생산성과 품질을 함께 개선했습니다.</div>
     </div>
 
     <div class="section">
@@ -347,7 +347,7 @@
       <div class="work-proj">
         <div class="work-proj-head">
           <div class="work-proj-title-wrap">
-            <div class="work-proj-name">FMS</div>
+            <div class="work-proj-name">FMS — Facility Management System</div>
             <div class="work-proj-sub">시설물 유지보수 업무 디지털화 웹 애플리케이션</div>
           </div>
           <div class="work-proj-meta">
@@ -372,7 +372,7 @@
       <div class="work-proj">
         <div class="work-proj-head">
           <div class="work-proj-title-wrap">
-            <div class="work-proj-name">BEMS</div>
+            <div class="work-proj-name">BEMS — Building Energy Management System</div>
             <div class="work-proj-sub">운영 지표 데이터 실시간 수집·시각화 및 계층형 데이터 조회 분석 시스템</div>
           </div>
           <div class="work-proj-meta">
@@ -387,10 +387,9 @@
           <div class="work-proj-bullets">
             <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>SSE 도입으로 폴링 대비 네트워크 요청 60% 감소, 화면 반영 지연 3~5초 → 1초 이내</span></div>
 <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>Layered → FSD 전환으로 deep import 74~84%, page-service 결합도 60~75% 감소</span></div>
-            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>AI 엔지니어링 기반 코드 리뷰로 라우트 버그·번들 과다·API 역의존 사전 탐지 </span></div>
-            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>배포 전 품질 기준 확보 및 검증 시간 75% 단축</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>라우트·번들·API 구조 결함을 사전 차단하고 검토 리소스와 소요 시간을 50% 이상 절감</span></div>
           </div>
-          <span class="work-proj-result">코드 리뷰 자동화 → 라우팅 안정성·API 역의존 점검, 초기 JS 30~60% 절감 가능</span>
+          <span class="work-proj-result">코드 리뷰 자동화 → 라우팅 안정성·API 역의존 점검, 초기 JS 30~60% 절감</span>
         </div>
       </div>
 
@@ -411,12 +410,11 @@
             <span class="tag">React</span><span class="tag">Node.js</span><span class="tag">TypeScript</span><span class="tag">AWS IoT Core</span><span class="tag">Lambda</span><span class="tag">WebSocket</span><span class="tag">DynamoDB</span><span class="tag">S3</span><span class="tag">Athena</span>
           </div>
           <div class="work-proj-bullets">
-            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>MQTT·WebSocket 기반 제어 흐름 정리로 제어 응답 지연 40% 감소</span></div>
-            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>AI 코드 리뷰로 분산 소켓 구조 탐지 → 공통 모듈 통합, 소켓 생성 지점 66.7% 감소</span></div>
-            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>MQTT 리스너 구조 개선, cleanup 0%→100%, 수신 성공률 14.67%→100%</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>중복 소켓 생성 구조를 식별하고 공통 모듈화해 관리 지점 60% 감소</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>MQTT 리스너 구조 개선, cleanup 0%→100%, 수신 성공률 15% → 100%</span></div>
             <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>S3 + Athena 분석 환경 구성, CloudWatch Alarm 연동으로 장애 대응 체계 확보</span></div>
           </div>
-          <span class="work-proj-result">메시지 수신 성공률 14.67% → 100%, 화면 전환 소켓 준비 시간 0.706ms→0ms</span>
+          <span class="work-proj-result">메시지 수신 성공률 15% → 100%, 화면 전환 소켓 준비 지연 100% 제거</span>
         </div>
       </div>
 
@@ -520,11 +518,10 @@
           <div class="work-proj-bullets">
             <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>GPT 챗봇 — 의도 분류·슬롯 추출로 임대매물·시세·용어·정책 대화형 제공</span></div>
             <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>인증 진입점을 서버 리다이렉트로 전환해 spinner hydration 제거 및 초기 라우팅 성능 개선</span></div>
-            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>route params 서버 처리로 client boundary 축소, 브라우저 JS 실행 전 인증 라우팅 결정</span></div>
-            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>client route → server shell 전환 + 인증 서버 리다이렉트로 First Load JS 14.4% 감소 (194→166kB)</span></div>
+            <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>Server Shell 전환과 인증 리다이렉트 개선으로 First Load JS 10%+ 감소</span></div>
             <div class="work-proj-bullet"><span class="work-proj-dot">▸</span><span>React Query provider 인스턴스 단위 생성으로 SSR 캐시 오염 리스크 제거</span></div>
           </div>
-          <span class="work-proj-result">client page entry 17개 → 14개 (17.6% 감소), 루트 진입 spinner hydration 제거</span>
+          <span class="work-proj-result">클라이언트 진입점 15% 감소, 루트 진입 spinner hydration 제거로 초기 진입 체감 속도 개선</span>
         </div>
       </div>
 

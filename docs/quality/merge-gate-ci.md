@@ -4,9 +4,6 @@ title: Merge Gate — CI 품질 자동화
 sidebar_label: Merge Gate CI
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # Merge Gate — 심각도 기반 병합 차단
 
 ---
@@ -52,129 +49,19 @@ graph LR
 
 ---
 
-## GitHub Actions Workflow
+## Merge Gate 판정 흐름
 
-<Tabs>
-  <TabItem value="ci" label="CI 파이프라인">
+| 검증 항목 | 실패 시 심각도 | 병합 정책 |
+|---|---|---|
+| TypeScript type-check | Critical | 병합 차단 |
+| Vitest unit test | Critical | 병합 차단 |
+| Playwright E2E | Major | 병합 차단 |
+| Chromatic visual diff | Minor | 리뷰 요청 |
 
-```yaml title="ci.yml"
-name: CI — Merge Gate
-
-on:
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  unit-test:
-    name: Unit Tests (Vitest)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - run: npm ci
-      - run: npm run test:coverage
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-
-  e2e-test:
-    name: E2E Tests (Playwright)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: playwright-report
-          path: playwright-report/
-
-  visual-test:
-    name: Visual Tests (Chromatic)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - run: npm ci
-      - uses: chromaui/action@latest
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          exitZeroOnChanges: true   # 변경 감지 시 리뷰 요청 (차단 아님)
-
-  type-check:
-    name: TypeScript Type Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run type-check   # tsc --noEmit
-```
-
-  </TabItem>
-  <TabItem value="gate" label="Merge Gate 판정">
-
-```yaml title="merge-gate.yml"
-name: Merge Gate
-
-on:
-  pull_request:
-    branches: [main]
-  workflow_run:
-    workflows: ['CI — Merge Gate']
-    types: [completed]
-
-jobs:
-  severity-check:
-    name: Severity Check & Gate Decision
-    runs-on: ubuntu-latest
-    needs: [unit-test, e2e-test, type-check]
-    steps:
-      - name: Check CI results
-        id: severity
-        run: |
-          CRITICAL=0
-          MAJOR=0
-
-          # TypeScript 에러 → Critical
-          if [ "${{ needs.type-check.result }}" == "failure" ]; then
-            echo "CRITICAL: TypeScript type errors detected"
-            CRITICAL=$((CRITICAL + 1))
-          fi
-
-          # 단위 테스트 실패 → Critical
-          if [ "${{ needs.unit-test.result }}" == "failure" ]; then
-            echo "CRITICAL: Unit tests failed"
-            CRITICAL=$((CRITICAL + 1))
-          fi
-
-          # E2E 실패 → Major
-          if [ "${{ needs.e2e-test.result }}" == "failure" ]; then
-            echo "MAJOR: E2E tests failed"
-            MAJOR=$((MAJOR + 1))
-          fi
-
-          echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
-          echo "major=$MAJOR" >> $GITHUB_OUTPUT
-
-      - name: Gate Decision
-        run: |
-          CRITICAL="${{ steps.severity.outputs.critical }}"
-          MAJOR="${{ steps.severity.outputs.major }}"
-
-          if [ "$CRITICAL" -gt 0 ] || [ "$MAJOR" -gt 0 ]; then
-            echo "❌ MERGE: HOLD — Critical: $CRITICAL, Major: $MAJOR"
-            exit 1  # 병합 차단
-          else
-            echo "✅ MERGE: PASS"
-          fi
-```
-
-  </TabItem>
-</Tabs>
+1. PR 생성 시 type-check, unit, E2E, visual test를 실행합니다.
+2. 실패 항목을 Critical / Major / Minor로 분류합니다.
+3. Critical 또는 Major가 있으면 `MERGE: HOLD`로 병합을 차단합니다.
+4. Minor만 있거나 이슈가 없으면 `MERGE: PASS`로 병합을 허용합니다.
 
 ---
 

@@ -4,6 +4,9 @@ title: 하네스 엔지니어링 — AGENTS.md · SKILL.md
 sidebar_label: 하네스 엔지니어링
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # 하네스 엔지니어링
 
 ---
@@ -38,7 +41,7 @@ Agent가 **어떻게 행동해야 하는지**를 문서로 명세해,
 # Agent 행동 규칙
 
 ## 역할
-너는 FMS의 **UI 구현 Agent**다.
+UI 구현 Agent다.
 UI 컴포넌트 작성과 레이아웃 구성만 담당한다.
 
 ## 허용 행동
@@ -135,6 +138,66 @@ Domain A 목록 기능 개발 →
   skills/domain-a/entity-list.md (기능)
   — 나머지 파일은 로드 안 함 → 컨텍스트 최소화
 ```
+
+---
+
+## 프로젝트 적용 사례
+
+FMS, BEMS, 원격 제어 시스템, SAJU:ME, PinHouse 등 포트폴리오에 포함된 프로젝트 전반에서
+AI Agent가 활용할 수 있는 프로젝트별 스킬을 체계화했습니다.
+각 도메인의 코딩 규칙, 아키텍처, 참고 자료를 명문화해 AI Agent의 맥락 인식을 개선했습니다.
+
+<Tabs>
+<TabItem value="before" label="Before — 문맥 부재">
+
+```
+개발자: "로그인 화면 구현해줘"
+AI Agent: 프로젝트 구조를 모르고 일반적인 코드 생성
+→ 아키텍처 불일치, 재작업 반복
+```
+
+</TabItem>
+<TabItem value="after" label="After — 스킬 기반 맥락">
+
+```
+.agents/skills/{project-domain}/
+├── SKILL.md                    ← 프로젝트 규칙·아키텍처 정의
+├── references/
+│   ├── fsd-architecture.md     ← FSD 레이어 구조
+│   ├── auth-flow.md            ← 인증 흐름
+│   ├── api-integration.md      ← API 통합 패턴
+│   └── testing-strategy.md     ← 테스트 전략
+```
+
+SKILL.md에서 AI Agent에게:
+- 프로젝트 구조 (FSD)
+- 코딩 규칙 (타입 안정성, 컴포넌트 레이어)
+- 파일 레이어 역할 (model/hooks/ui/entities/app)
+- 필독 자료 (references)
+
+```tsx
+// AI Agent가 생성한 코드 예시
+export default function LoginPage() {
+  // FSD 레이어 규칙 자동 준수
+  const { login } = useAuthMutation();
+  return <LoginForm onSubmit={login} />;
+}
+```
+
+**효과**
+- 맥락 기반 코드 생성
+- 아키텍처 일관성 유지
+- 재작업 최소화
+
+</TabItem>
+</Tabs>
+
+**구조:**
+- **SKILL.md**: 프로젝트 규칙, 아키텍처, 필수 패턴
+- **References**: 도메인별 심화 자료 (인증, API, 테스트)
+- **AI Agent 맥락**: 파일 레이어(model/hooks/ui/entities)별 책임 명확화
+
+**결과**: 프로젝트별 AI Agent 코드 생성 **신뢰도 향상**, 개발 속도 **가속화**, 코드 리뷰 피드백 **감소**
 
 ---
 
