@@ -9,11 +9,11 @@ sidebar_label: SAJU:ME
 **2026.03 – 2026.06 · FE 개발 · 배포**
 
 사용자의 출생 정보로 사주를 분석하고, 일일 에너지를 기반으로 맞춤형 장소를 추천하는 한국식 운세 추천 서비스입니다.
-<br/>Admin Dashboard와 Cloudflare Edge 배포로 운영 효율을 확보하고, Changesets 기반 패키지 자동화로 배포 효율을 높였습니다.
+<br/>Admin Dashboard와 Cloudflare Edge 배포로 운영 효율을 확보하고, Changesets 기반 변경 이력 관리와 CI/CD 배포 자동화로 릴리즈 흐름을 표준화했습니다.
 
 ## 기술 스택
 
-`Next.js 15` `TypeScript` `Tailwind CSS` `Zustand` `TanStack Query` `FSD` `Vitest` `Playwright` `Storybook` `Spring Boot` `MySQL` `Redis` `AWS` `Cloudflare`
+`Next.js 15` `TypeScript` `Tailwind CSS` `Zustand` `TanStack Query` `OpenAPI` `Zod` `FSD` `Vitest` `Playwright` `Storybook` `Spring Boot` `MySQL` `Redis` `AWS` `Cloudflare`
 
 ---
 
@@ -22,14 +22,15 @@ sidebar_label: SAJU:ME
 | 발견 항목 | 문제 | 개선 방향 | 결과 |
 |---|---|---|---|
 | 관리자 시스템 부재 | 운영·모니터링 수작업 | Admin Dashboard + Kakao OAuth | 관리 효율화 |
+| API 계약 안정성 | 응답 타입 불일치로 인한 런타임 오류 가능성 | OpenAPI 타입 생성 + Zod 런타임 검증 적용 | API 연동 안정성 확보 |
 | Edge 배포 환경 구성 | Next.js SSR을 서버리스로 배포 불가 | OpenNext.js + Cloudflare Workers + nodejs_compat | **엣지 배포 완성** |
-| 패키지 배포 자동화 | 배포 시마다 수동 버전 업데이트 후 배포 | Changesets: 개발자가 버전 선택 → CI/CD 자동 배포 | **배포 프로세스 자동화** |
+| 릴리즈 흐름 표준화 | 패키지 변경 이력과 배포 절차가 분리되어 관리됨 | Changesets로 변경 이력 관리, CI/CD로 배포 자동화 | **릴리즈 프로세스 표준화** |
 
 ---
 
 ## AI Agent
 
-운영 효율을 높이고, 엣지 배포와 패키지 자동화를 구현했습니다.
+운영 효율을 높이고, 엣지 배포와 릴리즈 흐름 표준화를 구현했습니다.
 
 ### 1. Admin Dashboard 구축
 
@@ -94,23 +95,23 @@ routes = [
 
 **결과**: Next.js SSR **엣지 배포** 완성, **콜드 스타트 제거**, 글로벌 **저지연 응답** 확보
 
-### 3. 패키지 배포 자동화 (Changesets)
+### 3. 릴리즈 흐름 표준화 (Changesets + CI/CD)
 
-패키지별 버전 갱신과 CHANGELOG 작성을 수동으로 하고 배포하던 과정을 Changesets로 체계화했습니다. 개발자가 변경 범위(major/minor/patch)를 선택하면, CI/CD가 버전 갱신·CHANGELOG 생성·배포를 자동으로 처리합니다.
+패키지별 변경 범위와 변경 이력은 개발자가 Changesets로 명시하고, 실제 배포 실행은 CI/CD가 처리하도록 릴리즈 흐름을 분리했습니다.
 
 ```json title="package.json"
 {
   "scripts": {
     "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "changeset publish"
+  "version-packages": "changeset version",
+  "release": "changeset publish"
   }
 }
 ```
 
 **구현 방식:**
-- **Changesets**: 패키지별 major·minor·patch 변경 이력 관리
+- **Changesets**: 개발자가 패키지별 major·minor·patch 변경 범위와 변경 이력을 명시
 - **Monorepo packages**: web, admin, ui, design-tokens 패키지 변경 범위 분리
-- **Release workflow**: 변경 이력 기반 버전 갱신과 배포 절차 표준화
+- **Release workflow**: CI/CD에서 변경 이력 기반 배포 실행
 
-**결과**: 버전 결정 프로세스 표준화, 패키지 배포 과정 **자동화**, 변경 이력 추적성 확보
+**결과**: 패키지 변경 관리 기준 표준화, 배포 실행 **자동화**, 변경 이력 추적성 확보

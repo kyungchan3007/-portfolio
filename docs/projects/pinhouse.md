@@ -38,7 +38,7 @@ AI Agent 기반 코드 검증 워크플로를 도입해 아래 3가지 문제를
 기존 루트 `/` 페이지는 `"use client"` 기반으로 Spinner를 먼저 렌더링한 뒤, 클라이언트에서 인증 체크 후 `router.replace()`로 이동했습니다.
 이로 인해 첫 진입 시 의미 있는 HTML 없이 Spinner만 SSR되고, 브라우저 JS hydration 이후에야 인증 체크와 redirect가 실행되는 구조였습니다.
 
-```tsx title="app/page.tsx — Before"
+```tsx title="page.tsx — Before"
 export default function Home() {
   useAuthCheck();
   return <Spinner />;
@@ -47,7 +47,7 @@ export default function Home() {
 
 서버 컴포넌트에서 쿠키를 직접 읽고 즉시 `redirect()`를 호출하는 구조로 변경해, 브라우저 JS 실행 전에 라우팅이 결정되도록 개선했습니다.
 
-```tsx title="app/page.tsx — After"
+```tsx title="page.tsx — After"
 export default async function Home() {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;
@@ -65,7 +65,7 @@ export default async function Home() {
 
 `onboarding/[type]`, `_quicksearch/[type]` 등 dynamic route entry 자체가 Client Component로 선언되어 있어, `useParams()`에 의존하는 구조였습니다.
 
-```tsx title="app/onboarding/[type]/page.tsx — Before"
+```tsx title="[type]/page.tsx — Before"
 export default function OnboardingPage() {
   const { type } = useParams() as { type: string };
   const content = onboardingContentMap[type as keyof typeof onboardingContentMap];
@@ -84,7 +84,7 @@ export default function OnboardingPage() {
 
 route entry는 Server Component로 두고 `params`를 서버에서 해석한 뒤, UI 로직만 Client Component로 분리했습니다.
 
-```tsx title="app/onboarding/[type]/page.tsx — After"
+```tsx title="[type]/page.tsx — After"
 type OnboardingPageProps = {
   params: Promise<{ type: string }>;
 };
@@ -95,7 +95,7 @@ export default async function OnboardingPage({ params }: OnboardingPageProps) {
 }
 ```
 
-```tsx title="app/onboarding/[type]/onboardingPageClient.tsx — After"
+```tsx title="[type]/onboardingPageClient.tsx — After"
 type OnboardingPageClientProps = {
   type: string;
 };
@@ -124,7 +124,7 @@ export function OnboardingPageClient({ type }: OnboardingPageClientProps) {
 
 기존에는 모듈 스코프에 전역 `QueryClient` singleton을 생성하고 있었습니다. SSR/동시 렌더링 환경에서는 요청 간 캐시가 공유될 수 있어 사용자별 데이터가 섞일 구조적 위험이 있었습니다.
 
-```tsx title="src/app/providers/queryProvider.tsx — Before"
+```tsx title="queryProvider.tsx — Before"
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -144,7 +144,7 @@ export const QueryProvider = ({ children }: { children: React.ReactNode }) => {
 
 `useState`를 활용해 Provider 인스턴스별로 `QueryClient`를 생성하는 구조로 변경했습니다.
 
-```tsx title="src/app/providers/queryProvider.tsx — After"
+```tsx title="queryProvider.tsx — After"
 interface QueryProviderProps {
   children: React.ReactNode;
 }

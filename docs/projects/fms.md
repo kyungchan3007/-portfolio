@@ -26,6 +26,7 @@ import TabItem from '@theme/TabItem';
 |---|---|---|---|
 | 개발 병렬성 | 2인 체제로 전 도메인 커버 어려움 | VSA 기반 Agent 도메인 독립 할당 | 30+ 라우트 전 도메인 병렬 개발 |
 | 타입 안정성 | 수동 타입 정의·백엔드 소통 비용 발생 | OpenAPI → Zod 타입 자동화 | 소통 비용 감소, 타입 불일치 버그 제거 |
+| UI 기준 표준화 | 슬라이스별 UI·토큰 변경 기준이 불명확함 | shared UI·design-tokens 분리, Changesets 기준 명시 | 릴리즈 기준 표준화 |
 | 프롬프트 오해 | 컨텍스트 누적으로 AI 재작업 반복 | 하네스 엔지니어링, 도메인별 reference 명세화 | 재작업 감소, 개발 사이클 단축 |
 
 ---
@@ -116,17 +117,25 @@ export async function getEntityList(params: GetEntityListData) {
 
 **결과**: 수동 타입 정의 제거, Zod 런타임 검증으로 API 계약 위반 즉시 감지, 백엔드 소통 비용 및 타입 불일치 버그 감소
 
-### 2. UI · 디자인 토큰 패키지 분리
-
+### 2. VSA 기반 UI · 디자인 토큰 분리
+여러 슬라이스에서 반복되는 UI 컴포넌트와 디자인 토큰만 공용 영역으로 분리했습니다.
+기능별 비즈니스 로직은 슬라이스 내부에 두고, `shared-ui`와 `design-tokens`에는 도메인 의존성이 없는 표현 계층만 배치했습니다.
+Changesets로 패키지별 major · minor · patch 변경 기준을 명시하고, 공용 UI와 디자인 토큰의 릴리즈 기준을 표준화했습니다.
 ```
-apps/
-  web/          ← 메인 서비스
-packages/
-  ui/           ← 공용 컴포넌트
-  design-tokens/← 색상·타이포·간격 토큰
+shared-ui/
+  Button/
+  Modal/
+  DataTable/
+  FormField/
+
+design-tokens/
+  colors.ts
+  typography.ts
+  spacing.ts
+  radius.ts
 ```
 
-```ts title="packages/design-tokens/src/index.ts"
+```ts title="index.ts"
 export const colors = {
   brand: {
     primary: "#5956E9",
@@ -164,5 +173,3 @@ export const shadows = {
   lg: "0 8px 32px rgba(89,86,233,0.20)",
 } as const;
 ```
-
-Changesets로 major · minor · patch 기준 수립, 패키지 버전 독립 관리.

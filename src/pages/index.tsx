@@ -80,8 +80,8 @@ const PROJECTS = [
   {
     period: '2026.03 — 2026.06',
     title: 'SAJU:ME',
-    desc: '한국식 운세 추천 서비스. Admin Dashboard와 Cloudflare Edge 배포로 운영·배포 효율 개선.',
-    tags: ['Next.js 15', 'TypeScript', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Cloudflare'],
+    desc: '한국식 운세 추천 서비스. Admin Dashboard와 Cloudflare Edge 배포, 릴리즈 흐름 표준화로 운영 효율 개선.',
+    tags: ['Next.js 15', 'TypeScript', 'TanStack Query', 'OpenAPI', 'Zod', 'Cloudflare'],
     link: '/projects/saju',
   },
 ];
