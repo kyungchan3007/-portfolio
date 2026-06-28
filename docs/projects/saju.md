@@ -21,6 +21,7 @@ sidebar_label: SAJU:ME
 
 | 발견 항목 | 문제 | 개선 방향 | 결과 |
 |---|---|---|---|
+| 사용자 이탈 | 사주 분석 로딩 시간이 길어 이탈율 높음 | 로딩 중 사주 관련 퀴즈 삽입으로 체류 유도 | 이탈율 **30%+ 감소** |
 | 관리자 시스템 부재 | 운영·모니터링 수작업 | Admin Dashboard + Kakao OAuth | 관리 효율화 |
 | API 계약 안정성 | 응답 타입 불일치로 인한 런타임 오류 가능성 | OpenAPI 타입 생성 + Zod 런타임 검증 적용 | API 연동 안정성 확보 |
 | Edge 배포 환경 구성 | Next.js SSR을 서버리스로 배포 불가 | OpenNext.js + Cloudflare Workers + nodejs_compat | **엣지 배포 완성** |

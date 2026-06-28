@@ -13,7 +13,7 @@ sidebar_label: BEMS
 
 ## 기술 스택
 
-`React` `TypeScript` `Redux` `SSE` `react-query` `Styled-components` `Sonar`
+`React` `TypeScript` `Redux` `Web Worker` `react-query` `Styled-components` `Sonar`
 
 ---
 
@@ -21,79 +21,165 @@ sidebar_label: BEMS
 
 | 발견 항목 | 문제 | 개선 방향 | 결과 |
 |---|---|---|---|
-| 네트워크 요청 | 불필요한 폴링 요청 | SSE 전환 | **60% 감소** |
-| 화면 반영 지연 | 폴링 주기로 3~5초 지연 | SSE 실시간 수신 | **1초 이내** |
-| 트리 렌더링 | 전체 트리 재렌더링 | 서브트리 상태 유지 | **60% 개선** |
-| 초기 JS 로드 | 전체 페이지 직접 import | lazy route 전환 | **30~60% 절감 가능** |
-| API 역의존 | API client의 UI/상태 참조 | 의존성 주입 분리 | **60~75% 감소 가능** |
-| 렌더링 비용 | theme/message 재생성 | 메모이제이션 적용 | 불필요 렌더 감소 |
+| 데이터 조회 구조 | 15분 주기 폴링으로 실시간 반영 불가 | 1분 단위 delta 업데이트 구조로 전환 | 네트워크 요청 **60% 감소** |
+| 메인 스레드 부하 | 4,400개 데이터 비교·갱신 시 UI 블로킹 | Web Worker로 비교·검증 연산 분리 | 화면 반영 지연 **3~5초 → 1초 이내** |
+| 데이터 정합성 | null·부분 응답 환경에서 데이터 오염 가능성 | JSON 규칙 기반 보정 수식 분리 | 프론트 레이어 동적 계산으로 정합성 확보 |
+| 성능 측정 체계 | 개선 효과를 정량적으로 판단할 기준 없음 | performance.now() + rAF 기반 측정 체계 구축 | 개선 전후 수치 검증 |
 
 ---
 
-## AI Agent
+## 1. 실시간 데이터 전환 및 네트워크 최적화
 
-코드 리뷰 기준이 명문화되어 있지 않아 번들 크기, 의존성 구조, 라우팅 안정성을 수동으로 점검해야 했습니다. AI Agent를 도입해 정적 분석 기반으로 주요 이슈를 발굴하고 개선 방향을 도출했습니다.
+고객 요구사항 변경으로 기존 15분 주기 데이터 조회를 1분 단위 실시간 구조로 전환해야 했습니다.
+전체 데이터를 매번 교체하는 방식 대신, 변경된 데이터만 추출해 전달하는 delta 업데이트 구조를 도입했습니다.
 
-### 1. lazy route 전환 (번들 크기 개선)
+```ts title="deltaExtractor.ts"
+// 이전 상태와 비교하여 변경된 항목만 추출
+export function extractDelta(prev: DataMap, next: DataMap): DeltaEntry[] {
+  const delta: DeltaEntry[] = [];
 
-```tsx
-// Before
-{ path: "/usermanagement", element: <UserManagement /> }
+  for (const key of Object.keys(next)) {
+    if (prev[key] !== next[key]) {
+      delta.push({ key, value: next[key] });
+    }
+  }
 
-// After
-const UserManagement = lazy(
-  () => import("@/pages/user-management")
-);
-
-{
-  path: "/usermanagement",
-  element: (
-    <Suspense fallback={<LoadingDot />}>
-      <UserManagement />
-    </Suspense>
-  ),
+  return delta;
 }
 ```
 
-초기 번들에 전체 페이지가 포함되던 구조를 화면별 lazy loading으로 전환. 초기 JS 로드 **30~60% 절감** 가능.
+**결과**: 전체 교체 대비 네트워크 요청 **60% 감소**, 변경 데이터만 화면에 반영
 
-### 2. API 레이어 역의존 해소
+---
 
-```ts
-// Before
-const state = store.getState();
-createNotify(...);
+## 2. Web Worker 기반 렌더링 성능 개선
 
-// After
-export const createApiClient = ({ getAuthState, onAuthExpired, onError }) => {
-  const api = axios.create({ baseURL: BASE_URL });
+1분 단위로 수신되는 **4,400개 데이터**의 비교·캐싱 연산을 메인 스레드에서 처리하자 UI 블로킹이 발생하고 화면 반영이 3~5초 지연되었습니다.
 
-  api.interceptors.request.use((req) => {
-    const { accessToken, currentMenu } = getAuthState();
-    req.headers.Authorization = `Bearer ${accessToken}`;
-    req.headers.menu = currentMenu;
-    return req;
-  });
+비교·검증 연산 전체를 **Web Worker 백그라운드 스레드**로 분리하고, 변경된 항목만 순차적으로 메인 스레드에 전달하는 구조로 개선했습니다.
 
-  return api;
+```ts title="dataWorker.ts (Worker 스레드)"
+// 백그라운드에서 4,400개 데이터 비교 후 delta만 순차 전달
+self.onmessage = (e: MessageEvent<WorkerPayload>) => {
+  const { prev, next } = e.data;
+  const delta: DeltaEntry[] = [];
+
+  for (const key of Object.keys(next)) {
+    if (prev[key] !== next[key]) {
+      delta.push({ key, value: next[key] });
+    }
+  }
+
+  // 변경 항목만 메인 스레드에 배달
+  self.postMessage({ type: 'DELTA', payload: delta });
 };
 ```
 
-API client가 UI/상태 계층을 직접 참조하던 구조를 의존성 주입 방식으로 분리. page-service 직접 결합 **60~75% 감소** 가능.
+```ts title="useRealtimeData.ts (메인 스레드)"
+// Worker 생성 및 delta 수신
+const workerRef = useRef<Worker | null>(null);
 
-### 3. 렌더링 비용 개선
+useEffect(() => {
+  workerRef.current = new Worker(
+    new URL('./dataWorker.ts', import.meta.url),
+    { type: 'module' }
+  );
 
-```tsx
-// Before
-loadMessages({ ko: { ... } });
-const theme = createTheme({ palette: { mode: isDark ? "dark" : "light" } });
+  workerRef.current.onmessage = (e: MessageEvent<WorkerResponse>) => {
+    if (e.data.type === 'DELTA') {
+      // delta 항목만 순차 반영
+      dispatch(applyDelta(e.data.payload));
+    }
+  };
 
-// After
-useEffect(() => { loadMessages({ ko: { ... } }); }, [t]);
-const theme = useMemo(
-  () => createTheme({ palette: { mode: isDark ? "dark" : "light" } }),
-  [isDark]
-);
+  return () => {
+    workerRef.current?.terminate();
+  };
+}, []);
+
+const handleNewData = (next: DataMap) => {
+  workerRef.current?.postMessage({ prev: prevDataRef.current, next });
+  prevDataRef.current = next;
+};
 ```
 
-App 최상위 렌더마다 theme 객체와 메시지가 재생성되던 구조를 `useMemo` / `useEffect`로 개선.
+**결과**: 메인 스레드 블로킹 제거, 화면 반영 지연 **3~5초 → 1초 이내** 단축
+
+---
+
+## 3. JSON 규칙 기반 데이터 정합성 확보
+
+null 데이터와 부분 응답 환경에서 백엔드 프로시저 수정 시 영향 범위가 증가하고 데이터 오염 가능성이 존재했습니다.
+데이터 보정 수식을 JSON 기반 규칙으로 분리하여 프론트 레이어에서 동적으로 계산하는 구조로 개선했습니다.
+
+```json title="correctionRules.json"
+[
+  {
+    "field": "powerUsage",
+    "condition": "null",
+    "fallback": 0
+  },
+  {
+    "field": "efficiency",
+    "condition": "< 0",
+    "formula": "value * -1"
+  },
+  {
+    "field": "temperature",
+    "condition": "> 100",
+    "fallback": null
+  }
+]
+```
+
+```ts title="applyRules.ts"
+import rules from './correctionRules.json';
+
+export function applyCorrection(data: RawData): CorrectedData {
+  const result = { ...data };
+
+  for (const rule of rules) {
+    const value = result[rule.field];
+
+    if (rule.condition === 'null' && value == null) {
+      result[rule.field] = rule.fallback;
+    } else if (rule.condition === '< 0' && typeof value === 'number' && value < 0) {
+      result[rule.field] = rule.formula ? eval(rule.formula.replace('value', String(value))) : rule.fallback;
+    } else if (rule.condition === '> 100' && typeof value === 'number' && value > 100) {
+      result[rule.field] = rule.fallback ?? null;
+    }
+  }
+
+  return result;
+}
+```
+
+**결과**: 백엔드 프로시저 변경 시 프론트 수정 최소화, 데이터 정합성 확보
+
+---
+
+## 4. 성능 측정 체계 구축
+
+성능 개선 효과를 정량적으로 판단하기 어려운 문제가 있었습니다.
+`performance.now()`와 `requestAnimationFrame()`을 조합해 실제 화면 반영 지연을 측정하는 체계를 구축했습니다.
+
+```ts title="measureRenderDelay.ts"
+export function measureRenderDelay(label: string) {
+  const start = performance.now();
+
+  requestAnimationFrame(() => {
+    const end = performance.now();
+    console.log(`[${label}] 화면 반영 지연: ${(end - start).toFixed(2)}ms`);
+  });
+}
+```
+
+```ts title="useRealtimeData.ts — 측정 적용"
+const handleNewData = (next: DataMap) => {
+  measureRenderDelay('delta-apply');
+  workerRef.current?.postMessage({ prev: prevDataRef.current, next });
+  prevDataRef.current = next;
+};
+```
+
+**결과**: 개선 전후 수치 정량 비교 가능, Web Worker 도입 효과 검증 완료
