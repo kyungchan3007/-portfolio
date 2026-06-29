@@ -319,30 +319,223 @@ Step 4️⃣: npm run build
 
 ---
 
+### 2.8 테스트 기준 & 운영 프로세스
+
+#### 2.8.1 테스트 4단계별 기준
+
+변경 유형에 따른 테스트 기준:
+
+| 단계 | 유형 | 기본 검증 | 추가 검증 조건 | 추가 검증 |
+|------|------|---------|---------|----------|
+| 1단계 | 계산/순수 로직 변경 | 관련 unit test 확인 | 계산 결과가 여러 화면 재사용 / API 매핑 영향 | 영향 화면의 unit test 추가 확인 |
+| 2단계 | 계산 결과 → 렌더링 연결 | unit test + 필요시 화면 smoke | CTA 노출 영향 / 사용자 흐름 변경 / 접근성 리스크 | e2e smoke + Storybook 확인 |
+| 3단계 | API/캐시/인증 정책 변경 | typecheck + unit test + route/auth 분기 | React Query key 변경 / refresh·redirect·cookie 처리 변경 | e2e 시나리오 확인 |
+| 4단계 | UI/UX만 수정 | 화면 smoke + 접근성 기본 확인 | 상태 변화/조건부 렌더 포함 | 2단계 또는 3단계로 승격 |
+
+**3단계 원칙**: `typecheck`와 관련 unit test는 반드시 통과해야 함. **생략 불가**.
+
+---
+
+#### 2.8.2 테스트 파일 규칙
+
+- **위치**: 변경 파일 폴더 아래 `test/` 하위
+- **파일명**: `*.test.ts` 또는 `*.test.tsx`
+- **최소 기준**: 정상 케이스 1개 + 실패/예외 케이스 1개부터 시작
+- **우선 대상**: `shared/utils`, `features/*/model`, `features/*/hooks`, `entities/*/model`
+- **제외**: `apps/web/src/generated/api` 아래 파일
+
+---
+
+#### 2.8.3 e2e 승격 기준
+
+아래 중 **하나라도 해당**하면 unit test만으로는 부족하고 e2e를 추가:
+
+1. **인증 흐름** (로그인, 리프레시, 리다이렉트) 변경
+2. **사주 입력 → 결과 조회 핵심 흐름** 변경
+3. **Cloudflare Turnstile 검증 흐름** 변경
+4. **사용자가 직접 겪는 에러 처리 흐름** 변경
+
+**실행 명령**:
+```bash
+# 전체 E2E
+npm run test:e2e
+
+# 특정 시나리오 (chromium)
+npm run test:e2e -- <spec> --project=chromium
+
+# 모바일 환경
+npm run test:e2e -- <spec> --project=mobile-chrome
+```
+
+---
+
+#### 2.8.4 검증 → 리뷰 운영 프로세스
+
+2단계 검증이 모두 통과하면, 검증 Agent는 코드를 **Reviewer Agent에 자동 전달**합니다.
+
+```
+2단계 검증 완료 (모두 PASS)
+    ↓
+📋 변경 분석:
+    - 변경 유형을 4단계 중 하나로 분류
+    - gate-matrix 기준으로 필수 스킬 결정
+    - 추가 검증 조건 확인
+    ↓
+🔄 Reviewer Agent 트리거:
+    - 해당 단계의 필수 스킬 순서 적용
+    - 추가 조건 발견 시 추가 스킬로 승격
+    ↓
+📊 최종 판정:
+    - MERGE: PASS → 병합 진행
+    - MERGE: HOLD → 구현 Agent에 수정 요청
+    ↓
+🔁 오류 시 delta-only 재검증:
+    - 변경된 부분만 재검증 (효율성 ↑)
+    - Critical/Major 미해결 항목 재확인
+    ↓
+✅ PASS 달성 → 병합 진행
+```
+
+**4단계 분류 기준**:
+
+| 단계 | 유형 | 필수 스킬 | 추가 가능 스킬 |
+|------|------|---------|--------------|
+| 1단계 | 계산/순수 로직 | `code-review-guard` | `vercel-react-best-practices` |
+| 2단계 | 계산→렌더링 | `code-review-guard`, `vercel-react-best-practices` | `web-design-guidelines` |
+| 3단계 | API/캐시/인증 | `code-review-guard`, `next-best-practices` | `vercel-react-best-practices` |
+| 4단계 | UI/UX만 수정 | `web-design-guidelines` | 다른 단계로 승격 |
+
+---
+
 ## 3단계 — 리뷰 (Reviewer Agent)
 
-`caveman-review` 기준으로 코드를 판정합니다.
+검증 Agent가 2단계를 통과한 코드를 Reviewer Agent에 전달합니다.
+**변경 유형에 맞는 최소 검증부터 시작하고, 추가 리스크 발견 시 상위 단계로 승격합니다.**
 
-```markdown title="Reviewer Agent 판정 기준"
+---
+
+### 3.1 4단계 검증 기준
+
+| 단계 | 유형 | 필수 스킬 | 기본 검증 | 추가 검증 조건 | 추가 스킬 |
+|------|------|---------|---------|---------|----------|
+| 1단계 | 계산/순수 로직 변경 | `code-review-guard` | 관련 unit test | 계산 결과가 여러 화면 재사용 / API 매핑 영향 / 캐시 키 연결 | `vercel-react-best-practices` |
+| 2단계 | 계산 결과 → 렌더링 연결 | `code-review-guard`, `vercel-react-best-practices` | unit test + 화면 smoke | CTA 노출 영향 / 사용자 흐름 변경 / 접근성 리스크 | `web-design-guidelines`, `caveman-review` |
+| 3단계 | API/캐시/인증 정책 변경 | `code-review-guard`, `next-best-practices` | typecheck, unit test, route/auth 분기 | React Query key/invalidation 변경 / refresh·redirect·cookie 처리 변경 | `vercel-react-best-practices`, `caveman-review` |
+| 4단계 | UI/UX만 수정 | `web-design-guidelines` | 화면 smoke, 접근성 기본 확인 | 상태 변화/조건부 렌더 포함 / metadata·layout·route 영향 | 2단계 또는 3단계로 승격 |
+
+**3단계 원칙**: 기본적으로 가장 보수적으로 검증합니다. typecheck 통과는 필수입니다.
+
+---
+
+### 3.2 단계 승격 규칙
+
+- 작업이 여러 단계에 걸치면 **가장 위험한 단계**를 기준으로 선택
+- UI만 수정이라고 판단했더라도 **상태 연결, 조건부 렌더, 라우트 연관이 발견되면 즉시 승격**
+- 3단계는 기본적으로 가장 보수적으로 검증
+- 검증을 생략한 경우 **생략 사유와 잔여 리스크를 결과에 명시**
+
+---
+
+### 3.3 세부 작업 유형 매핑
+
+구체적인 작업이 어느 단계에 해당하는지 참고:
+
+| 작업 | 단계 | 필수 검증 | 추가 검증 |
+|------|------|---------|---------|
+| 순수 유틸/모델 계산 | 1단계 | unit test | - |
+| 기능 구현/리팩터 (렌더 연결) | 2단계 | unit test, typecheck | 화면 smoke |
+| `/saju` 입력 흐름 변경 | 2단계 | 입력/제출 unit | pending form 흐름 |
+| `/saju/result` 결과 조회 변경 | 2~3단계 | result unit, typecheck | e2e smoke |
+| React Query 캐시/무효화 변경 | 3단계 | query unit, typecheck | e2e 시나리오 |
+| BFF/API route 변경 | 3단계 | route handler unit | 실패 응답/쿠키 분기 |
+| 인증/권한/로그인 흐름 변경 | 3단계 | typecheck, 인증 unit | e2e 검증 |
+| 쿠키/세션/민감정보 처리 | 3단계 | cookie 옵션, console 노출 확인 | typecheck |
+| UI/디자인 수정 | 4단계 | 화면 smoke | 접근성 |
+| 디자인 시스템/토큰 변경 | 4단계 | Storybook build, typecheck | - |
+| 성능 개선 | 2단계 | 변경 지점 성능 근거 | typecheck |
+| 릴리즈 직전 통합 점검 | 전 단계 | 모든 단계 검증 적용 | 핵심 unit/e2e |
+
+---
+
+### 3.4 단계별 검증 명령 예시
+
+#### 1단계: 계산/순수 로직 변경
+
+```bash
+$code-review-guard 이번 변경분 검증해줘. 계산 로직/유틸 변경 기준으로. MERGE: PASS/HOLD로.
+```
+
+추가 조건 발견 시:
+```bash
+$vercel-react-best-practices 이번 변경 추가 점검. 데이터 페칭/캐시 사이클 영향 중심으로.
+```
+
+#### 2단계: 계산 결과 → 렌더링 연결
+
+```bash
+$code-review-guard + $vercel-react-best-practices 이번 변경분 검증해줘. 렌더링 연결 로직, 리렌더 위험 중심으로. MERGE: PASS/HOLD로.
+```
+
+추가 조건 발견 시:
+```bash
+$web-design-guidelines 이번 변경 추가 점검. 접근성, 레이아웃, 반응형 위반 항목을 파일:라인으로 보고.
+```
+
+#### 3단계: API/캐시/인증 정책 변경
+
+```bash
+$code-review-guard + $next-best-practices 이번 변경분 검증해줘. API route, 인증 흐름, 캐시 정책 중심으로. typecheck 결과도 포함. MERGE: PASS/HOLD로.
+```
+
+추가 조건 발견 시:
+```bash
+$vercel-react-best-practices 이번 변경 추가 점검. React Query 캐시/무효화, 렌더 성능 영향 중심으로.
+```
+
+#### 4단계: UI/UX만 수정
+
+```bash
+$web-design-guidelines 이번 변경분 검증해줘. 접근성, 시맨틱, 인터랙션 UX 위반 항목을 파일:라인으로 보고. MERGE: PASS/HOLD로.
+```
+
+추가 조건 발견 시 (승격):
+```bash
+$code-review-guard + $vercel-react-best-practices 단계 승격 검증. 조건부 렌더/상태 연결 포함 변경 기준으로. MERGE: PASS/HOLD로.
+```
+
+#### 통합 검증 (릴리즈 직전)
+
+```bash
+$code-review-guard + $next-best-practices + $vercel-react-best-practices + $web-design-guidelines 릴리즈 전 통합 검증. 전 단계 기준 적용. MERGE: PASS/HOLD로.
+```
+
+---
+
+### 3.5 Reviewer Agent 판정 기준
+
+최종 판정은 다음 기준으로 결정합니다:
+
+```markdown
 ## Critical (병합 차단)
 - [ ] 런타임 에러 가능성 (null 참조, 타입 불일치)
-- [ ] 보안 취약점 (XSS, 인증 누락)
+- [ ] 보안 취약점 (XSS, 인증 누락, 민감정보 노출)
 - [ ] 테스트 없는 도메인 로직
 - [ ] API 계약 위반 (Zod 스키마 미검증)
 
 ## Major (병합 차단)
-- [ ] 성능 문제 (불필요한 전체 리렌더링)
+- [ ] 성능 문제 (불필요한 전체 리렌더링, 번들 크기 과다)
 - [ ] AGENTS.md 금지 행동 위반
 - [ ] 슬라이스 경계 위반 (index.ts 우회)
+- [ ] 3단계에서 typecheck 미통과
 
 ## Minor (경고만)
 - [ ] 네이밍 컨벤션 불일치
-- [ ] 주석 누락
-- [ ] 코드 중복
+- [ ] 접근성 기본 요구사항 위반
+- [ ] 코드 중복 또는 불필요한 복잡도
 
 ## 판정
-MERGE: PASS  → 병합 허용
-MERGE: HOLD  → Critical/Major 미해결 시 병합 차단
+- **MERGE: PASS** → 병합 허용
+- **MERGE: HOLD** → Critical/Major 미해결 시 병합 차단, 수정 요청
 ```
 
 ---
