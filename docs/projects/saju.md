@@ -4,7 +4,7 @@ title: SAJU:ME
 sidebar_label: SAJU:ME
 ---
 
-# SAJU:ME
+# 🔮 SAJU:ME
 
 **2026.03 – 2026.06 · FE 개발 · 배포**
 

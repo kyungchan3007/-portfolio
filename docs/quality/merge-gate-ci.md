@@ -1,10 +1,10 @@
 ---
 sidebar_position: 2
 title: Merge Gate — CI 품질 자동화
-sidebar_label: Merge Gate CI
+sidebar_label: 🚫 Merge Gate — 심각도 기반 병합 차단
 ---
 
-# Merge Gate — 심각도 기반 병합 차단
+# 🚫 Merge Gate — 심각도 기반 병합 차단
 
 ---
 

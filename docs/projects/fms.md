@@ -7,7 +7,7 @@ sidebar_label: FMS
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# FMS
+# 🏭 FMS
 
 **2026.01 – 2026.06 · ㈜TSM Technology · 과장 · FE 개발 · 팀 리딩**
 

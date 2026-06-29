@@ -1,0 +1,8 @@
+{
+  "label": "🤖 AI Workflow",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "AI Agent 기반 개발 워크플로우 설계와 운영 방식"
+  }
+}

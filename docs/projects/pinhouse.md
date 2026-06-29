@@ -4,7 +4,7 @@ title: PinHouse — 맞춤형 주거 탐색 서비스
 sidebar_label: PinHouse
 ---
 
-# PinHouse — 맞춤형 주거 탐색 서비스
+# 🏠 PinHouse — 맞춤형 주거 탐색 서비스
 
 **2025.10 – 2026.03 · Pinhouse · FE 개발**
 
