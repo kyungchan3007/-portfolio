@@ -12,17 +12,10 @@ const TECH_CARDS = [
     link: '/architecture/layered-to-fsd',
   },
   {
-    icon: '📡',
-    title: 'SSE 실시간 통신',
-    desc: '폴링 방식에서 SSE로 전환. Redux 부분 갱신으로 불필요한 리렌더링 제거.',
-    result: '네트워크 요청 60% 감소',
-    link: '/realtime/sse-vs-polling',
-  },
-  {
     icon: '⚡',
     title: 'AWS IoT 제어',
     desc: 'MQTT → IoT Core → Lambda → WebSocket. 멱등성 검증으로 중복 처리 제거.',
-    result: '제어 지연 23s → 1s',
+    result: '제어 지연 10s → 1s',
     link: '/realtime/aws-iot-control',
   },
   {
@@ -59,8 +52,8 @@ const PROJECTS = [
   {
     period: '2023.08 — 2025.08',
     title: 'BEMS',
-    desc: '운영 지표 데이터 실시간 수집·시각화. SSE 도입으로 네트워크 요청 60% 감소.',
-    tags: ['React', 'TypeScript', 'Redux', 'SSE', 'react-query', 'Styled-components'],
+    desc: '운영 지표 데이터 실시간 수집·시각화. Web Worker 기반 렌더링으로 화면 반영 지연 3~5초 → 1초 이내.',
+    tags: ['React', 'TypeScript', 'Redux', 'Web Worker', 'react-query', 'Styled-components'],
     link: '/projects/bems',
   },
   {

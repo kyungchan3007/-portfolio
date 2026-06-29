@@ -13,7 +13,7 @@ import TabItem from '@theme/TabItem';
 
 ---
 
-제어 명령 전송 후 화면 반영까지 **23초 지연** 발생.
+제어 명령 전송 후 화면 반영까지 **10초 지연** 발생.
 원인을 추적하자 동일한 MQTT 메시지가 IoT Core를 통해 Lambda에 **중복 전달**되고 있었습니다.
 Lambda가 중복 처리되고, DynamoDB에 중복 저장되면서 처리 지연이 누적되었습니다.
 
@@ -33,7 +33,7 @@ sequenceDiagram
     IoT->>Lambda: 전달 ② (중복)
     Lambda->>DB: 저장 ①
     Lambda->>DB: 저장 ② (중복 저장)
-    Note over Lambda,DB: 중복 처리로 지연 누적 → 23초
+    Note over Lambda,DB: 중복 처리로 지연 누적 → 10초
 ```
 
 MQTT QoS 설정에 따라 **at-least-once** 전달이 보장되어 중복이 발생할 수 있습니다.
@@ -180,7 +180,7 @@ sequenceDiagram
 
 ---
 
-- 제어 지연 **23초 → 1초 이내** 단축
-- 실시간 메시지 전송량 약 **40% 감소** (중복 제거)
+- 제어 지연 **10초 → 1초 이내** 단축
+- 실시간 메시지 전송량 약 **30~40% 감소** (중복 제거)
 - DynamoDB 쓰기 비용 절감
-- 오류율 **20%+** 감소
+- 오류율 **20%** 감소

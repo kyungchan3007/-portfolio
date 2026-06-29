@@ -20,7 +20,6 @@ const sidebars: SidebarsConfig = {
           items: [
             'projects/bems',
             'architecture/layered-to-fsd',
-            'realtime/sse-vs-polling',
           ],
         },
         {
