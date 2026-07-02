@@ -73,6 +73,12 @@ const config: Config = {
         },
         {
           type: 'docSidebar',
+          sidebarId: 'architectureSidebar',
+          position: 'left',
+          label: '아키텍처',
+        },
+        {
+          type: 'docSidebar',
           sidebarId: 'aiWorkflowSidebar',
           position: 'left',
           label: 'AI Workflow',

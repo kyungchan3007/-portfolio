@@ -245,3 +245,22 @@
 .contact-link:hover {
   color: #00C9A7;
 }
+
+/* 한글 표 줄바꿈 개선 (word-break: keep-all → 단어 중간에서 안 끊김) */
+.markdown table {
+  display: table;
+  width: 100%;
+  table-layout: auto;
+}
+
+.markdown table th,
+.markdown table td {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 첫 번째 열(1단계·2단계 등 짧은 라벨)은 아예 줄바꿈 방지 */
+.markdown table th:first-child,
+.markdown table td:first-child {
+  white-space: nowrap;
+}

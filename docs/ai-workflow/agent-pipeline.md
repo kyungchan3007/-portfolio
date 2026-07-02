@@ -3,15 +3,18 @@ sidebar_position: 7
 title:  자동화 검증 워크플로우
 ---
 
-# 자동화 검증 워크플로우
+# 검증·리뷰·배포를 하나로 이어붙이다
 
+역할 분리와 스킬 시스템까지 갖추고 나니, 마지막 조각은 이걸 **하나의 파이프라인으로 이어붙이는 것**이었습니다. 구현이 끝난 코드가 검증 → 리뷰 → 배포로 자동으로 흘러가되, 수정 범위에 따라 검증 강도가 달라지도록 설계했습니다. 작은 수정에 무거운 전체 검증을 붙이면 느려지고, 위험한 변경에 가벼운 검증만 붙이면 사고가 나기 때문입니다.
+
+이 파이프라인이 부족한 인력·촉박한 마감 속에서도 품질 기준을 강제하는 마지막 안전망이 되었습니다.
 
 ---
 
 
 ## 검증
 
-구현된 코드를 자동으로 실행하여 검증합니다.
+구현된 코드를 자동으로 실행해 검증하도록 구성했습니다.
 
 ```bash
 # 검증 실행 순서
@@ -52,8 +55,8 @@ npm run build               # 빌드 성공 여부
 **실패 시 처리**:
 1. TypeScript 컴파일러 에러 로그 수집
 2. 오류 파일 + 라인 번호 + 에러 메시지 정리
-3. 구현 Agent에 전달: "검증 실패: TypeScript 타입 오류"
-4. 구현 Agent가 타입 수정 후 재커밋
+3. Codex에 전달: "검증 실패: TypeScript 타입 오류"
+4. Codex가 타입 수정 후 재커밋
 5. delta-only 재검증: 변경된 파일만 타입 검사
 
 **예시**:
@@ -84,8 +87,8 @@ Fix: Add null check or use optional chaining
 1. 실패한 테스트 케이스 수집
 2. 스택 트레이스 + assertion 에러 메시지 정리
 3. 영향받은 함수/컴포넌트 파악
-4. 구현 Agent에 전달: "검증 실패: Vitest 테스트 실패 (3/25)"
-5. 구현 Agent가 로직 수정 + 테스트 추가/수정
+4. Codex에 전달: "검증 실패: Vitest 테스트 실패 (3/25)"
+5. Codex가 로직 수정 + 테스트 추가/수정
 6. delta-only 재검증: 해당 파일의 테스트만 재실행
 
 **예시**:
@@ -122,8 +125,8 @@ Coverage: 72% (warning - increase to 80%+)
 1. 실패한 시나리오 + 오류 메시지 수집
 2. 스크린샷 비교 (기대값 vs 실제값) 첨부
 3. DOM 스냅샷, 콘솔 에러 수집
-4. 구현 Agent에 전달: "검증 실패: E2E 테스트 실패 (로그인 흐름)"
-5. 구현 Agent가 UI/로직 수정
+4. Codex에 전달: "검증 실패: E2E 테스트 실패 (로그인 흐름)"
+5. Codex가 UI/로직 수정
 6. delta-only 재검증: 영향받은 사용자 흐름 시나리오만 재실행
 
 **예시**:
@@ -161,8 +164,8 @@ Screenshot comparison attached (diff: 3.2% pixels)
 **실패 시 처리**:
 1. 빌드 에러 로그 또는 번들 분석 리포트 수집
 2. 크기 증가 항목 파악 (어떤 패키지/모듈이 증가했는가)
-3. 구현 Agent에 전달: "검증 실패: 번들 크기 25% 증가 (best-practices 위반)"
-4. 구현 Agent가 최적화 (배럴 import 제거, dynamic import 추가 등)
+3. Codex에 전달: "검증 실패: 번들 크기 25% 증가 (best-practices 위반)"
+4. Codex가 최적화 (배럴 import 제거, dynamic import 추가 등)
 5. delta-only 재검증: 번들 크기 전체 확인 (영향 광범위)
 
 **예시**:
@@ -189,19 +192,19 @@ Action: Review bundle-barrel-imports & bundle-dynamic-imports rules
 
 ```
 Step 1️⃣: npm run type-check
-         ↓ (FAIL → 구현 Agent에 전달, 재검증 대기)
+         ↓ (FAIL → Codex에 전달, 재검증 대기)
          ↓ (PASS → 다음 단계)
 
 Step 2️⃣: npm run test:unit
-         ↓ (FAIL → 구현 Agent에 전달, 재검증 대기)
+         ↓ (FAIL → Codex에 전달, 재검증 대기)
          ↓ (PASS → 다음 단계)
 
 Step 3️⃣: npm run test:e2e
-         ↓ (FAIL → 구현 Agent에 전달, 재검증 대기)
+         ↓ (FAIL → Codex에 전달, 재검증 대기)
          ↓ (PASS → 다음 단계)
 
 Step 4️⃣: npm run build
-         ↓ (FAIL → 구현 Agent에 전달, 재검증 대기)
+         ↓ (FAIL → Codex에 전달, 재검증 대기)
          ↓ (PASS → 모든 검증 완료)
 
 ✅ 최종 결과: VALIDATION PASS → 리뷰 단계로 진행
@@ -223,9 +226,9 @@ Step 4️⃣: npm run build
     - 스크린샷 비교 (E2E 실패 시)
     - 번들 분석 (빌드 실패 시)
 
-    ↓ 구현 Agent에 전달
+    ↓ Codex에 전달
     
-🔄 구현 Agent:
+🔄 Codex:
     - "검증 실패: [실패 타입]"
     - 에러 로그 분석 & 근본 원인 파악
     - 코드 수정 + 테스트 추가/수정
@@ -253,7 +256,7 @@ Step 4️⃣: npm run build
    └─ 리뷰 단계로 진행
    
 ❌ 여전히 FAIL
-   └─ 재수정 요청 (검증 Agent → 구현 Agent)
+   └─ 재수정 요청 (검증 Agent → Codex)
    └─ 최대 재시도: 3회 (무한 루프 방지)
 ```
 
@@ -332,7 +335,7 @@ npm run test:e2e -- <spec> --project=mobile-chrome
     ↓
 📊 최종 판정:
     - MERGE: PASS → 병합 진행
-    - MERGE: HOLD → 구현 Agent에 수정 요청
+    - MERGE: HOLD → Codex에 수정 요청
     ↓
 🔁 오류 시 delta-only 재검증:
     - 변경된 부분만 재검증 (효율성 ↑)
@@ -361,12 +364,12 @@ npm run test:e2e -- <spec> --project=mobile-chrome
 
 ### 4단계 검증 기준
 
-| 단계 | 유형 | 필수 스킬 | 기본 검증 | 추가 검증 조건 | 추가 스킬 |
-|------|------|---------|---------|---------|----------|
-| 1단계 | 계산/순수 로직 변경 | `code-review-guard` | 관련 unit test | 계산 결과가 여러 화면 재사용 / API 매핑 영향 / 캐시 키 연결 | `best-practices` |
-| 2단계 | 계산 결과 → 렌더링 연결 | `code-review-guard`, `best-practices` | unit test + 화면 smoke | CTA 노출 영향 / 사용자 흐름 변경 / 접근성 리스크 | `web-design-guidelines`, `caveman-review` |
-| 3단계 | API/캐시/인증 정책 변경 | `code-review-guard`, `best-practices` | typecheck, unit test, route/auth 분기 | React Query key/invalidation 변경 / refresh·redirect·cookie 처리 변경 | `best-practices`, `caveman-review` |
-| 4단계 | UI/UX만 수정 | `web-design-guidelines` | 화면 smoke, 접근성 기본 확인 | 상태 변화/조건부 렌더 포함 / metadata·layout·route 영향 | 2단계 또는 3단계로 승격 |
+| 단계    | 유형 | 필수 스킬 | 기본 검증 | 추가 검증 조건 | 추가 스킬 |
+|-------|------|---------|---------|---------|----------|
+| 1단계   | 계산/순수 로직 변경 | `code-review-guard` | 관련 unit test | 계산 결과가 여러 화면 재사용 / API 매핑 영향 / 캐시 키 연결 | `best-practices` |
+| 2단계   | 계산 결과 → 렌더링 연결 | `code-review-guard`, `best-practices` | unit test + 화면 smoke | CTA 노출 영향 / 사용자 흐름 변경 / 접근성 리스크 | `web-design-guidelines`, `caveman-review` |
+| 3단계   | API/캐시/인증 정책 변경 | `code-review-guard`, `best-practices` | typecheck, unit test, route/auth 분기 | React Query key/invalidation 변경 / refresh·redirect·cookie 처리 변경 | `best-practices`, `caveman-review` |
+| 4단계   | UI/UX만 수정 | `web-design-guidelines` | 화면 smoke, 접근성 기본 확인 | 상태 변화/조건부 렌더 포함 / metadata·layout·route 영향 | 2단계 또는 3단계로 승격 |
 
 **3단계 원칙**: 기본적으로 가장 보수적으로 검증합니다. typecheck 통과는 필수입니다.
 
@@ -383,7 +386,6 @@ npm run test:e2e -- <spec> --project=mobile-chrome
 
 ### 세부 작업 유형 매핑
 
-구체적인 작업이 어느 단계에 해당하는지 참고:
 
 | 작업 | 단계 | 필수 검증 | 추가 검증 |
 |------|------|---------|---------|
@@ -399,60 +401,6 @@ npm run test:e2e -- <spec> --project=mobile-chrome
 | 디자인 시스템/토큰 변경 | 4단계 | Storybook build, typecheck | - |
 | 성능 개선 | 2단계 | 변경 지점 성능 근거 | typecheck |
 | 릴리즈 직전 통합 점검 | 전 단계 | 모든 단계 검증 적용 | 핵심 unit/e2e |
-
----
-
-### 단계별 검증 명령 예시
-
-#### 1단계: 계산/순수 로직 변경
-
-```bash
-$code-review-guard 이번 변경분 검증해줘. 계산 로직/유틸 변경 기준으로. MERGE: PASS/HOLD로.
-```
-
-추가 조건 발견 시:
-```bash
-$best-practices 이번 변경 추가 점검. 데이터 페칭/캐시 사이클 영향 중심으로.
-```
-
-#### 2단계: 계산 결과 → 렌더링 연결
-
-```bash
-$code-review-guard + $best-practices 이번 변경분 검증해줘. 렌더링 연결 로직, 리렌더 위험 중심으로. MERGE: PASS/HOLD로.
-```
-
-추가 조건 발견 시:
-```bash
-$web-design-guidelines 이번 변경 추가 점검. 접근성, 레이아웃, 반응형 위반 항목을 파일:라인으로 보고.
-```
-
-#### 3단계: API/캐시/인증 정책 변경
-
-```bash
-$code-review-guard + $best-practices 이번 변경분 검증해줘. API route, 인증 흐름, 캐시 정책 중심으로. typecheck 결과도 포함. MERGE: PASS/HOLD로.
-```
-
-추가 조건 발견 시:
-```bash
-$best-practices 이번 변경 추가 점검. React Query 캐시/무효화, 렌더 성능 영향 중심으로.
-```
-
-#### 4단계: UI/UX만 수정
-
-```bash
-$web-design-guidelines 이번 변경분 검증해줘. 접근성, 시맨틱, 인터랙션 UX 위반 항목을 파일:라인으로 보고. MERGE: PASS/HOLD로.
-```
-
-추가 조건 발견 시 (승격):
-```bash
-$code-review-guard + $best-practices 단계 승격 검증. 조건부 렌더/상태 연결 포함 변경 기준으로. MERGE: PASS/HOLD로.
-```
-
-#### 통합 검증 (릴리즈 직전)
-
-```bash
-$code-review-guard + $best-practices + $best-practices + $web-design-guidelines 릴리즈 전 통합 검증. 전 단계 기준 적용. MERGE: PASS/HOLD로.
-```
 
 ---
 
@@ -526,9 +474,11 @@ HOLD 판정 → 수정 →
 
 ---
 
-## 파이프라인 효과
+## 이 파이프라인으로 얻은 것
 
-- 검증·리뷰·배포 사이클 단축으로 생산성 향상
-- 단계별 책임 분리로 Agent 정확도 95% 달성
-- delta-only 재검증으로 검증 효율 확보
-- Critical/Major 자동 차단으로 품질 기준 강제화
+처음엔 오히려 사람보다 느렸던 AI 개발이, 이 파이프라인을 갖추고 나서는 마감을 지키는 무기가 됐습니다.
+
+- **생산성 회복** — 검증·리뷰·배포 사이클을 이어붙여 왕복 시간을 줄였습니다.
+- **작업 완성율 95% 이상** — 단계별 책임 분리와 반복 튜닝으로 도달했습니다.
+- **검증 효율** — delta-only 재검증으로 수정 범위만 다시 확인했습니다.
+- **품질 강제** — Critical/Major를 자동 차단해, 손이 부족해도 기준이 무너지지 않게 했습니다.

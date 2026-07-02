@@ -63,6 +63,15 @@ const sidebars: SidebarsConfig = {
       ],
     },
   ],
+  architectureSidebar: [
+    {
+      type: 'category',
+      label: '아키텍처',
+      items: [
+        'architecture/ssr-auth-rendering',
+      ],
+    },
+  ],
   aiWorkflowSidebar: [
     {
       type: 'category',
