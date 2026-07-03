@@ -7,9 +7,8 @@ const TECH_CARDS = [
   {
     icon: '🏗️',
     title: 'Architecture',
-    desc: 'Layered → FSD / VSA 전환. 도메인별 책임 분리와 수정 영향 범위 축소.',
+    desc: '구조 재설계로 도메인별 책임 분리와 수정 영향 범위를 축소.',
     result: '수정 영향 범위 40% 축소',
-    link: '/architecture/layered-to-fsd',
   },
   {
     icon: '⚡',
@@ -93,11 +92,10 @@ export default function Home() {
           </h1>
 
           <div className="notice-box">
-            <div className="notice-box-label">📌 안내</div>
+            <div className="notice-box-label">📌 소개</div>
             <p className="notice-box-text">
-              이 사이트의 코드와 문서는 실무 경험을 기반으로 작성된 <strong>예시</strong>입니다.<br />
-              회사 규정상 실제 프로젝트 코드를 공개할 수 없어,
-              동일한 패턴과 구조로 재현한 예시 코드로 구성했습니다.
+              안녕하세요, 프론트엔드 엔지니어 박경찬입니다.<br />
+              프로젝트를 진행하며 어떤 문제를 발견했고, 어떻게 풀어갔는지 정리한 포트폴리오입니다.
             </p>
           </div>
         </div>

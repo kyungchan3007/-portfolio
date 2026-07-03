@@ -11,7 +11,6 @@ const sidebars: SidebarsConfig = {
           label: 'FMS',
           items: [
             'projects/fms',
-            'architecture/vsa-parallel-dev',
           ],
         },
         {
@@ -19,7 +18,7 @@ const sidebars: SidebarsConfig = {
           label: 'BEMS',
           items: [
             'projects/bems',
-            'architecture/layered-to-fsd',
+            'projects/bems-data-validation',
           ],
         },
         {
@@ -27,7 +26,6 @@ const sidebars: SidebarsConfig = {
           label: '원격 제어 시스템',
           items: [
             'projects/hvac-control',
-            'architecture/layered-to-vsa',
             'realtime/aws-iot-control',
             'realtime/dedup-idempotency',
           ],
@@ -69,6 +67,7 @@ const sidebars: SidebarsConfig = {
       label: '아키텍처',
       items: [
         'architecture/ssr-auth-rendering',
+        'architecture/project-architecture',
       ],
     },
   ],

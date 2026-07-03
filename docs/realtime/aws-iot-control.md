@@ -10,12 +10,33 @@ sidebar_label: AWS IoT 제어 흐름
 
 ---
 
-현장 장비를 웹에서 원격 제어하는 시스템.
-MQTT 프로토콜로 장비와 통신하고, AWS IoT Core → Lambda → WebSocket으로 상태를 실시간 반영합니다.
+현장 장비를 웹에서 원격 제어하는 시스템입니다.
+초기에는 MQTT로 들어온 메시지가 DynamoDB에 직접 적재되는 구조였고, 이후 중복 저장과 지연을 줄이기 위해 AWS Lambda를 중간 처리 계층으로 추가했습니다.
 
 ---
 
-## 전체 아키텍처
+## 구조 전환
+
+### Before — MQTT direct write
+
+```mermaid
+graph LR
+    FE[프론트엔드\nReact]
+    WS[WebSocket\nServer]
+    IoT[AWS IoT Core]
+    DDB[DynamoDB]
+    Device[현장 장비]
+
+    FE -->|제어 명령| WS
+    WS -->|MQTT Publish| IoT
+    Device -->|MQTT 상태 보고| IoT
+    IoT -->|직접 적재| DDB
+    DDB -->|조회 결과| FE
+```
+
+이 구조에서는 같은 시각의 동일 데이터가 여러 건씩 직접 적재될 수 있어, 저장 부담과 이후 조회 부담이 함께 커졌습니다.
+
+### After — Lambda 중간 처리 계층 추가
 
 ```mermaid
 graph LR
@@ -38,6 +59,10 @@ graph LR
     Lambda -->|로그 적재| S3
     S3 -->|SQL 분석| Athena
 ```
+
+---
+
+Lambda는 백엔드 애플리케이션 내부가 아니라 AWS Lambda 환경에 별도로 구현한 서버리스 중간 처리 계층입니다. 여기서 중복 검사와 저장 제어를 먼저 수행한 뒤 필요한 데이터만 DynamoDB에 반영하도록 바꿨습니다.
 
 ---
 
@@ -68,9 +93,9 @@ export async function sendDomainACommand(command: DomainACommand) {
 
 ### 2단계 — AWS IoT Core Rule
 
-MQTT 토픽 패턴을 기준으로 AWS IoT Core Rule을 구성하고, Rule Action으로 Lambda를 실행했습니다.
+MQTT 토픽 패턴을 기준으로 AWS IoT Core Rule을 구성하고, 직접 DynamoDB로 적재하던 흐름 대신 Rule Action으로 Lambda를 실행하도록 전환했습니다.
 
-### 3단계 — Lambda: 멱등성 검증 + 상태 처리
+### 3단계 — Lambda: 중복 검사 + 상태 처리
 
 ```ts title="domainAHandler.ts"
 import { DynamoDBClient, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
@@ -80,7 +105,7 @@ const db = new DynamoDBClient({ region: 'ap-northeast-2' });
 export async function handler(event: IoTEvent) {
   const { messageId, entityId, operation, payload } = event;
 
-  // 멱등성 검증 — 이미 처리한 messageId 확인
+  // 중복 검사 — 이미 처리한 messageId 확인
   const existing = await db.send(new GetItemCommand({
     TableName: 'domain-a-idempotency',
     Key: { messageId: { S: messageId } },
@@ -91,7 +116,7 @@ export async function handler(event: IoTEvent) {
     return { statusCode: 200, body: 'duplicate' };
   }
 
-  // 신규 메시지 처리
+  // 신규 메시지만 저장 허용
   await db.send(new PutItemCommand({
     TableName: 'domain-a-idempotency',
     Item: {
@@ -141,7 +166,7 @@ export function useDomainASync(entityId: string) {
 
 ---
 
-## CloudWatch Alarm 설정
+## 운영 안정성 보강
 
 ```yaml title="cloudwatch-alarms.yaml"
 DomainALambdaErrorAlarm:
@@ -175,6 +200,6 @@ DomainALambdaDurationAlarm:
 
 ---
 
-- 제어 응답 지연 23초 → **1초 이내**
-- 중복 메시지 처리 제거로 DB 비용 절감
+- direct write 구조 제거 후 제어 응답 지연 **10초+ → 1초 이내**
+- 중복 저장 제거로 DB 부담 및 이후 조회 부담 감소
 - CloudWatch Alarm으로 장애 즉시 감지 체계 확보

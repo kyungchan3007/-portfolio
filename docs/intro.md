@@ -16,7 +16,6 @@ title: 소개
 
 | 기술 | 한 줄 요약 | 적용 프로젝트 |
 |---|---|---|
-| [아키텍처 전환](/architecture/layered-to-fsd) | Layered → FSD / VSA 선택 적용 | FMS · BEMS |
 | [멱등성 검증](/realtime/dedup-idempotency) | AWS IoT Core 중복 메시지 필터링 | 원격 제어 시스템 |
 | [AWS IoT 제어](/realtime/aws-iot-control) | MQTT → Lambda → WebSocket, 응답 지연 23s→1s | 원격 제어 시스템 |
 | [OpenAPI → Zod](/projects/fms) | 타입 자동생성 + 런타임 계약 검증 | FMS |
