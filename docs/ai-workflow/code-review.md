@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+sidebar_label: 코드 리뷰
 ---
 
 #  병합 전 리뷰를 표준화한 이유

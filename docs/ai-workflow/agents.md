@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+sidebar_label: 역할 분리
 ---
 
 # 왜 구현과 검증을 다른 AI에게 맡겼나

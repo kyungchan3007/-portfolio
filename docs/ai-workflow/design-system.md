@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+sidebar_label: 디자인 시스템
 ---
 
 # 디자인이 확정되기 전에 디자인 시스템을 세운 방법

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+sidebar_label: 개요
 ---
 
 # 왜 AI Agent 워크플로우를 직접 만들었나

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+sidebar_label: 스킬 시스템
 ---
 
 # 스킬 시스템 — 지침을 온톨로지로 구조화하다

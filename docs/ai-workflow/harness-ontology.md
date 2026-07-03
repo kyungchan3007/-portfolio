@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+sidebar_label: 하네스 & 온톨로지
 ---
 
 # 하네스 + 온톨로지 엔지니어링

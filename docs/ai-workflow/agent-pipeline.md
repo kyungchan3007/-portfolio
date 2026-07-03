@@ -1,5 +1,6 @@
 ---
 sidebar_position: 7
+sidebar_label: 자동화 파이프라인
 title:  자동화 검증 워크플로우
 ---
 
