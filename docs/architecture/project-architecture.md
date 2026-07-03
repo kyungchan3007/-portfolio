@@ -98,8 +98,8 @@ export type Entity = z.infer<typeof EntitySchema>;
 API 응답을 받을 때 스키마로 즉시 검증해 계약 위반을 런타임에서 바로 감지할 수 있도록 했습니다.
 
 관련 문서:
-[FMS](/Users/chan/Documents/develop/-portfolio/docs/projects/fms.md:35)
-[AI Workflow](/Users/chan/Documents/develop/-portfolio/docs/ai-workflow/overview.md:1)
+[FMS](../projects/fms.md)
+[AI Workflow](../ai-workflow/overview.md)
 
 ---
 
@@ -245,8 +245,8 @@ export { useEntityList } from './model/useEntityList';
 - 신규 도메인 확장 시 기존 슬라이스 영향 최소화
 
 관련 문서:
-[BEMS](/Users/chan/Documents/develop/-portfolio/docs/projects/bems.md:32)
-[데이터 정합성 · 검증 체계](/Users/chan/Documents/develop/-portfolio/docs/projects/bems-data-validation.md:1)
+[BEMS](../projects/bems.md)
+[데이터 정합성 · 검증 체계](../projects/bems-data-validation.md)
 
 ---
 
@@ -371,6 +371,6 @@ export { useEntity } from './model/useEntity';
 수정 영향 범위 40% 축소. 슬라이스 단위 독립성으로 사이드 이펙트 감소.
 
 관련 문서:
-[원격 제어 및 모니터링](/Users/chan/Documents/develop/-portfolio/docs/projects/hvac-control.md:34)
-[AWS IoT 제어 흐름](/Users/chan/Documents/develop/-portfolio/docs/realtime/aws-iot-control.md:18)
-[멱등성 검증 & 중복 필터](/Users/chan/Documents/develop/-portfolio/docs/realtime/dedup-idempotency.md:42)
+[원격 제어 및 모니터링](../projects/hvac-control.md)
+[AWS IoT 제어 흐름](../realtime/aws-iot-control.md)
+[멱등성 검증 & 중복 필터](../realtime/dedup-idempotency.md)
