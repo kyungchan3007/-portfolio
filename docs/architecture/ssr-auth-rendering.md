@@ -124,7 +124,7 @@ export async function getDomainEntryRouteOnServer(): Promise<DomainEntryRoute> {
 }
 ```
 
-```tsx title="domain/page.tsx"
+```tsx title="page.tsx"
 export default async function DomainPage({ searchParams }: DomainPageProps) {
   const params = await searchParams;
   const nextPath = normalizeInternalRedirectPath(params.next);

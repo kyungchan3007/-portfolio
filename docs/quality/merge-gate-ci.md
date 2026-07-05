@@ -1,15 +1,16 @@
 ---
 sidebar_position: 2
-title: Merge Gate — CI 품질 자동화
-sidebar_label: 🚫 Merge Gate — 심각도 기반 병합 차단
+title: Merge Gate
+sidebar_label: Merge Gate
 ---
 
-# 🚫 Merge Gate — 심각도 기반 병합 차단
+# Merge Gate
 
 ---
 
 PR 병합 전에 코드 품질을 자동으로 검증하고,
-Critical/Major 이슈가 미해결 상태일 때 병합을 자동 차단하는 시스템입니다.
+Critical/Major 이슈가 미해결 상태일 때 병합을 보류하는 검증 게이트입니다.
+최종 머지는 AI가 결정하지 않았고, 테스트와 스모크 테스트가 모두 끝난 뒤 사람이 직접 진행했습니다.
 
 ---
 
@@ -33,7 +34,8 @@ graph LR
     Storybook[Storybook\n+ Chromatic\nUI 시각 검증]
     Reviewer[Reviewer Agent\nCritical/Major/Minor 판정]
     Gate{Merge Gate}
-    Merge[병합 허용]
+    Smoke[Smoke Test]
+    Human[Human Merge]
     Block[병합 차단]
 
     PR --> Vitest
@@ -43,8 +45,10 @@ graph LR
     Playwright --> Reviewer
     Storybook --> Reviewer
     Reviewer --> Gate
-    Gate -->|PASS| Merge
+    Gate -->|PASS| Smoke
     Gate -->|HOLD| Block
+    Smoke -->|통과| Human
+    Smoke -->|실패| Block
 ```
 
 ---
@@ -60,8 +64,9 @@ graph LR
 
 1. PR 생성 시 type-check, unit, E2E, visual test를 실행합니다.
 2. 실패 항목을 Critical / Major / Minor로 분류합니다.
-3. Critical 또는 Major가 있으면 `MERGE: HOLD`로 병합을 차단합니다.
-4. Minor만 있거나 이슈가 없으면 `MERGE: PASS`로 병합을 허용합니다.
+3. Critical 또는 Major가 있으면 `MERGE: HOLD`로 병합을 보류합니다.
+4. Minor만 있거나 이슈가 없으면 `MERGE: PASS` 상태로 스모크 테스트 단계로 넘깁니다.
+5. 스모크 테스트까지 끝나면 사람이 직접 최종 병합 여부를 판단합니다.
 
 ---
 
@@ -129,6 +134,7 @@ describe('EntitySchema', () => {
 
 ---
 
-- Critical/Major 미해결 시 병합 자동 차단으로 품질 기준 강제화
+- Critical/Major 미해결 시 자동으로 병합을 보류해 품질 기준 강제화
 - Vitest · Playwright · Storybook + Chromatic 3중 검증으로 코드·흐름·UI 전 영역 커버
+- 자동 검증과 스모크 테스트 이후 최종 병합은 사람이 직접 수행
 - delta-only 재검증으로 검증 효율 확보

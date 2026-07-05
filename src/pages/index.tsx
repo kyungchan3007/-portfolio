@@ -1,117 +1,170 @@
 import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import '../css/custom.css';
 
-const TECH_CARDS = [
+const STRENGTHS = [
   {
-    icon: '🏗️',
-    title: 'Architecture',
-    desc: '구조 재설계로 도메인별 책임 분리와 수정 영향 범위를 축소.',
-    result: '수정 영향 범위 40% 축소',
-  },
-  {
-    icon: '⚡',
-    title: 'AWS IoT 제어',
-    desc: 'MQTT → IoT Core → Lambda → WebSocket. 멱등성 검증으로 중복 처리 제거.',
-    result: '제어 지연 10s → 1s',
-    link: '/realtime/aws-iot-control',
-  },
-  {
-    icon: '🔷',
-    title: 'OpenAPI → Zod',
-    desc: 'HeyAPI로 타입 자동생성. Zod 런타임 검증으로 API 계약 위반 즉시 감지.',
-    result: '수동 타입 정의 제거',
-    link: '/projects/fms',
-  },
-  {
-    icon: '🚦',
-    title: 'Merge Gate (CI)',
-    desc: 'Critical / Major / Minor 심각도 판정 기반 병합 자동 차단.',
-    result: 'Vitest · Playwright · Chromatic 3중 검증',
-    link: '/quality/merge-gate-ci',
-  },
-  {
-    icon: '🤖',
-    title: 'AI Agent Workflow',
-    desc: 'Claude(UX/UI) + Codex(비즈니스 로직) 역할 분리. AGENTS.md · SKILL.md 하네스 엔지니어링.',
-    result: 'Agent 정확도 95% 달성',
-    link: '/ai-workflow/agent-pipeline',
-  },
-];
-
-const PROJECTS = [
-  {
-    period: '2026.01 — 2026.06',
-    title: 'FMS',
-    desc: '복합 업무 프로세스 디지털화. AI Agent 파이프라인으로 개발 인원 3→2명에도 전 도메인 커버리지 유지.',
-    tags: ['Next.js', 'TypeScript', 'Zustand', 'TanStack Query', 'Zod', 'Vitest', 'Playwright'],
-    link: '/projects/fms',
-  },
-  {
-    period: '2023.08 — 2025.08',
-    title: 'BEMS',
-    desc: '운영 지표 데이터 실시간 수집·시각화. Web Worker 기반 렌더링으로 화면 반영 지연 3~5초 → 1초 이내.',
-    tags: ['React', 'TypeScript', 'Redux', 'Web Worker', 'react-query', 'Styled-components'],
+    title: '성능 병목을 측정하고 줄입니다',
+    desc: '체감이 아니라 수치로 병목을 확인하고, 브라우저 렌더링과 네트워크 흐름을 함께 손봅니다.',
+    evidence: 'BEMS 화면 반영 지연 3~5초 -> 1초 이내',
     link: '/projects/bems',
   },
   {
-    period: '2024.08 — 2025.12',
-    title: '원격 제어 및 모니터링',
-    desc: 'AWS IoT Core 기반 현장 장비 원격 제어. 멱등성 검증으로 응답 지연 23초 → 1초.',
-    tags: ['React', 'TypeScript', 'Redux', 'WebSocket', 'AWS IoT Core', 'Lambda', 'DynamoDB'],
+    title: '복잡한 실시간 흐름을 안정화합니다',
+    desc: '이벤트가 꼬이는 시스템일수록 연결 지점, 중복 처리, 저장 흐름을 구조로 분리합니다.',
+    evidence: '원격 제어 응답 지연 10초+ -> 1초 이내',
     link: '/projects/hvac-control',
   },
   {
-    period: '2025.10 — 2026.03',
-    title: 'PinHouse',
-    desc: '맞춤형 주거 탐색 서비스. SSR 경계와 인증 라우팅 개선으로 First Load JS 14.4% 절감.',
-    tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Zod', 'Playwright'],
+    title: '반복 작업을 자동화해 팀 속도를 높입니다',
+    desc: 'OpenAPI 계약, CI, 작업 기준 문서를 정리해 재작업과 검증 비용을 줄입니다.',
+    evidence: 'FMS 2인 체제로 전 도메인 병렬 개발 유지',
+    link: '/projects/fms',
+  },
+  {
+    title: 'SSR 경계와 렌더링 병목을 다듬습니다',
+    desc: 'PinHouse에서 인증 진입, SSR 경계, React Query 캐시 구조를 실험하며 렌더링 병목을 확인하고 개선 기준을 정리했습니다.',
+    evidence: 'PinHouse 실험으로 SSR 개선 기준 정리',
     link: '/projects/pinhouse',
   },
   {
-    period: '2026.03 — 2026.06',
-    title: 'SAJU:ME',
-    desc: '한국식 운세 추천 서비스. Admin Dashboard와 Cloudflare Edge 배포, 릴리즈 흐름 표준화로 운영 효율 개선.',
-    tags: ['Next.js 15', 'TypeScript', 'TanStack Query', 'OpenAPI', 'Zod', 'Cloudflare'],
+    title: '실험한 방식을 실제 현업에 연결합니다',
+    desc: 'PinHouse와 SAJU:ME에서 AI Agents와 검증 흐름을 실험했고, 그 결과를 실제 현업의 작업 기준과 자동화 방식에 접목했습니다.',
+    evidence: '사이드 프로젝트 실험을 현업 검증 흐름에 반영',
     link: '/projects/saju',
   },
 ];
 
-export default function Home() {
-  const { siteConfig } = useDocusaurusContext();
+const HIGHLIGHTS = [
+  {
+    label: 'Performance',
+    title: 'BEMS',
+    summary: '실시간 데이터 비교·검증 연산을 Web Worker로 분리해 메인 스레드 부하를 줄였습니다.',
+    result: '화면 반영 3~5초 -> 1초 이내',
+    tags: ['React', 'TypeScript', 'Web Worker', 'react-query'],
+    link: '/projects/bems',
+  },
+  {
+    label: 'Realtime',
+    title: '원격 제어 및 모니터링',
+    summary: 'AWS IoT Core direct write 구조를 Lambda 중간 계층과 멱등성 검증 구조로 재구성했습니다.',
+    result: '제어 응답 10초+ -> 1초 이내',
+    tags: ['AWS IoT Core', 'Lambda', 'DynamoDB', 'Socket'],
+    link: '/projects/hvac-control',
+  },
+  {
+    label: 'System',
+    title: 'FMS',
+    summary: '도메인 확장과 인원 축소가 동시에 일어난 상황에서 VSA와 검증·작업 기준을 팀 공통 구조로 정리했습니다.',
+    result: '2인 체제로 설비·ERP 전 도메인 커버',
+    tags: ['Next.js', 'VSA', 'Zod', 'Playwright'],
+    link: '/projects/fms',
+  },
+];
 
+const SIDE_PROJECTS = [
+  {
+    label: 'Product',
+    title: 'SAJU:ME',
+    summary: 'PinHouse에서 다듬은 검증 흐름을 바탕으로 운영 도구, Edge 배포, 릴리즈 구조까지 확장했습니다.',
+    result: '실험 범위를 운영·배포 구조까지 확장',
+    tags: ['Next.js 15', 'Cloudflare', 'OpenAPI', 'Zod'],
+    link: '/projects/saju',
+  },
+  {
+    label: 'Frontend',
+    title: 'PinHouse',
+    summary: '검증 흐름을 실험하며 SSR 경계와 인증 진입 구조의 병목을 찾아 프론트엔드 기준을 다듬었습니다.',
+    result: 'SSR 병목 발굴 및 First Load JS 10%+ 절감',
+    tags: ['Next.js', 'SSR', 'TanStack Query', 'Zod'],
+    link: '/projects/pinhouse',
+  },
+];
+
+const PORTFOLIO_AREAS = [
+  {
+    title: '대표 프로젝트',
+    desc: '핵심 문제 해결 방식과 결과를 중심으로 정리한 프로젝트 문서입니다.',
+    links: [
+      { label: '소개', to: '/intro' },
+      { label: 'BEMS', to: '/projects/bems' },
+      { label: 'FMS', to: '/projects/fms' },
+      { label: '원격 제어', to: '/projects/hvac-control' },
+    ],
+  },
+  {
+    title: '구조와 렌더링',
+    desc: '프로젝트에서 선택한 구조, SSR 경계, 공통 렌더링 기준을 정리한 문서입니다.',
+    links: [
+      { label: '프로젝트 아키텍처', to: '/architecture/project-architecture' },
+      { label: 'SSR 인증/렌더링', to: '/architecture/ssr-auth-rendering' },
+      { label: 'Merge Gate', to: '/quality/merge-gate-ci' },
+    ],
+  },
+  {
+    title: '작업 기준과 자동화',
+    desc: '검증 기준, 리뷰 방식, 자동화 흐름을 문서화한 기록입니다.',
+    links: [
+      { label: '워크플로우 개요', to: '/ai-workflow/overview' },
+      { label: '검증 파이프라인', to: '/ai-workflow/agent-pipeline' },
+      { label: '스킬 시스템', to: '/ai-workflow/skill-system' },
+    ],
+  },
+];
+
+export default function Home() {
   return (
     <Layout title="포트폴리오" description="박경찬 프론트엔드 엔지니어 포트폴리오">
-      {/* Hero */}
       <div className="hero-section">
-        <div className="container">
-          <div className="hero-badge">Frontend Engineer · 약 4년 경력</div>
-          <h1 className="hero-title">
-            박경찬
-          </h1>
-
-          <div className="notice-box">
-            <div className="notice-box-label">📌 소개</div>
-            <p className="notice-box-text">
-              안녕하세요, 프론트엔드 엔지니어 박경찬입니다.<br />
-              프로젝트를 진행하며 어떤 문제를 발견했고, 어떻게 풀어갔는지 정리한 포트폴리오입니다.
+        <div className="container hero-layout">
+          <div className="hero-copy">
+            <div className="hero-badge">Frontend Engineer · 약 4년 경력 · 팀 리딩 경험</div>
+            <h1 className="hero-title">복잡해지는 운영 서비스를 <br/>구조로 정리하는 <br/>프론트엔드 엔지니어</h1>
+            <p className="hero-subtitle">
+              성능 병목, 실시간 동기화, 품질 검증, 협업 비용을 분리해서 보고
+              구조와 기준으로 다시 묶는 방식으로 문제를 풀어왔습니다.
             </p>
+
+            <div className="notice-box">
+              <div className="notice-box-label">Narrative</div>
+              <p className="notice-box-text">
+                이 포트폴리오는 프로젝트를 나열하기보다 어떤 문제를 발견했고,
+                왜 그 방식으로 풀었으며, 팀과 서비스에 어떤 기준을 남겼는지 보여주기 위해 정리했습니다.
+              </p>
+            </div>
+          </div>
+
+          <div className="hero-panel">
+            <div className="hero-panel-label">Selected Evidence</div>
+            <div className="hero-metric">
+              <strong>3~5초 → 1초</strong>
+              <span>BEMS 렌더링 지연 단축</span>
+            </div>
+            <div className="hero-metric">
+              <strong>10초+ → 1초</strong>
+              <span>원격 제어 응답 지연 개선</span>
+            </div>
+            <div className="hero-metric">
+              <strong>2인 체제 유지</strong>
+              <span>FMS 병렬 개발 구조 정착</span>
+            </div>
+            <div className="hero-links">
+              <Link to="/intro" className="hero-link-primary">소개</Link>
+              <Link to="/projects/fms" className="hero-link-secondary">FMS</Link>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 핵심 기술 */}
       <div className="section">
         <div className="container">
-          <p className="section-title">핵심 기술</p>
-          <div className="card-grid card-grid-3">
-            {TECH_CARDS.map((card) => (
-              <Link key={card.title} to={card.link} className="tech-card">
-                <div className="tech-card-icon">{card.icon}</div>
-                <div className="tech-card-title">{card.title}</div>
-                <p className="tech-card-desc">{card.desc}</p>
-                <div className="tech-card-result">→ {card.result}</div>
+          <p className="section-title">핵심 강점</p>
+          <div className="strength-grid">
+            {STRENGTHS.map((item) => (
+              <Link key={item.title} to={item.link} className="strength-card">
+                <div className="strength-card-title">{item.title}</div>
+                <p className="strength-card-desc">{item.desc}</p>
+                <div className="strength-card-evidence">{item.evidence}</div>
               </Link>
             ))}
           </div>
@@ -120,35 +173,85 @@ export default function Home() {
 
       <hr className="divider" />
 
-      {/* 프로젝트 */}
       <div className="section">
         <div className="container">
-          <p className="section-title">프로젝트</p>
-          <div className="card-grid card-grid-3">
-            {PROJECTS.map((project) => (
-              <Link key={project.title} to={project.link} className="project-card">
-                <div className="project-card-period">{project.period}</div>
-                <div className="project-card-title">{project.title}</div>
-                <p className="project-card-desc">{project.desc}</p>
+          <p className="section-title">대표 프로젝트</p>
+          <div className="project-group">
+            <div className="project-group-head">
+              <h2 className="project-group-title">회사 프로젝트</h2>
+              <p className="project-group-desc">실무 환경에서 성능, 실시간 처리, 구조 설계를 해결한 프로젝트입니다.</p>
+            </div>
+          <div className="highlight-grid">
+            {HIGHLIGHTS.map((item) => (
+              <Link key={item.title} to={item.link} className="highlight-card">
+                <div className="highlight-label">{item.label}</div>
+                <div className="highlight-title">{item.title}</div>
+                <p className="highlight-summary">{item.summary}</p>
+                <div className="highlight-result">{item.result}</div>
                 <div className="tag-list">
-                  {project.tags.map((tag) => (
+                  {item.tags.map((tag) => (
                     <span key={tag} className="tag">{tag}</span>
                   ))}
                 </div>
               </Link>
             ))}
           </div>
+          </div>
+
+          <div className="project-group">
+            <div className="project-group-head">
+              <h2 className="project-group-title">사이드 프로젝트</h2>
+              <p className="project-group-desc">주도적으로 설계하고 실험한 서비스와 프론트엔드 개선 사례입니다.</p>
+            </div>
+            <div className="highlight-grid highlight-grid-side">
+              {SIDE_PROJECTS.map((item) => (
+                <Link key={item.title} to={item.link} className="highlight-card">
+                  <div className="highlight-label">{item.label}</div>
+                  <div className="highlight-title">{item.title}</div>
+                  <p className="highlight-summary">{item.summary}</p>
+                  <div className="highlight-result">{item.result}</div>
+                  <div className="tag-list">
+                    {item.tags.map((tag) => (
+                      <span key={tag} className="tag">{tag}</span>
+                    ))}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
       <hr className="divider" />
 
-      {/* 연락처 */}
+      <div className="section">
+        <div className="container">
+          <p className="section-title">문서 영역</p>
+          <div className="path-grid">
+            {PORTFOLIO_AREAS.map((path) => (
+              <div key={path.title} className="path-card">
+                <div className="path-card-title">{path.title}</div>
+                <p className="path-card-desc">{path.desc}</p>
+                <div className="path-link-list">
+                  {path.links.map((link) => (
+                    <Link key={link.to} to={link.to} className="path-link">
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <hr className="divider" />
+
       <div className="contact-row">
         <a href="mailto:developfff@gmail.com" className="contact-link">
           ✉ developfff@gmail.com
         </a>
-        <a href="https://github.com/kyungchan3007" target="_blank" className="contact-link">
+        <a href="https://github.com/kyungchan3007" target="_blank" rel="noreferrer" className="contact-link">
           GitHub
         </a>
       </div>

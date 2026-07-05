@@ -4,8 +4,9 @@ const sidebars: SidebarsConfig = {
   projectsSidebar: [
     {
       type: 'category',
-      label: '프로젝트',
+      label: '대표 프로젝트',
       items: [
+        'intro',
         {
           type: 'category',
           label: 'FMS',
@@ -46,7 +47,7 @@ const sidebars: SidebarsConfig = {
   qualitySidebar: [
     {
       type: 'category',
-      label: '품질',
+      label: '검증과 릴리즈',
       items: [
         {
           type: 'category',
@@ -64,7 +65,7 @@ const sidebars: SidebarsConfig = {
   architectureSidebar: [
     {
       type: 'category',
-      label: '아키텍처',
+      label: '구조와 렌더링',
       items: [
         'architecture/ssr-auth-rendering',
         'architecture/project-architecture',
@@ -74,7 +75,7 @@ const sidebars: SidebarsConfig = {
   aiWorkflowSidebar: [
     {
       type: 'category',
-      label: 'AI Workflow',
+      label: '작업 기준과 자동화',
       items: [
         'ai-workflow/overview',
         'ai-workflow/agents',
