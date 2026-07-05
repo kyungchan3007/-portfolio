@@ -71,12 +71,13 @@ const config: Config = {
           position: 'left',
           label: '검증과 릴리즈',
         },
-        {
-          type: 'docSidebar',
-          sidebarId: 'architectureSidebar',
-          position: 'left',
-          label: '구조와 렌더링',
-        },
+        // Hidden for now due to sensitive architecture/security details.
+        // {
+        //   type: 'docSidebar',
+        //   sidebarId: 'architectureSidebar',
+        //   position: 'left',
+        //   label: '구조와 렌더링',
+        // },
         {
           type: 'docSidebar',
           sidebarId: 'aiWorkflowSidebar',

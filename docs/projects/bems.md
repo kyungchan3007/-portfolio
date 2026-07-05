@@ -59,14 +59,6 @@ BEMS는 데이터 규모가 커질수록 커지는 실시간 병목과 정합성
 
 ---
 
-## 아키텍처 선택
-
-데이터 규모가 커질수록 기존 Layered 구조에서는 기능 변경 시 여러 레이어를 동시에 따라가야 했고, 실시간 처리 개선과 유지보수가 함께 무거워졌습니다. 그래서 기능 단위로 변경 범위를 줄일 수 있는 FSD 방향으로 구조를 정리했습니다.
-
-이 선택 덕분에 실시간 병목 개선과 기능 수정 작업을 더 작은 단위로 나눠 다룰 수 있었습니다. 구조 선택 이유와 폴더 구성은 [프로젝트별 아키텍처](../architecture/project-architecture.md) 문서에 정리했습니다.
-
----
-
 ## 1. 실시간 데이터 전환 및 네트워크 최적화
 
 고객 요구사항 변경으로 기존 15분 주기 데이터 조회를 1분 단위 실시간 구조로 전환해야 했습니다. 하지만 전체 데이터를 매번 교체하는 방식으로는 데이터 양이 늘어날수록 네트워크 비용과 화면 반영 부담이 함께 커질 수밖에 없었습니다.
@@ -98,50 +90,41 @@ export function extractDelta(prev: DataMap, next: DataMap): DeltaEntry[] {
 
 그래서 비교·검증 연산 전체를 **Web Worker 백그라운드 스레드**로 분리하고, 변경된 항목만 순차적으로 메인 스레드에 전달하는 구조로 개선했습니다. 렌더링을 빠르게 만드는 것보다, 메인 스레드가 사용자 인터랙션에 집중할 수 있는 구조로 바꾸는 데 집중했습니다.
 
-```ts title="dataWorker.ts (Worker 스레드)"
-// 백그라운드에서 4,400개 데이터 비교 후 delta만 순차 전달
-self.onmessage = (e: MessageEvent<WorkerPayload>) => {
-  const { prev, next } = e.data;
-  const delta: DeltaEntry[] = [];
+예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
 
-  for (const key of Object.keys(next)) {
-    if (prev[key] !== next[key]) {
-      delta.push({ key, value: next[key] });
-    }
+```js title="metrics.worker.js"
+self.onmessage = (event: MessageEvent<WorkerRequest>) => {
+  const { type, payload } = event.data;
+
+  switch (type) {
+    case 'AGGREGATE':
+      self.postMessage({
+        type: 'AGGREGATE_DONE',
+        payload: aggregate(payload),
+      });
+      break;
+    case 'APPLY_DELTA':
+      self.postMessage({
+        type: 'DELTA_DONE',
+        payload: mergeDelta(payload.base, payload.delta),
+      });
+      break;
   }
-
-  // 변경 항목만 메인 스레드에 배달
-  self.postMessage({ type: 'DELTA', payload: delta });
 };
 ```
 
-```ts title="useRealtimeData.ts (메인 스레드)"
-// Worker 생성 및 delta 수신
-const workerRef = useRef<Worker | null>(null);
+```js title="worker-bridge.js"
+worker.postMessage({
+  type: 'APPLY_DELTA',
+  payload: { base, delta },
+});
 
-useEffect(() => {
-  workerRef.current = new Worker(
-    new URL('./dataWorker.ts', import.meta.url),
-    { type: 'module' }
-  );
-
-  workerRef.current.onmessage = (e: MessageEvent<WorkerResponse>) => {
-    if (e.data.type === 'DELTA') {
-      // delta 항목만 순차 반영
-      dispatch(applyDelta(e.data.payload));
-    }
-  };
-
-  return () => {
-    workerRef.current?.terminate();
-  };
-}, []);
-
-const handleNewData = (next: DataMap) => {
-  workerRef.current?.postMessage({ prev: prevDataRef.current, next });
-  prevDataRef.current = next;
+worker.onmessage = (event) => {
+  render(event.data.payload);
 };
 ```
+
+비교·검증 같은 무거운 비즈니스 로직은 Worker 쪽에서 실행했고, 메인 스레드에는 화면 반영에 필요한 결과만 넘기도록 정리했습니다.
 
 **결과**: 메인 스레드 블로킹 제거, 화면 반영 지연 **3~5초 → 1초 이내** 단축
 
@@ -152,5 +135,22 @@ const handleNewData = (next: DataMap) => {
 실시간 병목을 줄이는 것만으로는 충분하지 않았습니다. null·부분 응답 환경에서도 데이터를 안정적으로 보정해야 했고, 개선 결과 역시 클라이언트와 같은 기준으로 검증할 수 있어야 했습니다.
 
 그래서 JSON 규칙 기반 데이터 보정으로 정합성을 흡수하고, `performance.now()`와 `requestAnimationFrame()` 기반 측정 체계로 개선 전후를 정량적으로 확인했습니다.
+핵심은 백엔드 프로시저를 크게 흔들지 않으면서도 프론트 레이어에서 정합성 보정과 성능 검증 기준을 함께 관리할 수 있게 만든 점이었습니다.
 
-정합성 보정 방식과 성능 측정 체계는 [데이터 정합성 · 검증 체계](./bems-data-validation.md) 문서에 따로 정리했습니다.
+예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
+
+```ts title="dynamic-rule-pattern.ts"
+type Rule = {
+  key: string;
+  type: string;
+};
+
+export function applyRules(rules: Rule[], source: unknown) {
+  return rules.map((rule) => ({
+    key: rule.key,
+    value: executeFormula(rule.formula, source),
+  }));
+}
+```
+
+실제로는 도메인별 수식과 보정 규칙을 실행했고, 계산 결과만 화면과 검증 단계에서 사용할 수 있도록 넘겼습니다.

@@ -30,7 +30,24 @@ sidebar_label: SAJU:ME
 ---
 
 ## SSR 인증/렌더링
-SAJU:ME는 개인화된 결과와 인증 흐름이 많아, 상태 기반 진입 라우팅과 렌더 전 보안 게이트를 서버에서 먼저 처리하는 구조가 필요했습니다. 서버 컴포넌트 인증 판별부터 BFF 토큰 계층까지 이어지는 전체 흐름을 [SSR 인증/렌더링 구조](../architecture/ssr-auth-rendering.md)에 정리해 두었으니, 함께 봐주시면 감사하겠습니다.
+SAJU:ME는 개인화된 결과와 인증 흐름이 많아, 상태 기반 진입 라우팅과 렌더 전 보안 게이트를 서버에서 먼저 처리하는 구조가 필요했습니다. 핵심은 인증과 보안 검증을 화면 렌더 이후가 아니라 렌더 이전 서버 단계에서 먼저 끝내는 것이었습니다.
+
+일반적인 SSR 패턴을 사용했고, 도메인 특성에 맞게 재구성해 적용했습니다.
+
+예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
+
+```tsx title="server-gate-pattern.tsx"
+export default async function ResultPage() {
+  const session = await getSession();
+  const verified = await verifyRequest();
+
+  if (!session || !verified) {
+    redirect('/start');
+  }
+
+  return <ResultView />;
+}
+```
 
 
 ---
@@ -43,20 +60,32 @@ SAJU:ME는 개인화된 결과와 인증 흐름이 많아, 상태 기반 진입 
 
 운영팀이 수작업으로 관리하던 사용자, 커뮤니티, 알림, 모니터링을 한눈에 확인하고 관리할 수 있는 Admin Dashboard를 구축했습니다.
 
-```tsx title="dashboar.tsx"
+[//]: # (```tsx title="dashboar.tsx")
 
-export default function DashboardPage() {
-  return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-xl font-bold text-content-primary">대시보드</h2>
-        <p className="mt-1 text-sm text-content-muted">서비스 현황과 실시간 트래픽을 확인합니다.</p>
-      </div>
-      <DashboardSection />
-    </div>
-  );
-}
-```
+[//]: # ()
+[//]: # (export default function DashboardPage&#40;&#41; {)
+
+[//]: # (  return &#40;)
+
+[//]: # (    <div className="flex flex-col gap-6">)
+
+[//]: # (      <div>)
+
+[//]: # (        <h2 className="text-xl font-bold text-content-primary">대시보드</h2>)
+
+[//]: # (        <p className="mt-1 text-sm text-content-muted">서비스 현황과 실시간 트래픽을 확인합니다.</p>)
+
+[//]: # (      </div>)
+
+[//]: # (      <DashboardSection />)
+
+[//]: # (    </div>)
+
+[//]: # (  &#41;;)
+
+[//]: # (})
+
+[//]: # (```)
 
 **관리 기능:**
 - 실시간 트래픽 및 요청 통계 (Cloudflare Analytics 연동)
