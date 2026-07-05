@@ -51,7 +51,7 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'category',
-          label: 'Merge Gate',
+          label: '테스트 기반 개발',
           items: ['quality/merge-gate-ci'],
         },
         {
