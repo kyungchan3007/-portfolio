@@ -10,7 +10,7 @@ sidebar_label: PinHouse
 
 PinHouse는 사용자의 핀포인트 위치와 주거 조건을 기반으로 공공/민간 주거 공고를 탐색하고, 조건에 맞는 매물을 비교·검색할 수 있는 맞춤형 주거 탐색 서비스입니다.
 
-AI Agents 기반 코드 검증 워크플로를 도입해 SSR 경계, 인증 라우팅, React Query 캐시 구조의 잠재적 문제를 발굴하고, First Load JS 14.4% 절감과 렌더링 안정성을 개선할 수 있었고 프로젝트 품질을 높일 수 있었습니다.
+AI Agents 기반 코드 검증 워크플로를 도입해 SSR 경계, 인증 라우팅, React Query 캐시 구조의 잠재적 문제를 발굴하고, First Load JS 14% 절감과 렌더링 안정성을 개선할 수 있었고 프로젝트 품질을 높일 수 있었습니다.
 
 ## 기술 스택
 
@@ -51,7 +51,7 @@ AI Agent 기반 코드 검증 워크플로를 도입해 SSR 경계에서 아래 
 
 **개선 효과**
 - Client Component boundary를 UI 영역으로 제한
-- client `page.tsx` entry 수 17개 → 14개, 약 **17.6% 감소**
+- client `page.tsx` entry 수 17개 → 14개, 약 **17% 감소**
 
 ### 3. React Query Provider 동시성 개선
 
