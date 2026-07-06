@@ -70,23 +70,17 @@ Lambda는 백엔드 애플리케이션 내부가 아니라 AWS Lambda 환경에 
 
 ### 1단계 — 프론트엔드: 제어 명령 전송
 
-```ts title="domainAApi.ts"
-import { v4 as uuidv4 } from 'uuid';
+예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
 
-interface DomainACommand {
-  entityId: string;
-  operation: 'start' | 'stop' | 'update';
-  payload?: Record<string, unknown>;
-}
+```ts title="domainAApi.ts"
 
 export async function sendDomainACommand(command: DomainACommand) {
-  const messageId = uuidv4(); // 멱등성 키 생성
+  const messageId = "멱등성 키 생성"
 
   return wsClient.send({
     type: 'DOMAIN_A_COMMAND',
-    messageId,              // Lambda에서 중복 검증에 사용
-    timestamp: Date.now(),
-    ...command,
+    messageId,          // Lambda에서 중복 검증에 사용
+    /* 제어 명령 payload */
   });
 }
 ```
@@ -97,103 +91,62 @@ MQTT 토픽 패턴을 기준으로 AWS IoT Core Rule을 구성하고, 직접 Dyn
 
 ### 3단계 — Lambda: 중복 검사 + 상태 처리
 
+예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
+
 ```ts title="domainAHandler.ts"
-import { DynamoDBClient, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
-
-const db = new DynamoDBClient({ region: 'ap-northeast-2' });
-
-export async function handler(event: IoTEvent) {
-  const { messageId, entityId, operation, payload } = event;
-
-  // 중복 검사 — 이미 처리한 messageId 확인
+  // 1. 중복 검사 — 이미 처리한 messageId인지 확인
   const existing = await db.send(new GetItemCommand({
-    TableName: 'domain-a-idempotency',
-    Key: { messageId: { S: messageId } },
+  "messageId 기반 조회 키"
   }));
 
-  if (existing.Item) {
-    console.log(`중복 메시지 스킵: ${messageId}`);
-    return { statusCode: 200, body: 'duplicate' };
-  }
-
-  // 신규 메시지만 저장 허용
+  if (existing.Item) "중복으로 응답하고 즉시 종료" / "더 처리하지 않고 반환"
+  
+  // 2. 신규 메시지만 저장 (TTL로 자동 만료)
   await db.send(new PutItemCommand({
-    TableName: 'domain-a-idempotency',
-    Item: {
-      messageId: { S: messageId },
-      entityId: { S: entityId },
-      operation: { S: operation },
-      processedAt: { S: new Date().toISOString() },
-      ttl: { N: String(Math.floor(Date.now() / 1000) + 86400) }, // 24시간 TTL
-    },
+    "messageId, 처리 시각, TTL 등"
   }));
-
-  // 장비 상태 업데이트 및 WebSocket 전파
-  await updateDomainAState(entityId, operation, payload);
-  await broadcastToClients(entityId, { operation, status: 'applied' });
+  // 3. 상태 반영 + 실시간 전파
+  await updateState(/* 대상 식별자, 처리 내용 */);
+  await broadcastToClients(/* 구독 클라이언트에 상태 전파 */);
 
   return { statusCode: 200, body: 'processed' };
-}
+
 ```
 
 ### 4단계 — 프론트엔드: WebSocket 상태 동기화
 
+예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
+
 ```ts title="useDomainASync.ts"
-export function useDomainASync(entityId: string) {
-  const dispatch = useDispatch();
-  const processedIds = useRef(new Set<string>());
-
+  // WebSocket 구독 → 중복 수신 필터 → 상태 반영
   useEffect(() => {
-    const unsubscribe = wsClient.subscribe(
-      `domain-a:${entityId}`,
-      (message: DomainAMessage) => {
-        // 프론트 중복 렌더링 방지
-        if (processedIds.current.has(message.messageId)) return;
-        processedIds.current.add(message.messageId);
-
-        dispatch(applyDomainAState({
-          entityId: message.entityId,
-          status: message.status,
-          operation: message.operation,
-        }));
-      }
-    );
+    const unsubscribe = wsClient.subscribe(/* 구독 채널 */, (message) => {
+      "프론트 중복 렌더링 방지 로직 실행"
+      dispatch(applyState(/* 수신 상태 반영 */));
+    });
 
     return unsubscribe;
-  }, [entityId, dispatch]);
-}
+  }, [/* 의존성 */]);
 ```
 
 ---
 
 ## 운영 안정성 보강
 
-```yaml title="cloudwatch-alarms.yaml"
+예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
+
+```yaml title="yaml"
 DomainALambdaErrorAlarm:
   Type: AWS::CloudWatch::Alarm
   Properties:
-    AlarmName: domain-a-lambda-errors
-    MetricName: Errors
-    Namespace: AWS/Lambda
-    Statistic: Sum
-    Period: 60
-    EvaluationPeriods: 1
-    Threshold: 5
-    ComparisonOperator: GreaterThanOrEqualToThreshold
+    Threshold: <임계값>          # 예시값
     AlarmActions:
       - !Ref AlertSNSTopic  # SNS → 슬랙 알림
 
 DomainALambdaDurationAlarm:
   Type: AWS::CloudWatch::Alarm
   Properties:
-    AlarmName: domain-a-lambda-duration
-    MetricName: Duration
-    Namespace: AWS/Lambda
-    Statistic: Average
-    Period: 60
-    EvaluationPeriods: 3
-    Threshold: 5000          # 5초 초과 시 알림
-    ComparisonOperator: GreaterThanOrEqualToThreshold
+    Threshold: <임계값>         
     AlarmActions:
       - !Ref AlertSNSTopic
 ```

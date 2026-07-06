@@ -65,6 +65,8 @@ BEMS는 데이터 규모가 커질수록 커지는 실시간 병목과 정합성
 
 그래서 전체 교체 대신, 변경된 데이터만 추출해 전달하는 delta 업데이트 구조를 도입했습니다. 핵심은 조회 주기만 줄이는 것이 아니라, 실시간 요구를 감당할 수 있는 전송 구조로 바꾸는 것이었습니다.
 
+예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
+
 ```ts title="deltaExtractor.ts"
 // 이전 상태와 비교하여 변경된 항목만 추출
 export function extractDelta(prev: DataMap, next: DataMap): DeltaEntry[] {

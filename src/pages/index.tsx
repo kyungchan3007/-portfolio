@@ -60,17 +60,13 @@ const SIDE_PROJECTS = [
   {
     label: 'Product',
     title: 'SAJU:ME',
-    summary: 'PinHouse에서 다듬은 검증 흐름을 바탕으로 운영 도구, Edge 배포, 릴리즈 구조까지 확장했습니다.',
-    result: '검증한 방식을 운영·배포 구조까지 확장',
-    tags: ['Next.js 15', 'Cloudflare', 'OpenAPI', 'Zod'],
+    summary: '실제 배포·운영 과정에서 AI 활용, E2E 검증, 디자인 시스템 패키지 구조를 먼저 검증하고 다듬었습니다.',
     link: '/projects/saju',
   },
   {
     label: 'Frontend',
     title: 'PinHouse',
-    summary: '검증 흐름을 탐색하며 SSR 경계와 인증 진입 구조의 병목을 찾아 프론트엔드 기준을 다듬었습니다.',
-    result: 'SSR 병목 발굴 및 First Load JS 10%+ 절감',
-    tags: ['Next.js', 'SSR', 'TanStack Query', 'Zod'],
+    summary: '실제 서비스 개발 과정에서 SSR 경계, 인증 진입, React Query 캐시 구조의 기준을 다듬었습니다.',
     link: '/projects/pinhouse',
   },
 ];
@@ -128,25 +124,25 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero-panel">
-            <div className="hero-panel-label">Selected Evidence</div>
-            <div className="hero-metric">
-              <strong>3~5초 → 1초</strong>
-              <span>BEMS 렌더링 지연 단축</span>
-            </div>
-            <div className="hero-metric">
-              <strong>10초+ → 1초</strong>
-              <span>원격 제어 응답 지연 개선</span>
-            </div>
-            <div className="hero-metric">
-              <strong>2인 체제 유지</strong>
-              <span>FMS 병렬 개발 구조 정착</span>
-            </div>
-            <div className="hero-links">
-              <Link to="/intro" className="hero-link-primary">소개</Link>
+          {/*<div className="hero-panel">*/}
+          {/*  <div className="hero-panel-label">Selected Evidence</div>*/}
+          {/*  <div className="hero-metric">*/}
+          {/*    <strong>3~5초 → 1초</strong>*/}
+          {/*    <span>BEMS 렌더링 지연 단축</span>*/}
+          {/*  </div>*/}
+          {/*  <div className="hero-metric">*/}
+          {/*    <strong>10초+ → 1초</strong>*/}
+          {/*    <span>원격 제어 응답 지연 개선</span>*/}
+          {/*  </div>*/}
+          {/*  <div className="hero-metric">*/}
+          {/*    <strong>2인 체제 유지</strong>*/}
+          {/*    <span>FMS 병렬 개발 구조 정착</span>*/}
+          {/*  </div>*/}
+          {/*  <div className="hero-links">*/}
+          {/*    <Link to="/intro" className="hero-link-primary">소개</Link>*/}
 
-            </div>
-          </div>
+          {/*  </div>*/}
+          {/*</div>*/}
         </div>
       </div>
 
@@ -178,7 +174,7 @@ export default function Home() {
           <div className="project-group">
             <div className="project-group-head">
               <h2 className="project-group-title">사이드 프로젝트</h2>
-              <p className="project-group-desc">현업에 가져갈 작업 방식과 검증 흐름을 주도적으로 다듬고 검증한 프로젝트입니다.</p>
+              <p className="project-group-desc">현업에 가져갈 작업 방식과 검증 흐름을 다듬은 프로젝트입니다.</p>
             </div>
             <div className="highlight-grid highlight-grid-side">
               {SIDE_PROJECTS.map((item) => (
@@ -186,12 +182,6 @@ export default function Home() {
                   <div className="highlight-label">{item.label}</div>
                   <div className="highlight-title">{item.title}</div>
                   <p className="highlight-summary">{item.summary}</p>
-                  <div className="highlight-result">{item.result}</div>
-                  <div className="tag-list">
-                    {item.tags.map((tag) => (
-                      <span key={tag} className="tag">{tag}</span>
-                    ))}
-                  </div>
                 </Link>
               ))}
             </div>

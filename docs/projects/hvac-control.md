@@ -145,3 +145,32 @@ function bindPersistence(source: EventSource) {
 ```
 
 실제로는 메시지를 필요한 형태로 해석한 뒤 저장 로직을 실행했고, 저장 결과와 화면 반영 흐름은 분리해서 관리했습니다.
+
+### 5. S3 + Athena 기반 장애 원인 추적
+
+제어 명령 이후 같은 데이터가 여러 건씩 중복 수신되는 문제가 있었지만, 실시간으로 흘러가는 MQTT 메시지만으로는 중복이 네트워크에서 생기는지 장비에서 생기는지 원인을 특정하기 어려웠습니다.
+
+그래서 IoT Core로 들어오는 MQTT 메시지를 S3에 원본 로그로 적재하고, Athena에서 SQL로 집계해 중복이 어디서 얼마나 발생하는지 수치로 확인했습니다.
+
+예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
+
+```sql title="athena-duplicate-analysis.sql"
+-- 제어 명령(messageId) 1건당 중복 수신 건수 집계
+SELECT
+  messageId,
+  deviceId,
+  COUNT(*) AS received_count
+FROM iot_message_logs
+WHERE /* 분석 기간 */
+GROUP BY messageId, deviceId
+HAVING COUNT(*) > 1
+ORDER BY received_count DESC;
+```
+
+집계 결과, 원인은 네트워크가 아니라 장비 쪽이었습니다. 노후 장비가 실시간 1:1 응답을 처리하지 못하고 제어 명령 한 번에 동일 메시지를 5~10건씩 반복 발행하고 있었고, 이 중복 폭주가 누적되며 장비가 과부하로 멈추는 현상까지 이어졌습니다.
+
+원인을 특정한 뒤에는 CloudWatch Alarm으로 이상 징후(오류율·처리 지연)를 즉시 감지하도록 연결해, 같은 문제가 재발하면 로그를 다시 뒤지기 전에 먼저 알림을 받도록 장애 추적 체계를 갖췄습니다.
+
+**결과**: 중복 폭주의 근본 원인을 장비 오작동으로 특정, S3·Athena 로그 분석 + CloudWatch Alarm으로 장애 원인 추적 체계 확보
+
+자세한 분석 흐름과 멱등성 대응은 [멱등성 검증 & 중복 필터](../realtime/dedup-idempotency.md) 문서에 정리했습니다.

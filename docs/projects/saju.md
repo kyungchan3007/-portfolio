@@ -13,7 +13,7 @@ sidebar_label: SAJU:ME
 
 ## 기술 스택
 
-`Next.js 15` `TypeScript` `Tailwind CSS` `Zustand` `TanStack Query` `OpenAPI` `Zod` `FSD` `Vitest` `Playwright` `Storybook` `Spring Boot` `MySQL` `Redis` `AWS` `Cloudflare`
+`Next.js 15` `TypeScript` `Tailwind CSS` `Zustand` `TanStack Query` `OpenAPI` `Zod` `FSD` `Vitest` `Playwright` `Storybook` `Cloudflare`
 
 ---
 
@@ -29,125 +29,41 @@ sidebar_label: SAJU:ME
 
 ---
 
-## SSR 인증/렌더링
-SAJU:ME는 개인화된 결과와 인증 흐름이 많아, 상태 기반 진입 라우팅과 렌더 전 보안 게이트를 서버에서 먼저 처리하는 구조가 필요했습니다. 핵심은 인증과 보안 검증을 화면 렌더 이후가 아니라 렌더 이전 서버 단계에서 먼저 끝내는 것이었습니다.
+## 운영과 배포 구조
 
-일반적인 SSR 패턴을 사용했고, 도메인 특성에 맞게 재구성해 적용했습니다.
+운영팀이 수작업으로 관리하던 사용자, 커뮤니티, 알림, 모니터링을 한눈에 확인하고 관리할 수 있도록 Admin Dashboard를 구축했습니다. 실시간 트래픽과 요청 통계, 커뮤니티 관리, 푸시 알림 이력, 워커 에러율과 HTTP 상태를 확인할 수 있게 하면서 운영 업무를 자동화했습니다.
 
-예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
+Next.js SSR을 Cloudflare Workers 엣지 런타임에서 실행하기 위해 OpenNext.js와 nodejs_compat 플래그를 활용했습니다. 이를 통해 서버리스 환경에서도 SSR을 유지하면서 콜드 스타트 부담을 줄이고, 글로벌 저지연 응답을 확보했습니다.
 
-```tsx title="server-gate-pattern.tsx"
-export default async function ResultPage() {
-  const session = await getSession();
-  const verified = await verifyRequest();
-
-  if (!session || !verified) {
-    redirect('/start');
-  }
-
-  return <ResultView />;
-}
-```
-
+패키지별 변경 범위와 변경 이력은 Changesets로 명시하고, 실제 배포 실행은 CI/CD가 처리하도록 릴리즈 흐름을 분리했습니다. 이 구조로 변경 이력 추적성과 배포 자동화 기준을 함께 정리했습니다.
 
 ---
 
-## AI Agent
+## 사이드 프로젝트로서의 SAJU:ME
 
-운영 효율을 높이고, 엣지 배포와 릴리즈 흐름 표준화를 구현했습니다.
+SAJU:ME는 실제 사용자에게 배포하고 함께 운영한 서비스이며, AI 활용 방식과 배포 전 검증, 디자인 시스템 패키지 구조를 실제 제품 흐름 안에서 먼저 검증하고 다듬은 프로젝트였습니다.
 
-### 1. Admin Dashboard 구축
+가장 큰 과제는 **AI를 어떻게 써야 생산성과 품질을 동시에 잡을 수 있는가**였습니다. 하네스와 온톨로지로 AI의 실행 범위와 역할을 고정하고, 스킬 트리거의 **오탐·미탐을 수치로 검증**했으며, 여기에 테스트와 배포 전 검증 자동화를 붙여 재현 가능한 작업 방식으로 정리했습니다. (AI 워크플로우 자체의 설계 과정은 [작업 기준과 자동화](../ai-workflow/overview.md)에 따로 정리했습니다.)
 
-운영팀이 수작업으로 관리하던 사용자, 커뮤니티, 알림, 모니터링을 한눈에 확인하고 관리할 수 있는 Admin Dashboard를 구축했습니다.
+이렇게 실제 제품에서 검증한 방식을 이후 현업 여러 프로젝트의 배포 전 검증과 UI 표준화로 옮겼습니다.
 
-[//]: # (```tsx title="dashboar.tsx")
+### 1. 배포 전 E2E 검증 — 도메인 흐름과 보안까지
 
-[//]: # ()
-[//]: # (export default function DashboardPage&#40;&#41; {)
+사주는 개인화된 결과와 인증 흐름이 많아, 기능이 늘수록 회귀가 두려운 서비스였습니다. 그래서 주요 사용자 흐름(사주 입력·결과·관리, 궁합, 성격, 추천, 커뮤니티 등)을 Playwright E2E로 덮고, 여기에 **보안 시나리오까지 테스트로 못박았습니다.**
 
-[//]: # (  return &#40;)
+특히 인증은 정상 흐름뿐 아니라 공격 상황을 테스트했습니다. OAuth state가 맞지 않는 콜백을 거부하는지, 일회성 state 쿠키가 이후 정리되는지, 교차 출처에서 상태를 바꾸는 요청을 막는지를 검증했습니다.
 
-[//]: # (    <div className="flex flex-col gap-6">)
-
-[//]: # (      <div>)
-
-[//]: # (        <h2 className="text-xl font-bold text-content-primary">대시보드</h2>)
-
-[//]: # (        <p className="mt-1 text-sm text-content-muted">서비스 현황과 실시간 트래픽을 확인합니다.</p>)
-
-[//]: # (      </div>)
-
-[//]: # (      <DashboardSection />)
-
-[//]: # (    </div>)
-
-[//]: # (  &#41;;)
-
-[//]: # (})
-
-[//]: # (```)
-
-**관리 기능:**
-- 실시간 트래픽 및 요청 통계 (Cloudflare Analytics 연동)
-- 커뮤니티 별 코호트 생성·편집
-- 푸시 알림 발송 및 이력 관리
-- 워커 에러율 및 HTTP 상태 모니터링
-
-**인증:**
-- Kakao OAuth 기반 관리자 로그인
-- 환경별 (dev/staging/prod) 멀티 테넌트 구조
-
-**결과**: 관리 업무 **자동화**, 실시간 모니터링 확보, 데이터 기반 운영 의사결정 가능
-
-### 2. Cloudflare Edge 런타임 배포 (OpenNext.js + nodejs_compat)
-
-Next.js SSR을 Cloudflare Workers 엣지 런타임에서 실행하기 위해 OpenNext.js와 nodejs_compat 플래그를 활용해 Node.js API 호환성을 확보했습니다.
-
-```toml title="wrangler.toml — Before"
-# Workers 런타임에서 Node.js 모듈 미지원
-[env.production]
-routes = [
-  { pattern = "example.com", zone_id = "..." }
-]
-
-# Next.js 의존 모듈 중 일부가 Node.js API 사용 불가
+```ts title="auth-security.spec.ts"
+test("state가 일치하지 않는 OAuth 콜백은 거부한다", async ({ page }) => {
+  await page.goto("/api/auth/callback?code=attacker-code");
+  await expect(page).toHaveURL(/\/login\?error=invalid_state$/);
+});
 ```
 
-```toml title="wrangler.toml — After"
-# nodejs_compat 플래그로 Node.js 환경 에뮬레이션
-[env.production]
-compatibility_flags = ["nodejs_compat"]
-routes = [
-  { pattern = "saju.me", zone_id = "..." }
-  { pattern = "docs.saju.me", zone_id = "..." }
-]
-```
+이 방식은 SAJU:ME에서 먼저 실행하고 반복 검증한 뒤, 현업 프로젝트들의 배포 전 단계에도 자리 잡게 했습니다. 현업에서도 Playwright E2E로 주요 사용자 흐름과 인증·보안 시나리오를 배포 전에 확인하는 기준을 세웠습니다.
 
-**구현 방식:**
-- **OpenNext.js**: Next.js 프로젝트를 Cloudflare Workers 호환 번들로 변환
-- **nodejs_compat**: Edge Runtime에서 `crypto`, `stream` 등 Node.js 표준 라이브러리 모듈 지원
-- **다중 도메인**: saju.me, docs.saju.me 서브도메인별 독립 배포
-- **CAPTCHA**: Cloudflare Turnstile로 봇 공격 차단
+### 2. 디자인 시스템 패키지 — 토큰과 컴포넌트 분리
 
-**결과**: Next.js SSR **엣지 배포** 완성, **콜드 스타트 제거**, 글로벌 **저지연 응답** 확보
+화면이 늘어날수록 색·간격·컴포넌트의 편차가 커졌습니다. 그래서 **디자인 토큰과 UI 컴포넌트를 각각 모노레포 패키지로 분리**하고, 각 컴포넌트에 Storybook 스토리를 붙여 상태를 눈으로 확인하도록 했습니다. 변경 이력은 Changesets로 관리했습니다.
 
-### 3. 릴리즈 흐름 표준화 (Changesets + CI/CD)
-
-패키지별 변경 범위와 변경 이력은 개발자가 Changesets로 명시하고, 실제 배포 실행은 CI/CD가 처리하도록 릴리즈 흐름을 분리했습니다.
-
-```json title="package.json"
-{
-  "scripts": {
-    "changeset": "changeset",
-  "version-packages": "changeset version",
-  "release": "changeset publish"
-  }
-}
-```
-
-**구현 방식:**
-- **Changesets**: 개발자가 패키지별 major·minor·patch 변경 범위와 변경 이력을 명시
-- **Monorepo packages**: web, admin, ui, design-tokens 패키지 변경 범위 분리
-- **Release workflow**: CI/CD에서 변경 이력 기반 배포 실행
-
-**결과**: 패키지 변경 관리 기준 표준화, 배포 실행 **자동화**, 변경 이력 추적성 확보
+토큰은 CSS 변수로 한곳에 모아 두고, 컴포넌트는 그 토큰만 참조하도록 해 표현 기준을 한 층에서 통제했습니다. 이 토큰·컴포넌트 패키지 분리 구조는 SAJU:ME에서 먼저 만들고 운영하며 안정화했고, 그 경험을 바탕으로 BEMS, 원격 제어, FMS 전반에 공통 UI 기준과 변경 관리 흐름을 적용했습니다.

@@ -67,10 +67,17 @@ const config: Config = {
         },
         {
           type: 'docSidebar',
-          sidebarId: 'qualitySidebar',
+          sidebarId: 'sideProjectsSidebar',
           position: 'left',
-          label: '검증과 릴리즈',
+          label: '사이드 프로젝트',
         },
+        // 사용자에게 제공하지 않음 — 내용은 보존
+        // {
+        //   type: 'docSidebar',
+        //   sidebarId: 'qualitySidebar',
+        //   position: 'left',
+        //   label: '검증과 릴리즈',
+        // },
         // Hidden for now due to sensitive architecture/security details.
         // {
         //   type: 'docSidebar',

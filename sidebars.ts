@@ -31,6 +31,14 @@ const sidebars: SidebarsConfig = {
             'realtime/dedup-idempotency',
           ],
         },
+      ],
+    },
+  ],
+  sideProjectsSidebar: [
+    {
+      type: 'category',
+      label: '사이드 프로젝트',
+      items: [
         {
           type: 'doc',
           id: 'projects/pinhouse',
@@ -49,11 +57,12 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '검증과 릴리즈',
       items: [
-        {
-          type: 'category',
-          label: '테스트 기반 개발',
-          items: ['quality/merge-gate-ci'],
-        },
+        // 사용자에게 제공하지 않음 (draft) — 내용은 보존
+        // {
+        //   type: 'category',
+        //   label: '테스트 기반 개발',
+        //   items: ['quality/merge-gate-ci'],
+        // },
         {
           type: 'category',
           label: '버전 관리',
