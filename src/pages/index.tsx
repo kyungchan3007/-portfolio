@@ -13,19 +13,19 @@ const STRENGTHS = [
     title: '기술 병목을 측정하고 해결합니다',
     desc: '체감이 아니라 수치로 병목을 확인하고, 브라우저 렌더링과 데이터 정합성 문제를 함께 손봅니다.',
     evidence: 'BEMS 화면 반영 지연 3~5초 → 1초 이내',
-    link: '/projects/bems#1-실시간-데이터-전환-및-네트워크-최적화',
+    link: '/projects/bems',
   },
   {
-    title: 'OpenAPI → Zod로 계약 검증을 자동화합니다',
-    desc: '수동 타입 정의 대신 스펙 변경이 타입 생성과 런타임 검증까지 한 번에 이어지도록 연결해 백엔드 소통 비용과 계약 위반 대응을 줄였습니다.',
+    title: 'API 계약과 설계 기준을 정리합니다',
+    desc: 'OpenAPI, Zod, RESTful endpoint 기준을 연결해 계약 검증과 API 설계 협의 비용을 줄였습니다.',
     evidence: 'FMS에서 OpenAPI → Zod 자동화 적용',
-    link: '/projects/fms#3-openapi--zod-타입-자동화',
+    link: '/projects/fms',
   },
   {
     title: '실시간 제어 흐름을 안정화합니다',
-    desc: '연결 지점, 중복 처리, 저장 구조를 분리해 응답성과 안정성을 높이고, 검증 흐름도 선택적으로 접목했습니다.',
+    desc: '연결 지점, 중복 처리, 저장 구조를 분리해 응답성과 안정성을 높이고, 운영 관측 체계도 함께 정리했습니다.',
     evidence: '원격 제어 응답 지연 10초+ → 1초 이내',
-    link: '/projects/hvac-control#1-소켓-생성-지점-통합',
+    link: '/projects/hvac-control',
   },
 ];
 
@@ -33,40 +33,40 @@ const HIGHLIGHTS = [
   {
     label: 'Workflow',
     title: 'FMS',
-    summary: '사이드 프로젝트에서 검증한 AI Agents 워크플로우를 전체 적용해 병렬 개발 구조와 팀 공통 작업 기준을 정착시킨 프로젝트입니다.',
-    result: '2인 체제로 설비·ERP 전 도메인 커버',
-    tags: ['Next.js', 'VSA', 'Zod', 'Playwright'],
+    summary: 'AI Workflow와 RESTful endpoint 설계 기준을 팀 공통 방식으로 정리해, 도메인 확장 상황에서도 같은 기준으로 구현·검증할 수 있게 만든 프로젝트입니다.',
+    result: '구현·검증 시간 약 50% 절감',
+    tags: ['OpenAPI', 'Zod', 'REST API', 'Playwright'],
     link: '/projects/fms',
   },
   {
     label: 'Performance',
     title: 'BEMS',
-    summary: '실시간 데이터 성능과 정합성 문제를 기술적으로 해결하고, 측정 기반 검증 체계를 만든 프로젝트입니다.',
+    summary: '상태·캐시·실시간 처리·품질 검증 기준을 함께 정리해 운영 가능한 프론트엔드 구조로 개선한 프로젝트입니다.',
     result: '화면 반영 3~5초 → 1초 이내',
-    tags: ['React', 'TypeScript', 'Web Worker', 'react-query'],
+    tags: ['Zustand', 'TanStack Query', 'BFF', 'Web Worker'],
     link: '/projects/bems',
   },
   {
     label: 'Realtime',
     title: '원격 제어 및 모니터링',
-    summary: '실시간 제어 구조를 안정화하고, 검증 관련 워크플로우를 부분 접목해 응답성과 신뢰성을 함께 개선한 프로젝트입니다.',
+    summary: '실시간 제어 구조와 운영 관측 체계를 함께 정리해 응답성과 신뢰성을 개선한 프로젝트입니다.',
     result: '제어 응답 10초+ → 1초 이내',
-    tags: ['AWS IoT Core', 'Lambda', 'DynamoDB', 'Socket'],
+    tags: ['AWS IoT Core', 'Lambda', 'WebSocket', 'CloudWatch'],
     link: '/projects/hvac-control',
   },
 ];
 
 const SIDE_PROJECTS = [
   {
-    label: 'Product',
+    label: 'Workflow',
     title: 'SAJU:ME',
-    summary: '실제 배포·운영 과정에서 AI 활용, E2E 검증, 디자인 시스템 패키지 구조를 먼저 검증하고 다듬었습니다.',
+    summary: 'Skill·Ontology 기반 AI Agent Harness와 평가 구조를 만들고, 그 기준을 이후 FMS 개발 프로세스로 확장한 프로젝트입니다.',
     link: '/projects/saju',
   },
   {
-    label: 'Frontend',
+    label: 'State & Cache',
     title: 'PinHouse',
-    summary: '실제 서비스 개발 과정에서 SSR 경계, 인증 진입, React Query 캐시 구조의 기준을 다듬었습니다.',
+    summary: 'Zustand·TanStack Query·BFF 기반 검색 상태와 캐시 구조를 정리하고, 그 기준을 이후 BEMS 개선으로 연결한 프로젝트입니다.',
     link: '/projects/pinhouse',
   },
 ];
@@ -82,16 +82,6 @@ const PORTFOLIO_AREAS = [
       { label: '원격 제어', to: '/projects/hvac-control' },
     ],
   },
-  // Hidden for now due to sensitive architecture/security details.
-  // {
-  //   title: '구조와 렌더링',
-  //   desc: '프로젝트에서 선택한 구조, SSR 경계, 공통 렌더링 기준을 정리한 문서입니다.',
-  //   links: [
-  //     { label: '프로젝트 아키텍처', to: '/architecture/project-architecture' },
-  //     { label: 'SSR 인증/렌더링', to: '/architecture/ssr-auth-rendering' },
-  //     { label: 'Merge Gate', to: '/quality/merge-gate-ci' },
-  //   ],
-  // },
   {
     title: '작업 기준과 자동화',
     desc: '검증 기준, 리뷰 방식, 자동화 흐름을 문서화한 기록입니다.',
@@ -112,8 +102,8 @@ export default function Home() {
             <div className="hero-badge">Frontend Engineer · 약 4년 경력 · 팀 리딩 경험</div>
             <h1 className="hero-title">박경찬 · Frontend Engineer</h1>
             <p className="hero-subtitle">
-              팀의 작업 기준을 만들고, 기술 병목을 해결하고, 사이드 프로젝트에서 검증한 방식을
-              현업 프로젝트에 전체 또는 부분적으로 접목하는 방식으로 문제를 풀어왔습니다.
+              팀의 작업 기준을 만들고, 기술 병목을 해결하고, 사이드 프로젝트에서 정리한 기준을
+              현업 프로젝트 품질 개선으로 연결하는 방식으로 문제를 풀어왔습니다.
             </p>
 
             <div className="notice-box">
@@ -123,26 +113,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-
-          {/*<div className="hero-panel">*/}
-          {/*  <div className="hero-panel-label">Selected Evidence</div>*/}
-          {/*  <div className="hero-metric">*/}
-          {/*    <strong>3~5초 → 1초</strong>*/}
-          {/*    <span>BEMS 렌더링 지연 단축</span>*/}
-          {/*  </div>*/}
-          {/*  <div className="hero-metric">*/}
-          {/*    <strong>10초+ → 1초</strong>*/}
-          {/*    <span>원격 제어 응답 지연 개선</span>*/}
-          {/*  </div>*/}
-          {/*  <div className="hero-metric">*/}
-          {/*    <strong>2인 체제 유지</strong>*/}
-          {/*    <span>FMS 병렬 개발 구조 정착</span>*/}
-          {/*  </div>*/}
-          {/*  <div className="hero-links">*/}
-          {/*    <Link to="/intro" className="hero-link-primary">소개</Link>*/}
-
-          {/*  </div>*/}
-          {/*</div>*/}
         </div>
       </div>
 
@@ -152,29 +122,29 @@ export default function Home() {
           <div className="project-group">
             <div className="project-group-head">
               <h2 className="project-group-title">회사 프로젝트</h2>
-              <p className="project-group-desc">팀 기준 정착, 기술 병목 해결, AI Workflow 전체 적용과 부분 적용을 보여주는 실무 프로젝트입니다.</p>
+              <p className="project-group-desc">팀 기준 정착, 상태·캐시·실시간 처리 개선, 운영 품질 향상을 보여주는 실무 프로젝트입니다.</p>
             </div>
-          <div className="highlight-grid">
-            {HIGHLIGHTS.map((item) => (
-              <Link key={item.title} to={item.link} className="highlight-card">
-                <div className="highlight-label">{item.label}</div>
-                <div className="highlight-title">{item.title}</div>
-                <p className="highlight-summary">{item.summary}</p>
-                <div className="highlight-result">{item.result}</div>
-                <div className="tag-list">
-                  {item.tags.map((tag) => (
-                    <span key={tag} className="tag">{tag}</span>
-                  ))}
-                </div>
-              </Link>
-            ))}
-          </div>
+            <div className="highlight-grid">
+              {HIGHLIGHTS.map((item) => (
+                <Link key={item.title} to={item.link} className="highlight-card">
+                  <div className="highlight-label">{item.label}</div>
+                  <div className="highlight-title">{item.title}</div>
+                  <p className="highlight-summary">{item.summary}</p>
+                  <div className="highlight-result">{item.result}</div>
+                  <div className="tag-list">
+                    {item.tags.map((tag) => (
+                      <span key={tag} className="tag">{tag}</span>
+                    ))}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="project-group">
             <div className="project-group-head">
               <h2 className="project-group-title">사이드 프로젝트</h2>
-              <p className="project-group-desc">현업에 가져갈 작업 방식과 검증 흐름을 다듬은 프로젝트입니다.</p>
+              <p className="project-group-desc">공부와 시행착오를 통해 만든 기준을 실제 서비스 품질 개선으로 연결한 프로젝트입니다.</p>
             </div>
             <div className="highlight-grid highlight-grid-side">
               {SIDE_PROJECTS.map((item) => (

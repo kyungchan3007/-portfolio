@@ -9,61 +9,155 @@ sidebar_label: SAJU:ME
 **2026.03 – 2026.06 · FE 개발 · 배포**
 
 사용자의 출생 정보로 사주를 분석하고, 일일 에너지를 기반으로 맞춤형 장소를 추천하는 한국식 운세 추천 서비스입니다.
-<br/>Admin Dashboard와 Cloudflare Edge 배포로 운영 효율을 확보하고, Changesets 기반 변경 이력 관리와 CI/CD 배포 자동화로 릴리즈 흐름을 표준화했습니다.
+<br/>이 프로젝트에서는 AI가 역할과 검증 기준 없이 일할 때 생기는 편차를 줄이기 위해 Skill·Ontology 기반 AI Agent Harness를 설계했고, 그 기준을 이후 FMS 개발 프로세스로 확장했습니다.
 
 ## 기술 스택
 
-`Next.js 15` `TypeScript` `Tailwind CSS` `Zustand` `TanStack Query` `OpenAPI` `Zod` `FSD` `Vitest` `Playwright` `Storybook` `Cloudflare`
+`Next.js 15` `TypeScript` `Claude` `Codex` `Skill` `Ontology` `OpenAPI` `Zod` `Playwright` `Storybook` `Cloudflare`
 
 ---
 
 ## 성과 요약
 
-| 발견 항목 | 문제 | 개선 방향 | 결과 |
+| 항목 | 문제 | 적용 | 결과 |
 |---|---|---|---|
-| 사용자 이탈 | 사주 분석 로딩 시간이 길어 이탈율 높음 | 로딩 중 사주 관련 퀴즈 삽입으로 체류 유도 | 이탈율 **30%+ 감소** |
-| 관리자 시스템 부재 | 운영·모니터링 수작업 | Admin Dashboard + Kakao OAuth | 관리 효율화 |
-| API 계약 안정성 | 응답 타입 불일치로 인한 런타임 오류 가능성 | OpenAPI 타입 생성 + Zod 런타임 검증 적용 | API 연동 안정성 확보 |
-| Edge 배포 환경 구성 | Next.js SSR을 서버리스로 배포 불가 | OpenNext.js + Cloudflare Workers + nodejs_compat | **엣지 배포 완성** |
-| 릴리즈 흐름 표준화 | 패키지 변경 이력과 배포 절차가 분리되어 관리됨 | Changesets로 변경 이력 관리, CI/CD로 배포 자동화 | **릴리즈 프로세스 표준화** |
+| AI 역할 분리 | UX 판단, 비즈니스 로직, 리뷰 문맥이 한 흐름에 섞여 결과 편차 발생 | Claude와 Codex 역할 분리, Skill·Ontology 연결 | 구현·검증 문맥 분리와 재작업 감소 |
+| 평가 구조 | 작업 유형별 품질 기준을 일관되게 확인하기 어려움 | `prompt-trigger-eval` 기반 체크리스트 자동 실행 | AI 구현 결과 **100건 중 95건** 1차 검증 통과 |
+| 검증 기준 정착 | 좋은 결과가 나와도 재현 가능한 기준이 부족함 | 4단계 Workflow와 문서화 기준 정리 | 검증 기준 충족률 **95%** 달성 |
+| 현업 확산 | 프로젝트 안에서만 끝나면 재사용 가치가 낮음 | Harness·평가 구조를 FMS에 확장 | 팀 공통 AI Workflow로 정착 |
 
 ---
 
-## 운영과 배포 구조
+## 이 프로젝트에서 맡은 역할
 
-운영팀이 수작업으로 관리하던 사용자, 커뮤니티, 알림, 모니터링을 한눈에 확인하고 관리할 수 있도록 Admin Dashboard를 구축했습니다. 실시간 트래픽과 요청 통계, 커뮤니티 관리, 푸시 알림 이력, 워커 에러율과 HTTP 상태를 확인할 수 있게 하면서 운영 업무를 자동화했습니다.
-
-Next.js SSR을 Cloudflare Workers 엣지 런타임에서 실행하기 위해 OpenNext.js와 nodejs_compat 플래그를 활용했습니다. 이를 통해 서버리스 환경에서도 SSR을 유지하면서 콜드 스타트 부담을 줄이고, 글로벌 저지연 응답을 확보했습니다.
-
-패키지별 변경 범위와 변경 이력은 Changesets로 명시하고, 실제 배포 실행은 CI/CD가 처리하도록 릴리즈 흐름을 분리했습니다. 이 구조로 변경 이력 추적성과 배포 자동화 기준을 함께 정리했습니다.
+- Skill·Ontology 기반 AI Agent Harness 설계
+- Claude와 Codex의 역할 분리 기준 정리
+- 작업 유형별 검증 체크리스트와 평가 구조 설계
+- 배포 전 검증, 재사용 UI, 워크스페이스 구조, Edge 배포까지 구현
 
 ---
 
-## 사이드 프로젝트로서의 SAJU:ME
+## 핵심 문제
 
-SAJU:ME는 실제 사용자에게 배포하고 함께 운영한 서비스이며, AI 활용 방식과 배포 전 검증, 디자인 시스템 패키지 구조를 실제 제품 흐름 안에서 먼저 검증하고 다듬은 프로젝트였습니다.
+AI를 개발에 쓰기 시작하면 속도는 빨라질 수 있지만, 역할과 검증 기준이 고정되어 있지 않으면 UX 판단, 비즈니스 로직, 리뷰 문맥이 한 흐름에 섞이게 됩니다. 그러면 결과 편차가 커지고, 결국 프롬프트를 다시 쓰거나 사람이 직접 되돌리는 비용이 늘어납니다.
 
-가장 큰 과제는 **AI를 어떻게 써야 생산성과 품질을 동시에 잡을 수 있는가**였습니다. 하네스와 온톨로지로 AI의 실행 범위와 역할을 고정하고, 스킬 트리거의 **오탐·미탐을 수치로 검증**했으며, 여기에 테스트와 배포 전 검증 자동화를 붙여 재현 가능한 작업 방식으로 정리했습니다. (AI 워크플로우 자체의 설계 과정은 [작업 기준과 자동화](../ai-workflow/overview.md)에 따로 정리했습니다.)
+SAJU:ME에서는 이 문제를 피하지 않고, **어떻게 하면 AI가 같은 기준으로 구현하고 검증하도록 만들 수 있는지**를 구조적으로 정리했습니다.
 
-이렇게 실제 제품에서 검증한 방식을 이후 현업 여러 프로젝트의 배포 전 검증과 UI 표준화로 옮겼습니다.
+---
 
-### 1. 배포 전 E2E 검증 — 도메인 흐름과 보안까지
+## 1. Skill · Ontology 기반 AI Agent Harness
 
-사주는 개인화된 결과와 인증 흐름이 많아, 기능이 늘수록 회귀가 두려운 서비스였습니다. 그래서 주요 사용자 흐름(사주 입력·결과·관리, 궁합, 성격, 추천, 커뮤니티 등)을 Playwright E2E로 덮고, 여기에 **보안 시나리오까지 테스트로 못박았습니다.**
+SAJU:ME에서는 도메인 개념, 관계, 검증 규칙을 Ontology로 구조화하고, Skill과 단계별 컨텍스트를 연결해 구현·검증·리뷰·배포의 4단계 Workflow를 만들었습니다.
 
-특히 인증은 정상 흐름뿐 아니라 공격 상황을 테스트했습니다. OAuth state가 맞지 않는 콜백을 거부하는지, 일회성 state 쿠키가 이후 정리되는지, 교차 출처에서 상태를 바꾸는 요청을 막는지를 검증했습니다.
+### 역할 분리
 
-```ts title="auth-security.spec.ts"
-test("state가 일치하지 않는 OAuth 콜백은 거부한다", async ({ page }) => {
-  await page.goto("/api/auth/callback?code=attacker-code");
-  await expect(page).toHaveURL(/\/login\?error=invalid_state$/);
-});
+- Claude: UX/UI 구현과 디자인 반영
+- Codex: 비즈니스 로직·API 검증과 리뷰
+
+이렇게 역할을 나눈 이유는, 같은 문맥에서 구현과 검증이 동시에 일어나면 좋은 결과가 나와도 편차가 크고 재현성이 떨어지기 때문이었습니다.
+
+```ts title="domain.ts"
+// 설명용 예시: 실제 Skill 설정 파일이 아님
+const 워크플로우 = {
+  implement: {
+    role: 'ui-agent',
+    context: ['requirements', 'ui-guides'],
+  },
+  verify: {
+    role: 'review-agent',
+    checks: ['domain-rule', 'api-contract', 'quality-gate'],
+  },
+  release: {
+    requires: ['smoke-test', 'deploy-check'],
+  },
+}
 ```
 
-이 방식은 SAJU:ME에서 먼저 실행하고 반복 검증한 뒤, 현업 프로젝트들의 배포 전 단계에도 자리 잡게 했습니다. 현업에서도 Playwright E2E로 주요 사용자 흐름과 인증·보안 시나리오를 배포 전에 확인하는 기준을 세웠습니다.
+---
 
-### 2. 디자인 시스템 패키지 — 토큰과 컴포넌트 분리
+## 2. prompt-trigger-eval 기반 평가 구조
 
-화면이 늘어날수록 색·간격·컴포넌트의 편차가 커졌습니다. 그래서 **디자인 토큰과 UI 컴포넌트를 각각 모노레포 패키지로 분리**하고, 각 컴포넌트에 Storybook 스토리를 붙여 상태를 눈으로 확인하도록 했습니다. 변경 이력은 Changesets로 관리했습니다.
+좋은 결과가 나왔다는 인상만으로는 기준이 되기 어렵습니다. 그래서 SAJU:ME에서는 작업 유형별 검증 체크리스트가 자동으로 실행되도록 평가 구조를 붙였습니다.
 
-토큰은 CSS 변수로 한곳에 모아 두고, 컴포넌트는 그 토큰만 참조하도록 해 표현 기준을 한 층에서 통제했습니다. 이 토큰·컴포넌트 패키지 분리 구조는 SAJU:ME에서 먼저 만들고 운영하며 안정화했고, 그 경험을 바탕으로 BEMS, 원격 제어, FMS 전반에 공통 UI 기준과 변경 관리 흐름을 적용했습니다.
+### 평가 방식
+
+- `prompt-trigger-eval` Skill로 작업 유형별 체크리스트 자동 실행
+- 요구사항 충족 여부, 도메인 규칙 준수, 품질 기준 충족 여부 확인
+- AI 구현 결과 100건 평가
+
+### 결과
+
+- 95건이 1차 검증 체크리스트 통과
+- 검증 기준 충족률 95%
+
+```ts title="domain.ts"
+// 설명용 예시: 실제 평가 결과 형식이 아님
+const 평가결과 = {
+  trigger: 'implementation-complete',
+  checks: [
+    'requirement-match',
+    'domain-rule',
+    'api-contract',
+    'ui-consistency',
+  ],
+  passWhen: 'all-required-checks-pass',
+}
+```
+
+---
+
+## 3. React·TypeScript 기반 재사용 UI 및 npm Workspaces 모노레포 구축
+
+디자인 프로토타입을 화면별로 그대로 구현하면 공통 UI가 화면마다 중복되고, 프로젝트가 커질수록 패키지 간 책임과 의존 관계가 복잡해질 가능성이 있었습니다.
+
+### 문제
+
+디자인 프로토타입을 화면별로 개별 구현하면서 공통 UI 컴포넌트가 중복되고, 프로젝트 확장에 따라 패키지 간 책임과 의존 관계가 복잡해질 위험이 있었습니다.
+
+### 적용
+
+- 디자인 프로토타입을 HTML·CSS 기반에서 React·TypeScript 컴포넌트로 재구현
+- npm Workspaces 기반으로 `web`·`admin`·`ui`·`design-tokens` 패키지 책임 분리
+- 공통 UI 컴포넌트와 디자인 기준을 `ui`·`design-tokens` 패키지로 분리 관리
+
+### 결과
+
+- 공통 UI 컴포넌트와 디자인 기준을 별도 패키지로 관리해 웹·관리자 화면에서 재사용 가능한 구조 확보
+
+---
+
+## 4. OpenNext·Cloudflare Workers 기반 Edge 서버리스 배포
+
+Next.js 애플리케이션을 서버리스 환경에 배포하는 과정에서 Node.js 의존 기능의 Edge Runtime 호환성과 초기 응답 지연 문제가 있었습니다.
+
+### 문제
+
+Next.js를 서버리스 환경에 배포할 때 Node.js 의존 기능이 Edge Runtime과 호환되지 않는 지점이 있었고, 초기 응답 지연 문제도 함께 발생했습니다.
+
+### 적용
+
+- OpenNext 기반으로 Next.js 애플리케이션을 Cloudflare Workers에 배포
+- Node.js 의존 기능을 Edge Runtime에 맞게 조정
+
+### 결과
+
+- 서버 인스턴스 운영 부담과 Cold Start 영향 최소화
+- 사용자와 가까운 Edge 환경에서 콘텐츠 제공
+
+---
+
+## 5. FMS 개발 프로세스로 확장
+
+SAJU:ME에서 정리한 것은 단순한 개인 작업 팁이 아니라, 나중에 다른 프로젝트에서도 반복 사용할 수 있는 기준이어야 했습니다.
+
+그래서 이 프로젝트에서 만든 다음 요소를 FMS 개발 프로세스로 확장했습니다.
+
+- Harness 구조
+- 평가 기준
+- 문서화 방식
+- 역할 분리 원칙
+
+결과적으로 SAJU:ME에서 정리한 AI Agent Workflow는 FMS에서 팀 공통 개발 프로세스로 자리 잡았습니다.
+
+---
+

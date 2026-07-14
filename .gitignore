@@ -18,8 +18,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-박경찬-1.html
-박경찬.html
+박경찬-이력서.html
+*.pdf
 
 # IntelliJ IDE
 .idea/

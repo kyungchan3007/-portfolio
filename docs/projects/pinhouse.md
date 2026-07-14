@@ -8,130 +8,155 @@ sidebar_label: PinHouse
 
 **2025.10 – 2026.03 · Pinhouse · FE 개발**
 
-PinHouse는 사용자의 핀포인트 위치와 주거 조건을 기반으로 공공/민간 주거 공고를 탐색하고, 조건에 맞는 매물을 비교·검색할 수 있는 맞춤형 주거 탐색 서비스입니다.
-
-SSR 경계, 인증 라우팅, React Query 캐시 구조의 잠재적 문제를 발굴하고, First Load JS 14% 절감과 렌더링 안정성을 개선할 수 있었고 프로젝트 품질을 높일 수 있었습니다.
+PinHouse는 사용자의 위치와 주거 조건을 기반으로 공공/민간 주거 공고를 탐색하고, 조건에 맞는 매물을 비교·검색할 수 있는 맞춤형 주거 탐색 서비스입니다.
+<br/>이 프로젝트에서는 페이지마다 달라지는 검색 조건을 상태, Query Key, BFF 캐시 기준으로 일관되게 연결해 검색 데이터 흐름을 정리했고, 그 경험을 이후 BEMS 상태·캐시 구조 개선으로 확장했습니다.
 
 ## 기술 스택
 
-`Next.js` `TypeScript` `Tailwind CSS` `Zustand` `TanStack Query` `Zod` `Vitest` `Playwright` `Storybook`
+`Next.js` `TypeScript` `Zustand` `TanStack Query` `BFF` `Zod` `Vitest` `Playwright` `Storybook`
 
 ---
 
 ## 성과 요약
 
-| 발견 항목 | 문제 | 개선 방향 | 결과 |
+| 항목 | 문제 | 적용 | 결과 |
 |---|---|---|---|
-| Root 인증 라우팅 | client-side Spinner hydration 후 redirect | 서버 쿠키 기반 `redirect()` 로 전환 | First Load JS **10%+ 절감** |
-| Dynamic Route page | `useParams()` 의존으로 route entry가 Client Component | Server Component shell + Client Component UI 분리 | client entry 수 **17% 감소** |
-| React Query Provider | 전역 singleton cache로 SSR 요청 간 오염 리스크 | `useState` 기반 provider 인스턴스 단위 생성으로 전환 | SSR cache contamination 리스크 완화 |
+| 검색 조건 상태 | 홈·글로벌 검색·지역 검색마다 조건이 달라 상태가 쉽게 분산됨 | Zustand로 검색 조건과 사용자 선택 상태 관리 | 페이지 간 검색 조건 일관성 확보 |
+| 공통 Query Key | 페이지가 달라도 동일 조건 데이터가 반복 요청됨 | 결과를 바꾸는 값을 공통 Query Key에 포함 | 동일 조건 클라이언트 캐시 재사용 |
+| BFF 캐시 | 클라이언트 캐시가 없으면 같은 조건도 다시 원본 API 호출 | 정규화된 검색 조건 기준 cache-aside | 조건별 캐시 경계와 재사용 기준 정리 |
+| 서비스 품질 | 인증 진입과 초기 로딩 흐름이 비효율적 | 서버 리다이렉트 전환 | First Load JS **10%+ 감소** |
 
 ---
 
-## 사이드 프로젝트로서의 PinHouse
+## 이 프로젝트에서 맡은 역할
 
-PinHouse는 실제 서비스로 함께 만든 프로젝트이면서, 제가 약하다고 느끼던 영역을 실제 제품에서 정면으로 파고든 자리였습니다.
+- 홈, 공고 목록, 글로벌 검색 UX 설계 및 구현
+- Zustand·TanStack Query·BFF 기반 검색 데이터 흐름 설계
+- 인증 진입 구조 정리와 초기 로딩 품질 개선
+- 주거 탐색 챗봇과 검색 연결 UX 구현
 
-제가 특히 확신이 부족했던 부분은 **SSR과 정적 렌더링, 아키텍처 설계**였습니다. 그동안 감으로만 다뤄 왔던 영역이라, PinHouse에서 이 부분들을 의도적으로 깊게 붙잡았습니다. SSR과 정적 렌더링은 특정 한 화면이 아니라, 조회량이 많은 주택 목록·필터별 조회·검색처럼 데이터가 무거운 화면부터 프로젝트에 필요한 정적 페이지, 그리고 챗봇까지 화면 성격에 따라 어디에 어떤 렌더링을 적용할지 판단하는 기준을 세우는 과정이었습니다. 백엔드 API를 사용하는 화면에서도 데이터 요청 시점과 렌더링 책임을 함께 정리하면서, 화면별로 서버에서 먼저 처리할 것과 클라이언트에 남길 것을 구분했습니다. 여기에 인증 진입을 서버로 옮기고(SSR 인증/렌더링) 폼 로직을 설정 기반 구조로 빼는 작업까지 더하면서, 막연히 어렵던 이 주제들을 제 강점이라고 말할 수 있는 수준까지 끌어올렸습니다. 여기서 세운 판단 기준은 이후 현업 여러 프로젝트에서 품질을 끌어올리는 밑바탕이 되었습니다.
+---
 
-아래 세 가지는 그 과정에서 특히 배움이 컸던 부분입니다.
+## 핵심 문제
 
-### 1. SSR 인증/렌더링
+PinHouse에서는 홈, 글로벌 검색, 지역 검색처럼 여러 페이지가 서로 다른 검색 조건을 다루고 있었습니다. 지역, 방 유형, 대중교통, 사용자 자격 조건이 조금만 달라져도 조회 결과가 바뀌는데, 이 기준이 페이지마다 흩어져 있으면 같은 데이터를 반복 요청하게 됩니다.
 
-아래는 PinHouse에서 직접 발굴하고 개선한 결과입니다. 핵심은 인증 진입과 렌더링 책임을 클라이언트에 남겨두지 않고, 서버에서 먼저 판단하도록 구조를 정리한 점이었습니다. 일반적인 SSR 패턴을 사용했고, 도메인 특성에 맞게 재구성해 적용했습니다.
+이 프로젝트에서는 **어떤 상태는 페이지 간 유지해야 하고, 어떤 데이터는 조건이 같을 때만 재사용해야 하는지**를 분리해 검색 데이터 흐름을 정리했습니다.
 
-예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
+---
 
-#### 1. Root 인증 라우팅 개선
+## 1. Zustand 기반 검색 조건 상태 관리
 
-클라이언트 렌더링 이후에 인증을 판단하지 않고, 서버에서 먼저 세션을 확인한 뒤 진입을 분기하는 패턴으로 정리했습니다.
+페이지 간 유지해야 하는 검색 조건과 사용자 선택 상태는 클라이언트 상태로 묶고, 확정된 조건에 따라 서버에서 받아오는 데이터는 별도로 분리했습니다.
 
-```tsx title="server-first-auth.tsx"
-export default async function EntryPage() {
-  const session = await getSession();
+- 지역
+- 방 유형
+- 대중교통
+- 사용자 자격 조건
 
-  if (!session) {
-    redirect('/login');
+이 기준을 먼저 나누어 두었기 때문에, 검색 UX가 늘어나도 어떤 값이 화면 상태인지, 어떤 값이 서버 조회 조건인지 명확하게 유지할 수 있었습니다.
+
+```ts title="domain.ts"
+// 설명용 예시: 실제 Store 이름이 아님
+const 검색스토어 = create<{
+  region?: string
+  roomTypes: string[]
+  transitTypes: string[]
+  지역설정: (value?: string) => void
+}>((set) => ({
+  region: undefined,
+  roomTypes: [],
+  transitTypes: [],
+  지역설정: (value) => set({ region: value }),
+}))
+```
+
+---
+
+## 2. TanStack Query 공통 Query Key 설계
+
+조회 결과를 바꾸는 값은 모두 Query Key에 들어가야, 페이지가 달라도 조건이 같으면 같은 캐시를 재사용하고 조건이 달라지면 새로운 데이터를 조회할 수 있습니다.
+
+PinHouse에서는 지역, 방 유형, 대중교통, 자격 조건처럼 결과를 바꾸는 값을 공통 Query Key에 포함했습니다.
+
+### 조건별 동작
+
+```text
+A 페이지: 서울
+B 페이지: 서울
+→ 동일 Query Key, 캐시 재사용
+
+B 페이지: 서울 + 지하철
+→ 새로운 Query Key, 새 조건 조회
+```
+
+```ts title="domain.ts"
+// 설명용 예시: 실제 검색 조건·API 이름이 아님
+function 조건정규화(입력: {
+  region?: string
+  roomTypes?: string[]
+  transitTypes?: string[]
+  eligibility?: string[]
+}) {
+  return {
+    region: 입력.region?.trim().toUpperCase() ?? 'ALL',
+    roomTypes: [...new Set(입력.roomTypes ?? [])].sort(),
+    transitTypes: [...new Set(입력.transitTypes ?? [])].sort(),
+    eligibility: [...new Set(입력.eligibility ?? [])].sort(),
   }
+}
 
-  return <Dashboard />;
+export const 검색키 = {
+  list: (입력: Parameters<typeof 조건정규화>[0]) =>
+    ['search', 조건정규화(입력)] as const,
 }
 ```
 
-**개선 효과**
-- Spinner hydration 및 client-side redirect 제거
-- `/` First Load JS **10%+ 감소**
+---
 
-#### 2. Dynamic Route의 Client Page 분리
+## 3. BFF 기반 조건별 캐시 경계
 
-라우트 진입점에서 필요한 값을 먼저 해석하고, UI 상호작용이 필요한 부분만 클라이언트 컴포넌트로 분리하는 패턴을 사용했습니다.
+클라이언트 캐시가 없을 때도, 조건이 같은 요청이라면 서버 단에서 다시 재사용할 수 있어야 합니다. 그래서 BFF에서는 정규화된 검색 조건을 기준으로 조건별 캐시를 조회하고, 동일 조건 데이터가 없을 때만 원본 API를 호출하도록 정리했습니다.
 
-```tsx title="server-shell-pattern.tsx"
-export default function RoutePage({ params }: { params: { id: string } }) {
-  return <ClientView id={params.id} />;
+이 구조 덕분에 페이지 구조를 유지하면서도 조건별 캐시 일관성을 확보할 수 있었습니다.
+
+```ts title="domain.ts"
+// 설명용 예시: 실제 BFF 구현과 Key가 아님
+export async function 검색결과조회(사용자ID, 원본조건) {
+  const 정규화조건 = 조건정규화(원본조건)
+  const 캐시키 = "사용자·정규화조건 기준 캐시 키 생성"
+  const 캐시값 = await cache.get(캐시키)
+
+  if (캐시값) "캐시된 값 즉시 반환"
+
+  const 원본데이터 = await requestOrigin(정규화조건)
+  await cache.set(캐시키, 원본데이터, "TTL 설정")
+
+  return 원본데이터
 }
 ```
 
-**개선 효과**
-- Client Component boundary를 UI 영역으로 제한
-- client `page.tsx` entry 수 17개 → 14개, 약 **17% 감소**
+---
 
-#### 3. React Query Provider 동시성 개선
+## 4. BEMS 상태·캐시 구조로 확장
 
-요청 간 상태가 섞이지 않도록, 데이터 캐시를 전역 공유하지 않고 요청 단위로 분리하는 패턴을 사용했습니다.
+PinHouse에서 정리한 것은 검색 화면 하나를 위한 구조가 아니었습니다. 상태 소유권 분리, 공통 Query Key, BFF 캐시 경계 설계는 이후 BEMS 리팩터링에서도 그대로 활용할 수 있는 기준이었습니다.
 
-```tsx title="request-scoped-provider.tsx"
-export function Providers({ children }: { children: React.ReactNode }) {
-  const [client] = useState(() => createQueryClient());
-  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-}
-```
+그래서 다음 요소를 BEMS 개선에 연결했습니다.
 
-**개선 효과**
-- React Query cache를 provider lifecycle 단위로 격리
-- request/user 간 cache contamination 리스크 완화
+- Zustand와 TanStack Query의 상태 소유권 분리
+- 공통 Query Key 기준
+- BFF 캐시 경계 설계
 
-### 2. AI 챗봇 — 프롬프트 룰 엔진과 구조화된 응답
+이 경험을 바탕으로 현업에서 반복 API 요청과 상태 관리 구조를 더 안정적으로 정리할 수 있었습니다.
 
-주거 공고를 자연어로 물어보면 답과 함께 매물 검색으로 이어주는 챗봇을 붙이면서 두 가지를 실험했습니다.
+---
 
-먼저 **프롬프트 규칙을 화면 코드에 흩뿌리지 않고 별도 패키지로 분리해 npm에 배포**했습니다. 규칙을 버전으로 관리하고 재사용할 수 있게 되면서, "프롬프트도 관리 대상"이라는 관점을 갖게 됐습니다.
+## 5. 추가로 구현한 서비스 품질 개선
 
-다음으로 **LLM 응답을 자유 텍스트가 아니라 구조화된 형태로 강제**했습니다. 답변은 `summary`, 필요할 때만 `followUpQuestion`, 매물 카테고리일 때만 지역별 `ctas`로 나눠 받도록 규칙을 세워, 화면에서 답변을 안정적으로 파싱하고 검색 버튼을 자동으로 만들 수 있었습니다.
+PinHouse는 검색 상태와 캐시 구조가 핵심이었지만, 서비스 품질을 높이기 위한 다른 개선도 함께 진행했습니다.
 
-예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
-
-```ts title="chatResponse.ts"
-type ChatResponse = {
-  summary: string;            // 핵심 답변
-  followUpQuestion?: string;  // 필요할 때만
-  ctas?: Array<{              // 매물 카테고리일 때만 지역별 생성
-    label: string;
-    action: "open_listing";
-    keyword?: string;
-  }>;
-};
-```
-
-이 실험으로 LLM을 제품에 붙일 때 **출력 신뢰성**을 어떻게 확보하는지 체득했습니다. 제가 약했던 부분이었고, 사이드에서 먼저 부딪혀 본 덕분에 현업에서도 자신 있게 다룰 수 있게 됐습니다.
-
-### 3. 주거 자격 진단 — 설정 기반 동적 폼
-
-자격 진단은 답에 따라 다음 질문이 갈라지는 흐름이라, 화면마다 조건을 하드코딩하면 유지보수가 빠르게 무너질 구조였습니다. 그래서 **단계와 컴포넌트를 코드가 아니라 "설정 데이터"로 정의하고, 렌더러가 그 설정을 해석해 폼을 그리는** 방식으로 풀었습니다.
-
-각 컴포넌트 설정은 타입·props와 함께 조건부 표시(`showWhen`)·비활성화(`disabledWhen`), 하위 질문(`children`), 상태 연결(`storeKey`)을 데이터로 갖고, 렌더러는 이를 읽어 동적으로 화면을 구성합니다.
-
-예시 코드입니다. 일반적인 패턴을 기반으로, 도메인 특성에 맞게 재구성해 적용했습니다.
-
-```ts title="componentConfig.ts"
-interface ComponentConfig {
-  type: ComponentType;                        // 어떤 입력 컴포넌트인지
-  props: Record<string, unknown>;
-  showWhen?: (data: FormData) => boolean;     // 조건부 표시
-  disabledWhen?: (data: FormData) => boolean; // 조건부 비활성화
-  children?: ComponentConfig[];               // 조건부 하위 질문
-  storeKey?: string;                          // 상태와 자동 연결
-}
-```
-
-이 "로직을 설정으로 빼는" 접근은 현업에서 데이터 보정 로직을 규칙 기반으로 분리했던 경험과 같은 결이었습니다. 사이드에서 다른 도메인에 한 번 더 적용해 보며 그 패턴에 대한 확신을 얻었고, 현업 여러 프로젝트에서 설정 기반 구조를 다룰 때 근거가 되었습니다.
+- 홈·공고 목록·글로벌 검색 UX 설계·구현
+- 클라이언트 인증을 Next.js 서버 리다이렉트로 전환
+- 인증 Spinner 제거, First Load JS 10% 이상 감소
+- 의도 분류·슬롯 추출 기반 주거 탐색 챗봇
