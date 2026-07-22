@@ -92,6 +92,8 @@ const sidebars: SidebarsConfig = {
         'ai-workflow/skill-system',
         'ai-workflow/design-system',
         'ai-workflow/code-review',
+        'ai-workflow/quality-checklist',
+        'ai-workflow/performance',
         'ai-workflow/agent-pipeline',
       ],
     },

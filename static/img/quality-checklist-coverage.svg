@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 400" role="img" aria-label="서비스 품질 체크리스트 충족률 50%에서 80%로 개선">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --border: rgba(0,201,167,0.22);
+      --track: rgba(139,148,158,0.18);
+      --mint: #00C9A7;
+      --mint-soft: rgba(0,201,167,0.55);
+      --text: #E6EDF3;
+      --muted: #8B949E;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #ffffff;
+        --panel: #f5f7fa;
+        --border: rgba(0,201,167,0.28);
+        --track: rgba(60,70,80,0.12);
+        --mint: #00b596;
+        --mint-soft: rgba(0,181,150,0.45);
+        --text: #1a1a2e;
+        --muted: #5a6472;
+      }
+    }
+    .bg { fill: var(--bg); }
+    .panel { fill: var(--panel); stroke: var(--border); stroke-width: 1; }
+    .track { fill: var(--track); }
+    .fill { fill: var(--mint); }
+    .fill-soft { fill: var(--mint-soft); }
+    .title { fill: var(--text); font-family: 'Pretendard', 'Segoe UI', sans-serif; font-weight: 700; }
+    .label { fill: var(--muted); font-family: 'Pretendard', 'Segoe UI', sans-serif; font-weight: 500; }
+    .pct { fill: var(--text); font-family: 'Fira Code', monospace; font-weight: 700; }
+    .pct-mint { fill: var(--mint); font-family: 'Fira Code', monospace; font-weight: 700; }
+    .arrow { fill: none; stroke: var(--mint); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+
+  <rect class="bg" x="0" y="0" width="820" height="400" rx="16"/>
+
+  <!-- header -->
+  <text class="title" x="40" y="58" font-size="24">서비스 품질 체크리스트 충족률</text>
+  <text class="label" x="40" y="86" font-size="14">개발 완료 시점을 기준선으로 삼아, 미충족 항목을 반복 리뷰로 해소</text>
+
+  <!-- Before: 50% -->
+  <text class="label" x="40" y="150" font-size="15">개발 완료 기준선</text>
+  <rect class="track" x="40" y="164" width="620" height="26" rx="13"/>
+  <rect class="fill-soft" x="40" y="164" width="310" height="26" rx="13"/>
+  <text class="pct" x="678" y="184" font-size="20">50%</text>
+
+  <!-- arrow between -->
+  <path class="arrow" d="M 350 214 L 350 244"/>
+  <path class="arrow" d="M 343 236 L 350 244 L 357 236"/>
+
+  <!-- After: 80% -->
+  <text class="label" x="40" y="288" font-size="15">반복 리뷰 후</text>
+  <rect class="track" x="40" y="302" width="620" height="26" rx="13"/>
+  <rect class="fill" x="40" y="302" width="496" height="26" rx="13"/>
+  <text class="pct-mint" x="678" y="322" font-size="20">80%</text>
+
+  <!-- footnote -->
+  <text class="label" x="40" y="372" font-size="13">Smoke · Regression 체크리스트를 FMS · BEMS · 원격 제어 전반에 동일 기준으로 적용</text>
+</svg>
