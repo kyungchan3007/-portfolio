@@ -107,6 +107,8 @@ const config: Config = {
             { label: 'FMS', to: '/projects/fms' },
             { label: 'BEMS', to: '/projects/bems' },
             { label: '원격 제어 시스템', to: '/projects/hvac-control' },
+            { label: '웹 접근성 개선', to: '/projects/accessibility' },
+            { label: '성능 최적화', to: '/projects/performance' },
             { label: 'PinHouse', to: '/projects/pinhouse' },
             { label: 'SAJU:ME', to: '/projects/saju' },
           ],

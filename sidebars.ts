@@ -31,6 +31,20 @@ const sidebars: SidebarsConfig = {
             'realtime/dedup-idempotency',
           ],
         },
+        {
+          type: 'category',
+          label: '웹 접근성',
+          items: [
+            'projects/accessibility',
+          ],
+        },
+        {
+          type: 'category',
+          label: '성능 최적화',
+          items: [
+            'projects/performance',
+          ],
+        },
       ],
     },
   ],
@@ -93,7 +107,6 @@ const sidebars: SidebarsConfig = {
         'ai-workflow/design-system',
         'ai-workflow/code-review',
         'ai-workflow/quality-checklist',
-        'ai-workflow/performance',
         'ai-workflow/agent-pipeline',
       ],
     },
