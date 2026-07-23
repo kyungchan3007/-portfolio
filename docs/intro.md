@@ -90,9 +90,9 @@ heading·landmark·ARIA 관계·포커스·색 대비를 전면 정리하고, ax
 **FMS · BEMS · 원격 제어 시스템 공통 적용 · ㈜TSM Technology · FE 개발**
 
 첫 화면 체감 속도(LCP)를 기준으로 삼은 성능 개선 작업입니다.
-점수가 아니라 LCP 분해로 병목을 특정하고, 초기 렌더 경로와 공용 번들 구조를 정리했습니다.
+점수가 아니라 LCP 분해로 병목을 특정하고, 전역 Provider 범위와 공통 번들 구조를 재구성해 세 서비스의 공통 앱 JS·CSS 번들을 각각 최대 29.7%·20.1% 줄였습니다.
 
-`Next.js` `web-vitals` `LCP attribution` `next/dynamic` `Playwright`
+`Next.js` `web-vitals` `attribution` `next/dynamic` `Playwright`
 
 ---
 
