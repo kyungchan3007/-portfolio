@@ -6,13 +6,13 @@ sidebar_label: 원격 제어 시스템
 
 # 🤖 원격 제어 및 모니터링
 
-**2025.08 – 2025.12 · ㈜TSM Technology · 과장 · FE 개발 · AWS 서버 구축**
+**개발 2025.08 – 2025.12 · 운영·리팩터링 2026.01 – 2026.07 · ㈜TSM Technology · 과장 · FE 개발 · AWS 서버 구축**
 
 AWS IoT Core 기반 현장 장비 원격 제어·실시간 모니터링 시스템에서, 중복 메시지·소켓 재생성·Listener 누수·장애 추적 부재를 데이터 처리·연결 생명주기·기능 구조·운영 관측 관점으로 정리했습니다.
 
 ## 기술 스택
 
-`React` `Node.js` `TypeScript` `Redux` `SSE` `WebSocket` `AWS IoT Core` `Lambda` `DynamoDB` `S3` `Athena` `CloudWatch`
+`React` `Node.js` `TypeScript` `Redux` `SSE` `WebSocket` `AWS IoT Core` `Lambda` `DynamoDB` `S3` `Athena` `CloudWatch` `GitHub Actions` `SonarQube`
 
 ---
 
@@ -25,6 +25,7 @@ AWS IoT Core 기반 현장 장비 원격 제어·실시간 모니터링 시스�
 | 메시지 수신 안정성 | 중복 구독과 잘못된 cleanup으로 메시지 누락 발생 | 화면 단위 등록·해제 기준 정리 | 수신 성공률 **15% → 100%** |
 | 구조 분리 | 실시간·일반 조회·소켓 로직이 전역에 분산돼 기능 변경 시 여러 계층 동시 수정 | 기능 단위 Slice로 분리하는 VSA 구조 전환 | 수정 영향 범위 **약 40% 감소** |
 | 운영 관측 | 장애 발생 후 원인 추적이 느림 | S3 로그, Athena 분석, CloudWatch Alarm 구성 | 장애 대응 **3일 → 1일 이내** |
+| CI/CD 자동화 | 수동 배포와 병합 전 자동 검증 부재 | GitHub Actions로 E2E·Storybook 검증, 품질 게이트 통과 시 AWS 자동 배포 | 결함 병합 전 차단, **무중단 릴리즈 체계 수립** |
 
 ---
 
@@ -156,5 +157,17 @@ GROUP BY messageId, deviceId
 HAVING COUNT(*) > 1
 ORDER BY receivedCount DESC;
 ```
+
+---
+
+## 5. GitHub Actions CI/CD — 테스트·배포 자동화
+
+병합 전 검증과 배포를 사람 손에 맡기지 않도록, 검증·품질 게이트·배포를 하나의 파이프라인으로 묶었습니다.
+
+- **문제** — 수동 배포와 병합 전 자동 검증 부재로 사용자 흐름 결함이 배포 후 발견되고 배포 공수가 큼
+- **적용** — CI 단계에서 E2E·Storybook 자동 검증으로 결함 유입을 병합 전 차단, 품질 게이트(SonarQube·E2E) 통과 시 AWS 자동 배포
+- **성과** — 사용자 흐름 결함 병합 전 차단, 수동 배포 공수 제거, 무중단 릴리즈 체계 수립
+
+---
 
 자세한 분석 흐름과 멱등성 대응은 [멱등성 검증 & 중복 필터](../realtime/dedup-idempotency.md) 문서에 따로 정리했습니다.

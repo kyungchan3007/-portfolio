@@ -6,13 +6,13 @@ sidebar_label: FMS
 
 # 🏭 FMS
 
-**2026.01 – 2026.06 · ㈜TSM Technology · 과장 · FE 개발 · 팀 리딩**
+**설계 2025.12 – 2026.02 · 개발 2026.03 – 2026.07 · ㈜TSM Technology · 과장 · FE 개발 · 팀 리딩**
 
 설비 관리에서 ERP까지 확장된 복합 업무 웹 애플리케이션에서, AI Workflow와 RESTful 설계 기준을 팀 공통 표준으로 정리해 범위가 커져도 같은 기준으로 구현·검증하도록 만들었습니다.
 
 ## 기술 스택
 
-`Next.js` `React` `TypeScript` `Claude` `Codex` `Skill` `Ontology` `OpenAPI` `Zod` `Radix UI` `Design Tokens` `Vitest` `Playwright`
+`Next.js` `React` `TypeScript` `Claude` `Codex` `Skill` `Ontology` `OpenAPI` `Zod` `Radix UI` `Design Tokens` `Vitest` `Playwright` `Lighthouse` `SSG`
 
 ---
 
@@ -20,8 +20,10 @@ sidebar_label: FMS
 
 | 항목 | 문제 | 적용 | 결과 |
 |---|---|---|---|
-| AI Workflow 표준화 | 요구사항·API·검증 기준이 단계마다 다르게 전달됨 | Claude·Codex 역할 분리, Skill·Ontology 연결, 팀 공통 Workflow 운영 | 구현·검증 시간 **약 50% 절감** |
+| AI Workflow 표준화 | 요구사항·API·검증 기준이 단계마다 다르게 전달됨 | Claude·Codex 역할 분리, Skill·Ontology 연결, 팀 공통 Workflow 운영 | 구현·검증 시간 **약 50% 절감**, 컨텍스트 토큰 **약 30% 절감** |
 | 개발 범위 확대 대응 | 도메인 확장으로 구현 범위가 빠르게 증가 | 역할·컨텍스트·검증 기준을 고정한 개발 흐름 정착 | 개발 범위 **약 50% 증가 상황 대응** |
+| 품질 검증 체계 | AI 생성 로직을 확정적으로 검증할 기준선 부재로 배포 후 품질 이슈 반복 | Vitest·Playwright 기능 회귀 검증, Lighthouse Web Vitals 측정, AI 검증·스모크 테스트 연동 | 서비스 품질 체크리스트 충족률 **50% → 90%** |
+| 사용 매뉴얼 | 서비스 사용 안내를 서버 렌더링 부담 없이 제공해야 함 | 매뉴얼 콘텐츠를 별도 라우트로 SSG 정적 생성 | 서버 렌더링 없이 정적 매뉴얼 제공 |
 | API 계약 대응 | 스펙 변경마다 타입·클라이언트를 수동 수정 | OpenAPI → Zod Runtime 검증 흐름 구성 | API 변경 대응·검증 시간 **50% 이상 절감** |
 | API 설계 기준 부재 | 기능별 Endpoint 명명·응답 구조가 달라짐 | RESTful endpoint 설계 기준 문서화 및 리뷰 기준화 | 반복적인 API 설계 협의·재작업 감소 |
 | 공통 UI 운영 | 화면이 늘수록 UI와 토큰 기준이 분산됨 | `ui`·`design-tokens` 패키지 분리, CSS 변수 기반 토큰 중앙화, Changesets 릴리즈 관리 | 공통 UI 변경 기준과 재사용 범위 정리 |
@@ -55,7 +57,7 @@ sidebar_label: FMS
 
 - **문제** — 요구사항·API·구현·리뷰가 한 흐름에 섞이면 AI가 UX·로직·검증을 한 번에 떠안아 결과 편차 발생
 - **적용** — Claude는 UX/UI 구현, Codex는 로직·API 검증·리뷰 담당 / Skill·Ontology로 작업 유형별 절차·기준 연결 / 구현→검증→리뷰→배포 단계별 컨텍스트 고정
-- **성과** — 구현·검증 시간 약 50% 절감, 리뷰 시간 50% 이상 절감, 프롬프트 재작업 감소, 목표 대비 약 2주 조기 완료
+- **성과** — 구현·검증 시간 약 50% 절감, 리뷰 시간 50% 이상 절감, YAML·Markdown 도메인 온톨로지·지침서로 AI 컨텍스트 토큰 약 30% 절감, 프롬프트 재작업 감소, 목표 대비 약 2주 조기 완료
 
 ```ts title="domain.ts"
 // 설명용 예시: 실제 프로젝트 설정 파일이 아님
@@ -209,6 +211,26 @@ export function DialogShell({ isOpen, onClose, isDismissible = true, children }:
 
 ---
 
+## 6. 품질 검증 체계 — 품질 체크리스트 충족률 50%→90%
+
+AI가 생성한 로직을 확정적으로 검증할 기준선이 없어 배포 후에야 품질 이슈가 반복 발견되던 문제를, 기능 회귀·Web Vitals·AI 점검을 하나의 검증 축으로 묶어 해결했습니다.
+
+- **문제** — AI 생성 로직을 확정적으로 검증할 기준선 부재로 배포 후 품질 이슈가 반복 발견
+- **적용** — Vitest·Playwright로 기능 회귀 검증, Lighthouse로 Web Vitals 측정, AI 검증 연동과 직접 스모크 테스트로 결함 유입 차단
+- **성과** — 서비스 품질 체크리스트 충족률 50% → 90%, 배포 안정성 확보
+
+---
+
+## 7. 서비스 사용 매뉴얼 페이지 — SSG 정적 생성
+
+사용 매뉴얼을 매번 서버에서 렌더링할 필요 없이 안정적으로 제공하기 위해, 콘텐츠를 구조화해 별도 라우트로 정적 생성했습니다.
+
+- **문제** — 서비스 사용 안내를 서버 렌더링 부담 없이 안정적으로 제공해야 함
+- **적용** — 매뉴얼 콘텐츠를 HTML로 구조화하고 별도 라우트로 분리해 SSG 정적 생성
+- **성과** — 서버 렌더링 없이 정적 매뉴얼 제공, 콘텐츠 변경 시 재생성으로 반영
+
+---
+
 ## 결과
 
 개별 화면 구현을 넘어, AI 활용·API 설계·계약 검증·공통 UI 운영을 하나의 팀 개발 방식으로 묶은 프로젝트였습니다.
@@ -217,4 +239,6 @@ export function DialogShell({ isOpen, onClose, isDismissible = true, children }:
 - 개발 범위 약 50% 증가 상황 대응
 - 리뷰 소요 시간 50% 이상 절감
 - API 변경 대응·검증 시간 50% 이상 절감
+- AI 컨텍스트 토큰 약 30% 절감
+- 서비스 품질 체크리스트 충족률 50% → 90%
 - 목표보다 약 2주 조기 완료
