@@ -89,7 +89,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'aiWorkflowSidebar',
           position: 'left',
-          label: '작업 기준과 자동화',
+          label: '작업 기준과 자동화(AI Agent)',
         },
         {
           href: 'https://github.com/kyungchan3007',
@@ -130,6 +130,9 @@ const config: Config = {
     },
     mermaid: {
       theme: { light: 'default', dark: 'dark' },
+      options: {
+        fontSize: 18,
+      },
     },
   } satisfies Preset.ThemeConfig,
 };

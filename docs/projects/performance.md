@@ -80,7 +80,7 @@ sidebar_label: 성능 최적화
 - 비핵심 클라이언트 영역을 **`next/dynamic`으로 분리**
 - 로그인 이후에만 필요한 기능은 **조건부 분리**해 초기 hydration 대상에서 제외
 
-```domain.tsx
+```tsx title="domain.tsx"
 import dynamic from "next/dynamic";
 
 // 첫 화면 밖의 비핵심 영역 — 초기 번들에서 분리
@@ -104,7 +104,7 @@ const 보조패널 = dynamic(() => import("./보조패널"), {
 - 글로벌 CSS의 **페이지 전용 스타일을 컴포넌트 로컬로 이동**
 - 화면 밖 섹션에 **`content-visibility: auto`**, **디스플레이 폰트 preload 비활성화**
 
-```domain.tsx
+```tsx title="domain.tsx"
 import Script from "next/script";
 
 // 전역이 아니라, 해당 영역이 실제 렌더될 때만 로드
@@ -121,7 +121,7 @@ export function 계측영역() {
 }
 ```
 
-```domain.css
+```css title="domain.css"
 /* 화면 밖 섹션의 렌더 비용을 뷰포트 진입 전까지 미룸 */
 .하단-섹션 {
   content-visibility: auto;
@@ -137,7 +137,7 @@ export function 계측영역() {
 
 "느린 것 같다"로는 원인을 특정할 수 없어, 지표 값과 그 값을 만든 요소를 함께 콘솔에서 관찰하도록 계측 코드를 붙였습니다. 환경변수로 on/off 하고, 팀이 바로 쓸 수 있는 형태로 공유했습니다.
 
-```domain.tsx
+```tsx title="domain.tsx"
 import { useReportWebVitals } from "next/web-vitals";
 
 export function 성능계측() {
@@ -170,14 +170,6 @@ export function 성능계측() {
 ## 5. 측정 → 리뷰 루프
 
 리포트를 사람이 눈으로 훑고 판단하면 회차마다 기준이 달라집니다. 그래서 Lighthouse CLI로 **리포트 파일을 만들고, 그 파일을 성능 리뷰 입력으로 넣는** 방식으로 돌렸습니다.
-
-```bash
-npx lighthouse http://localhost:3000 \
-  --preset=desktop \
-  --output=html \
-  --output-path=./lighthouse-report.html \
-  --no-enable-error-reporting
-```
 
 `리포트 생성 → 리뷰 입력 → 병목 분류·대응 항목 도출 → 적용 → 재측정`
 

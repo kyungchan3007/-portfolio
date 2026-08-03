@@ -37,17 +37,6 @@ sidebar_label: 웹 접근성
 
 ---
 
-## 핵심 문제 — 보이는 것과 쓸 수 있는 것의 간극
-
-세 서비스 모두 화면상으로는 정상 동작했지만, 시각적으로 동작한다는 것이 사용 가능하다는 뜻은 아니었습니다.
-
-- 스크린리더로 읽으면 heading 순서가 어긋나 문서 구조 파악 불가
-- 반응형 중심 작업에서 landmark·대비·포커스 상태가 쉽게 누락
-- 탭·프로그레스바 같은 상태 UI가 보조기기에 아무 의미도 전달 못 함
-- 한 번 고쳐도 다음 화면이 추가되면 같은 문제 재발 → 오조작·업무 지연으로 연결
-
----
-
 ## 1. 문서 구조 정상화 — 스크린리더 탐색 경로 복구
 
 heading을 시각 크기가 아니라 의미 계층 기준으로 재배치하고 landmark를 정리했습니다.
@@ -56,7 +45,7 @@ heading을 시각 크기가 아니라 의미 계층 기준으로 재배치하고
 - **적용** — heading을 의미 계층으로 재배치(크기는 스타일로만), 중복 `main` 제거 및 `header`·`nav`·`main`·`footer` 정리, 본문 이동 skip link 추가
 - **성과** — 키보드 사용자는 내비게이션을 건너뛰고 본문 진입, 스크린리더 사용자는 heading 목록만으로 구조 파악
 
-```domain.tsx
+```tsx title="domain.tsx"
 // 설명용 예시: 실제 레이아웃 구조가 아님
 <a href="#main-content" className="skip-link">
   본문으로 바로가기
@@ -77,7 +66,7 @@ heading을 시각 크기가 아니라 의미 계층 기준으로 재배치하고
 - **적용** — 탭 버튼·패널을 `role`·`aria-selected`·`aria-controls`·`aria-labelledby`로 연결, progressbar에 접근 가능한 이름·값 부여, 장식 아이콘은 `aria-hidden`·`focusable="false"`로 제외
 - **성과** — 탭 전환 시 현재 선택·대상 패널 함께 전달, 장식 요소가 낭독 흐름을 끊지 않음
 
-```domain.tsx
+```tsx title="domain.tsx"
 // 설명용 예시: 실제 컴포넌트 이름이 아님
 <button
   id={`tab-${key}`}
@@ -97,7 +86,7 @@ heading을 시각 크기가 아니라 의미 계층 기준으로 재배치하고
 </section>
 ```
 
-```domain.tsx
+```tsx title="domain.tsx"
 // 장식용 아이콘은 낭독·포커스 대상에서 제외
 <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
   <path d="..." />
@@ -114,7 +103,7 @@ heading을 시각 크기가 아니라 의미 계층 기준으로 재배치하고
 - **적용** — `focus-visible` 기반 포커스 링을 공통 스타일로 적용(마우스 클릭 시 미노출, 키보드 이동 시에만 노출), 링크·버튼 등 조작 요소 전반에 동일 기준
 - **성과** — 디자인을 해치지 않으면서 키보드 사용자 현재 위치 상시 표시, 포커스 스타일 기준 통일
 
-```domain.tsx
+```tsx title="domain.tsx"
 // 설명용 예시: 실제 경로·토큰 이름이 아님
 <Link
   href="/domains/sample"
@@ -144,7 +133,7 @@ heading을 시각 크기가 아니라 의미 계층 기준으로 재배치하고
 - **적용** — `@axe-core/playwright`를 E2E에 연결, 공개 페이지와 인증 필요 페이지까지 포함해 8개 경로 구성, 위반 발견 시 테스트 실패로 릴리즈 전 차단
 - **성과** — 감·개인 역량이 아닌 반복 실행 가능한 검증으로 전환, 공개·인증 8개 경로 통과 유지
 
-```domain.ts
+```ts title="domain.ts"
 // 설명용 예시: 실제 테스트 경로가 아님
 import AxeBuilder from "@axe-core/playwright";
 

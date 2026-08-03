@@ -122,22 +122,25 @@ worker.onmessage = ({ data }) => {
 
 ---
 
-## 3. 크로스 브라우징 렌더링 정리 — 4개 브라우저 동작 일관성 확보
+## 3. 크로스 브라우징 렌더링 정리 — 4개 브라우저 UI 동작 일관성 확보
 
-Worker의 비동기 반영과 레이아웃 변경이 겹쳐 브라우저마다 깨지던 렌더링을, DOM 반영 이후 후속 처리를 예약하는 방식으로 정리했습니다.
+비동기 데이터 반영과 레이아웃 재계산 시점이 엇갈리면서 브라우저마다 깨지던 렌더링을, React 상태 반영 직후 다음 프레임으로 후속 계산 시점을 미루는 방식으로 정리했습니다.
 
-- **문제** — Grid·Chart 잘림, 이미지 미노출, 이중 스크롤, Resize 이후에만 정상 표시
-- **적용** — DOM 반영 후 `requestAnimationFrame`으로 후속 처리 예약, `ResizeObserver`로 컨테이너 변경 감지 후 Grid·Chart 재계산, flex 자식에 `min-width/height: 0` 명시
+- **문제** — 비동기 데이터 반영과 레이아웃 재계산 시점이 엇갈려 Grid·Chart·이미지가 DOM 크기 확정 전에 측정·렌더되고, 브라우저별 레이아웃·페인트 타이밍 차이로 Grid·Chart 잘림, 이미지 미노출, 이중 스크롤, Resize 이후에만 정상 표시
+- **적용** — React 상태 반영 직후 `requestAnimationFrame`으로 후속 계산을 다음 프레임으로 예약하고, `ResizeObserver`로 컨테이너 크기 변경을 감지해 Grid·Chart 레이아웃을 재계산 — 측정·재계산 시점을 레이아웃 확정 이후로 맞춤
 - **성과** — Chrome·Edge·Safari·Firefox에서 Grid·Chart·이미지·스크롤 동작 일관성 확보
 
 ```ts title="domain.ts"
-// 설명용 예시: 실제 Grid API와 변수명이 아님
-useEffect(() => {
+// 설명용 예시: 실제 Grid·Chart API와 변수명이 아님
+useLayoutEffect(() => {
   const 대상요소 = containerRef.current
   if (!대상요소) return
 
   const observer = new ResizeObserver(() => {
-    requestAnimationFrame(() => grid.updateDimensions())
+    requestAnimationFrame(() => {
+      grid.updateDimensions()
+      chart.resize()
+    })
   })
 
   observer.observe(대상요소)
@@ -145,27 +148,121 @@ useEffect(() => {
 }, [])
 ```
 
-```css title="domain.css"
-/* 설명용 예시: 실제 Class 이름이 아님 */
-.domain-layout__content {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  overflow: auto;
-}
-```
+컨테이너 관찰은 `useLayoutEffect`로 첫 페인트 전에 연결하고, 크기 변경 시 `ResizeObserver`(감지) → `requestAnimationFrame`(다음 프레임 예약) → 재계산 순서로 측정·재계산 타이밍을 레이아웃 확정 이후로 안정화했습니다.
 
 ---
 
-## 4. SSR 아키텍처 재구축 — 화면 반영 2초→1초
+## 4. React.js → Next.js 재구축 — Container-Presenter에서 하이브리드 FSD로, 화면 반영 2초→1초
 
-남은 지연이 개별 코드가 아니라 CSR 구조 자체에서 나온다고 판단하고, 점진 개선 대신 아키텍처를 일괄 재구축했습니다.
+남은 지연이 개별 코드가 아니라 CSR(React.js SPA) 구조 자체에서 나온다고 판단하고, 점진 개선 대신 Next.js App Router로 아키텍처를 일괄 재구축했습니다.
 
-- **문제** — `렌더→mount→fetch→재렌더` 워터폴 누적, 화면별 오버페칭 반복, Worker로 옮겨도 연산이 브라우저에 남아 기기 성능 편차 발생
-- **적용** — Next.js SSR로 초기 조회·렌더링을 서버로 이동해 워터폴 제거, 서버·클라이언트 책임 경계(SoC) 재정의, 화면이 쓰는 데이터만 조회하도록 API 계약 재정의, 서버 확정 데이터 제공으로 Worker 클라이언트 연산 제거
-- **성과** — 전 페이지 화면 반영 2초 → 1초 이내(약 50% 단축), 오버페칭 제거로 정합성 확보, 기기 성능 편차 해소, 팀 스택 Next.js 통일
+- **문제**
+  - **구조** — 초기 React.js는 Container-Presenter 2계층으로 시작했는데, Container에 데이터 패칭·상태·비즈니스 로직이 몰리며 비대화되고 계층 간 중복 import가 누적
+  - **성능** — 모든 화면이 CSR이라 `mount → fetch → 재렌더` 워터폴로 첫 화면이 늦음. 무거운 연산은 Web Worker로 메인 스레드 밖으로 뺐지만(→ 2번), 초기 조회·렌더가 브라우저에 남는 CSR 구조 자체의 첫 로드 지연은 그대로 남음
+- **적용**
+  - **하이브리드 FSD 이관** — Container-Presenter 2계층을 FSD 계층(`shared`·`entities`·`features`·`widgets`)으로 재편하고, Next.js App Router의 라우팅·서버 컴포넌트와 결합한 하이브리드 FSD로 구성. 데이터 패칭을 서버 컴포넌트/상위 계층으로 끌어올려 Container 비대화·중복 import 해소
+  - **SSR** — 매 요청 달라지는 운영 화면은 초기 조회·렌더를 서버에서 확정해 CSR 워터폴 제거, 화면이 쓰는 데이터만 조회하도록 API 계약 재정의
+  - **SSG** — 거의 변하지 않는 정적 페이지는 빌드 타임에 미리 생성해 초기 로드 비용 최소화
+  - **역할 분리** — 초기 로드의 조회·렌더는 서버(SSR)로 옮기고, 로드 이후 1분 단위 실시간 갱신은 계속 Delta Update + Web Worker(→ 2번)가 담당하도록 경계를 나눔
+  - **AI 하네스 기반 재구축** — 재구축 전 과정을 AI 하네스(표준 구현·검증 프로세스)로 진행해 구조 변경의 일관성을 확보하고, Lighthouse로 전환 전후 성능을 정량 비교
+- **성과** — 전 페이지 화면 반영 2초 → 1초 이내(약 50% 단축), 오버페칭 제거로 정합성 확보, 서버 렌더링으로 기기 성능 편차 해소, 팀 스택 Next.js 통일
 
-이 재구축의 의미는 속도 수치보다, **클라이언트 최적화의 한계를 수치로 확인한 뒤 구조를 바꾸는 판단을 내렸다는 점**에 있습니다. 2초까지는 코드로 줄였고, 그 아래는 아키텍처를 바꿔야 닿는 구간이었습니다.
+**구조 비교** — 설명용 예시 구조이며 실제 폴더·파일 이름이 아닙니다.
+
+**A. 고수준 비교 (React → Next.js)**
+
+```mermaid
+graph LR
+  subgraph before["기존 · React SPA (CSR)"]
+    direction TB
+    C["container<br/>패칭·상태·로직 집중 → 비대화"] --> P["presenter<br/>UI 표현"]
+    C -. "mount 후 fetch (워터폴)" .-> BE1[("Backend API")]
+  end
+  subgraph after["재구축 · Next.js (하이브리드 FSD)"]
+    direction TB
+    A2["app · 서버 컴포넌트 (SSR)"] --> W2["widgets"] --> F2["features<br/>(실시간 · Web Worker)"] --> E2["entities"] --> S2["shared"]
+  end
+  before ==>|재구축| after
+```
+
+**B. 재구축 후 상세 흐름 (① 첫 로드 SSR → ② 로드 후 실시간 Worker)**
+
+```mermaid
+graph TB
+  PAGE["page.tsx<br/>SSR 초기 데이터"]
+  APIF["api/domain.ts<br/>API 공통화"]
+  BE[("Backend API")]
+  HOOK["useDomainRealtime.ts<br/>실시간 수신 · lifecycle"]
+  WCLIENT["worker-client.ts<br/>worker 호출 · 래핑"]
+
+  subgraph worker["domain-delta.worker.ts (Web Worker)"]
+    direction TB
+    WENTRY["worker entry<br/>INIT · APPLY_DELTA"]
+    CMP["compare-domain.ts<br/>prev vs next 비교"]
+    BUILD["build-patch.ts<br/>변경분 → patch"]
+    WENTRY --> CMP --> BUILD
+  end
+
+  STORE["store.ts<br/>patch만 적용"]
+  ENTITY["entities/domain<br/>types · normalizer"]
+  WIDGET["DomainWidget.tsx<br/>렌더"]
+
+  PAGE -->|"① 초기 fetch"| APIF
+  APIF -. 요청 .-> BE
+  PAGE -->|"① SSR props"| WIDGET
+  BE -. "② 실시간 stream" .-> HOOK
+  HOOK --> WCLIENT --> WENTRY
+  BUILD -->|"② PATCH"| STORE
+  STORE -->|selector| WIDGET
+  CMP -.->|"types·정규화"| ENTITY
+```
+
+각 파일의 역할은 다음과 같습니다.
+
+- **`page.tsx`** — 서버에서 초기 데이터를 fetch해 SSR로 확정하고, 위젯에 초기 props로 주입 (첫 로드 담당)
+- **`domain.ts`** — 도메인 API 호출 공통화 (page의 초기 fetch가 사용)
+- **`useDomainRealtime.ts`** — 실시간 데이터를 수신(stream 연결)하고 Web Worker의 생성·종료(lifecycle)를 관리
+- **`worker-client.ts`** — `new Worker(...)`로 워커를 띄우고 메시지 송수신을 래핑해, 상위 코드가 워커 API를 직접 다루지 않도록 격리
+- **`domain-delta.worker.ts`** — worker entry. `INIT`(기준 snapshot 설정)·`APPLY_DELTA` 메시지를 수신·응답
+- **`compare-domain.ts`** — 이전값 vs 현재값을 비교해 변경된 row·item·field만 추출(순수 함수)
+- **`build-patch.ts`** — 비교 결과를 store 반영용 patch로 변환(순수 함수)
+- **`store.ts`·`selectors.ts`** — 워커가 보낸 patch만 적용하고, 위젯에 필요한 selector 제공
+- **`types.ts`·`normalizer.ts`** — 도메인 타입과 원본 정규화 규칙을 정의. 정규화는 비교 전에 적용해 prev·next의 shape를 맞춤
+- **`DomainWidget.tsx`** — 서버 초기 데이터와 실시간 상태를 받아 최종 렌더
+
+**워커 메시지 흐름**
+
+```text
+초기 snapshot            → INIT (기준 snapshot 저장)
+새 snapshot·delta 수신   → APPLY_DELTA
+  → compare-domain.ts    : prev vs next 비교 → 변경분만 추출
+  → build-patch.ts       : 변경분 → patch 변환
+  → postMessage(PATCH)   → main thread store 반영
+```
+
+```ts title="domain.ts"
+// 설명용 예시: 실제 타입 이름이 아님
+
+// compare-domain.ts 의 비교 결과
+type CompareResult = {
+  added: Item[]
+  updated: Item[]
+  removed: string[]
+}
+
+// worker → main thread 응답 (build-patch.ts 결과)
+type WorkerResponse = {
+  type: 'PATCH'
+  payload: {
+    changedIds: string[]
+    patch: DomainPatch
+  }
+}
+```
+
+핵심은 **비교 레이어를 없애지 않되 메인 스레드가 아니라 워커 내부 단계로 두고, `비교(compare)`와 `patch 생성(build-patch)`까지 분리**했다는 점입니다. store는 patch만 반영해 얇게 유지되고, FSD 의존은 항상 **상위 → 하위 단방향**(`app → widgets → features → entities → shared`)으로만 흐릅니다.
+
+이 재구축의 의미는 속도 수치보다, **클라이언트 최적화의 한계를 수치로 확인한 뒤 프레임워크와 아키텍처 자체를 바꾸는 판단을 내렸다는 점**에 있습니다. 2초까지는 React.js 위에서 코드로 줄였고, 그 아래는 렌더링 구조를 서버로 옮겨야 닿는 구간이었습니다.
 
 ---
 

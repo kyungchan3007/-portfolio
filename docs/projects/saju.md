@@ -159,7 +159,7 @@ LCP 대부분이 **element render delay**에 몰려 있었고, attribution으로
 - `/preview/...` 프리뷰 라우트를 **SSG(`force-static`)로 전환**
 - 전역 Provider 범위·공통 번들 구조 재구성으로 **공통 CSS·JS 비용 축소**
 
-```domain.tsx
+```tsx title="domain.tsx"
 // LCP 후보인 히어로 이미지만 우선 로드로 승격
 <Image
   src={"화면 폭에 맞춰 고른 WebP 자산"}
