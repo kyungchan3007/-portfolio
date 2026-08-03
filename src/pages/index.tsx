@@ -24,7 +24,7 @@ const STRENGTHS = [
   {
     title: '실시간 제어 흐름을 안정화합니다',
     desc: '연결 지점, 중복 처리, 저장 구조를 분리해 응답성과 안정성을 높이고, 운영 관측 체계도 함께 정리했습니다.',
-    evidence: '원격 제어 응답 지연 10초+ → 1초 이내',
+    evidence: '원격 제어 응답 지연 5초 → 1초 이내',
     link: '/projects/hvac-control',
   },
 ];
@@ -50,7 +50,7 @@ const HIGHLIGHTS = [
     label: 'Realtime',
     title: '원격 제어 및 모니터링',
     summary: '실시간 제어 구조와 운영 관측 체계를 함께 정리해 응답성과 신뢰성을 개선한 프로젝트입니다.',
-    result: '제어 응답 10초+ → 1초 이내',
+    result: '제어 응답 5초 → 1초 이내',
     tags: ['AWS IoT Core', 'Lambda', 'WebSocket', 'CloudWatch'],
     link: '/projects/hvac-control',
   },

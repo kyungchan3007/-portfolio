@@ -143,6 +143,6 @@ DomainALambdaDurationAlarm:
 
 ## 결과
 
-- direct write 구조 제거로 제어 응답 지연 **10초+ → 1초 이내**
+- direct write 구조 제거로 제어 응답 지연 **5초 → 1초 이내**
 - 중복 저장 제거로 DB 부담·조회 부담 감소
 - CloudWatch Alarm으로 장애 즉시 감지 체계 확보
