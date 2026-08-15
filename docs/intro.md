@@ -47,7 +47,7 @@ AI Workflow는 처음부터 팀이 자연스럽게 받아들인 방식은 아니
 ## 대표 프로젝트
 
 ### [FMS](/projects/fms)
-**2026.01 – 2026.06 · ㈜TSM Technology · FE 개발 · 팀 리딩**
+**설계 2025.12 – 2026.02 · 개발 2026.03 – 2026.07 · ㈜TSM Technology · FE 개발 · 팀 리딩**
 
 복합 업무 프로세스를 디지털화한 웹 애플리케이션입니다.
 AI Workflow와 RESTful endpoint 설계 기준을 팀 공통 방식으로 정리해, 도메인 확장 상황에서도 같은 기준으로 구현·검증할 수 있게 만들었습니다.
@@ -57,7 +57,7 @@ AI Workflow와 RESTful endpoint 설계 기준을 팀 공통 방식으로 정리�
 ---
 
 ### [BEMS](/projects/bems)
-**2023.08 – 2025.08 · ㈜TSM Technology · FE 개발 · 팀 리딩**
+**신규 개발 2023.08 – 2025.08 · 운영·리팩터링 2025.09 – 2026.07 · ㈜TSM Technology · FE 개발 · 팀 리딩**
 
 운영 지표 데이터 실시간 수집·시각화 시스템입니다.
 상태·캐시·실시간 처리·품질 검증 기준을 함께 정리해, 브라우저 요청과 화면 반영 지연을 줄이고 운영 가능한 구조로 개선했습니다.
@@ -67,7 +67,7 @@ AI Workflow와 RESTful endpoint 설계 기준을 팀 공통 방식으로 정리�
 ---
 
 ### [원격 제어 및 모니터링](/projects/hvac-control)
-**2024.08 – 2025.12 · ㈜TSM Technology · FE 개발 · AWS 서버 구축**
+**개발 2025.08 – 2025.12 · 운영·리팩터링 2026.01 – 2026.07 · ㈜TSM Technology · FE 개발 · AWS 서버 구축**
 
 AWS IoT Core 기반 현장 장비 원격 제어 및 실시간 모니터링 시스템입니다.
 MQTT 멱등성, WebSocket 연결 구조, 장애 추적 흐름을 정리해 응답성과 신뢰성을 함께 개선했습니다.
@@ -99,7 +99,7 @@ heading·landmark·ARIA 관계·포커스·색 대비를 전면 정리하고, ax
 ## 사이드 프로젝트에서 확장한 기준
 
 [PinHouse](/projects/pinhouse)에서는 Zustand·TanStack Query·BFF 기반 검색 상태와 캐시 구조를 정리해, 이후 BEMS의 반복 요청과 상태 관리 구조 개선으로 연결했습니다.  
-[SAJU:ME](/projects/saju)에서는 Skill·Ontology 기반 AI Agent Harness와 평가 구조를 만들고, 그 기준을 이후 FMS 팀 공통 개발 프로세스로 확장했습니다.
+[SAJU:ME](/projects/saju)에서는 '오늘의 운세'만 보고 이탈하던 유입을 선행 게이트·자체 계측 실험으로 가입 전환 20%→30%까지 끌어올렸고, Skill·Ontology 기반 AI Agent Harness와 평가 구조도 함께 만들어 이후 FMS 팀 공통 개발 프로세스로 확장했습니다.
 
 이 과정에서 정리한 AI Workflow 기준은 FMS에, 상태·캐시 구조 기준은 BEMS에 연결되며 현업 프로젝트의 코드 품질과 서비스 품질을 함께 끌어올렸습니다.
 

@@ -58,9 +58,9 @@ const HIGHLIGHTS = [
 
 const SIDE_PROJECTS = [
   {
-    label: 'Workflow',
+    label: 'Growth',
     title: 'SAJU:ME',
-    summary: 'Skill·Ontology 기반 AI Agent Harness와 평가 구조를 만들고, 그 기준을 이후 FMS 개발 프로세스로 확장한 프로젝트입니다.',
+    summary: "'오늘의 운세'만 보고 이탈하던 유입을 선행 게이트·자체 계측 실험으로 가입 전환 20%→30%까지 끌어올리고, AI Agent Harness 기준도 함께 만들어 FMS로 확장한 프로젝트입니다.",
     link: '/projects/saju',
   },
   {
