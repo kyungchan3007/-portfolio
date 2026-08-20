@@ -60,38 +60,6 @@ const config: Config = {
       title: '박경찬',
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'projectsSidebar',
-          position: 'left',
-          label: '대표 프로젝트',
-        },
-        {
-          type: 'docSidebar',
-          sidebarId: 'sideProjectsSidebar',
-          position: 'left',
-          label: '사이드 프로젝트',
-        },
-        // 사용자에게 제공하지 않음 — 내용은 보존
-        // {
-        //   type: 'docSidebar',
-        //   sidebarId: 'qualitySidebar',
-        //   position: 'left',
-        //   label: '검증과 릴리즈',
-        // },
-        // Hidden for now due to sensitive architecture/security details.
-        // {
-        //   type: 'docSidebar',
-        //   sidebarId: 'architectureSidebar',
-        //   position: 'left',
-        //   label: '구조와 렌더링',
-        // },
-        {
-          type: 'docSidebar',
-          sidebarId: 'aiWorkflowSidebar',
-          position: 'left',
-          label: '작업 기준과 자동화(AI Agent)',
-        },
-        {
           href: 'https://github.com/kyungchan3007',
           label: 'GitHub',
           position: 'right',
@@ -100,27 +68,7 @@ const config: Config = {
     },
     footer: {
       style: 'dark',
-      links: [
-        {
-          title: '프로젝트',
-          items: [
-            { label: 'FMS', to: '/projects/fms' },
-            { label: 'BEMS', to: '/projects/bems' },
-            { label: '원격 제어 시스템', to: '/projects/hvac-control' },
-            { label: '웹 접근성 개선', to: '/projects/accessibility' },
-            { label: '성능 최적화', to: '/projects/performance' },
-            { label: 'PinHouse', to: '/projects/pinhouse' },
-            { label: 'SAJU:ME', to: '/projects/saju' },
-          ],
-        },
-        {
-          title: '연락처',
-          items: [
-            { label: 'GitHub', href: 'https://github.com/kyungchan3007' },
-            { label: 'Email', href: 'mailto:developfff@gmail.com' },
-          ],
-        },
-      ],
+      links: [],
       copyright: `Copyright © ${new Date().getFullYear()} 박경찬. Built with Docusaurus.`,
     },
     prism: {
