@@ -1,6 +1,8 @@
 import Layout from '@theme/Layout';
 import Mermaid from '@theme/Mermaid';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import DetailModalButton from '../components/DetailModalButton';
+import { MODAL_DETAILS, type ModalKey } from '../components/detailSlides';
 import '../css/custom.css';
 
 type Project = {
@@ -9,7 +11,7 @@ type Project = {
   summary: string;
   problem: string;
   role: string;
-  technologies: Array<{ name: string; why: string; how: string }>;
+  technologies: Array<{ name: string; why: string; how: string; detail?: ModalKey }>;
   architecture: string;
   code: string;
   result: string;
@@ -31,10 +33,10 @@ const PROJECTS: Project[] = [
     problem: '도메인이 확장되면서 요구사항, API, 검증 기준이 단계마다 달라졌습니다. 구현 방식이 사람마다 제각각이 되고 반복적인 협의와 QA 비용도 커졌습니다.',
     role: '2인 개발 체제에서 프론트엔드 구조와 AI 협업 프로세스를 주도했습니다.',
     technologies: [
-      { name: 'AI Harness', why: 'AI 결과의 편차와 재작업을 줄이고 구현·검증 문맥을 분리하기 위해 선택했습니다.', how: 'Skill·Ontology로 도메인 규칙을 구조화하고 Claude는 구현, Codex는 로직·API·보안·회귀 검증을 담당하도록 나눴습니다.' },
-      { name: 'OpenAPI · Zod', why: 'API 협의와 수동 타입 작성에서 생기는 계약 불일치를 줄이기 위해 선택했습니다.', how: 'OpenAPI를 계약의 기준으로 삼고 Zod로 런타임 응답까지 검증했습니다.' },
+      { name: 'AI Harness', why: 'AI 결과의 편차와 재작업을 줄이고 구현·검증 문맥을 분리하기 위해 선택했습니다.', how: 'Skill·Ontology로 도메인 규칙을 구조화하고 Claude는 구현, Codex는 로직·API·보안·회귀 검증을 담당하도록 나눴습니다.', detail: 'ai-harness' },
+      { name: 'OpenAPI · Zod', why: 'API 협의와 수동 타입 작성에서 생기는 계약 불일치를 줄이기 위해 선택했습니다.', how: 'OpenAPI를 계약의 기준으로 삼고 Zod로 런타임 응답까지 검증했습니다.', detail: 'openapi-zod' },
       { name: 'Playwright · Storybook', why: '기능 구현 후 반복되는 사용자 흐름과 공통 UI 회귀를 자동으로 확인하기 위해 선택했습니다.', how: '주요 사용자 흐름은 Playwright로, 공통 컴포넌트는 Storybook과 체크리스트로 검증했습니다.' },
-      { name: 'npm Workspaces · Design System', why: '화면별 개별 구현으로 공통 UI가 중복되고 접근성·동작 기준이 흩어졌기 때문에 선택했습니다.', how: 'npm Workspaces 모노레포로 애플리케이션·UI 자산을 분리하고, 디자인 토큰과 Headless UI 패턴으로 스타일과 접근성·동작을 나눴습니다.' },
+      { name: 'npm Workspaces · Design System', why: '화면별 개별 구현으로 공통 UI가 중복되고 접근성·동작 기준이 흩어졌기 때문에 선택했습니다.', how: 'npm Workspaces 모노레포로 애플리케이션·UI 자산을 분리하고, 디자인 토큰과 Headless UI 패턴으로 스타일과 접근성·동작을 나눴습니다.', detail: 'design-system' },
     ],
     architecture: `flowchart LR
   A[요구사항] --> B[Skill 선택]
@@ -146,7 +148,7 @@ const 검색키 = ['search', 정규화조건];`,
     technologies: [
       { name: '선행 게이트', why: "'오늘의 운세'만 보고 이탈하는 흐름을 가입 전환으로 바꾸기 위해 선택했습니다.", how: '무료 풀이를 미끼로 가입 완료 후 열람하는 선행 게이트로 전환하고, 기존 후행 게이트와 전후를 비교했습니다.' },
       { name: 'Cloudflare Workers 계측', why: '별도 분석 툴 없이 어느 게이트가 더 전환되는지 데이터로 판단해야 했기 때문에 선택했습니다.', how: 'Workers 로그에 variant·전환 이벤트를 남기고 집계해 variant별 전환율을 직접 계산했습니다.' },
-      { name: 'AI Harness', why: '구현과 검증이 한 문맥에 섞이면 결과 편차와 재작업이 커졌기 때문에 선택했습니다.', how: 'Claude는 구현, Codex는 로직·API·리뷰 검증을 맡기고 Ontology로 규칙을 구조화, prompt-trigger-eval 체크리스트를 자동 실행했습니다.' },
+      { name: 'AI Harness', why: '구현과 검증이 한 문맥에 섞이면 결과 편차와 재작업이 커졌기 때문에 선택했습니다.', how: 'Claude는 구현, Codex는 로직·API·리뷰 검증을 맡기고 Ontology로 규칙을 구조화, prompt-trigger-eval 체크리스트를 자동 실행했습니다.', detail: 'ai-harness' },
     ],
     architecture: `flowchart LR
   A[유입] --> B[무료 풀이 미끼]
@@ -178,9 +180,9 @@ export default function Home() {
 
         <section className="proof-section"><div className="container proof-layout"><div><p className="eyebrow">Measured outcomes</p><h2>개선 전후를 숫자로 남깁니다.</h2></div><div className="proof-grid"><div><strong>3~5초 → 1초</strong><span>BEMS 화면 반영 지연</span></div><div><strong>5초 → 1초</strong><span>원격 제어 응답 지연</span></div><div><strong>3일 → 1일</strong><span>장애 대응 시간</span></div><div><strong>50% → 90%</strong><span>품질 체크리스트 적용률</span></div></div></div></section>
 
-        <section className="portfolio-section projects-section" id="projects"><div className="container"><div className="section-heading section-heading-left"><p className="eyebrow">Selected work</p><h2>대표 프로젝트</h2></div><div className="project-list">{PROJECTS.map((project) => <article className="project-item project-detail-item" key={project.title}><div className="project-index">{project.label}</div><div className="project-main"><h3>{project.title}</h3><p className="project-summary">{project.summary}</p><div className="project-context"><div><small>Problem</small><p>{project.problem}</p></div><div><small>My role</small><p>{project.role}</p></div></div><div className="technology-proof"><h4>기술 선택과 구현</h4>{project.technologies.map((technology) => <div className="technology-item" key={technology.name}><strong>{technology.name}</strong><p><b>선택 이유</b> {technology.why}</p><p><b>적용 방식</b> {technology.how}</p></div>)}</div><div className="architecture-block"><h4>Architecture</h4><Mermaid value={project.architecture} /></div><div className="code-block"><h4>Implementation excerpt</h4><pre><code>{project.code}</code></pre></div><div className="project-bottom"><div className="project-details">{project.metrics.map((metric) => <span key={metric}>{metric}</span>)}</div></div><p className="project-result-line"><span>Result</span>{project.result}</p></div></article>)}</div></div></section>
+        <section className="portfolio-section projects-section" id="projects"><div className="container"><div className="section-heading section-heading-left"><p className="eyebrow">Selected work</p><h2>대표 프로젝트</h2></div><div className="project-list">{PROJECTS.map((project) => <article className="project-item project-detail-item" key={project.title}><div className="project-index">{project.label}</div><div className="project-main"><h3>{project.title}</h3><p className="project-summary">{project.summary}</p><div className="project-context"><div><small>Problem</small><p>{project.problem}</p></div><div><small>My role</small><p>{project.role}</p></div></div><div className="technology-proof"><h4>기술 선택과 구현</h4>{project.technologies.map((technology) => <div className={technology.detail ? 'technology-item technology-item--action' : 'technology-item'} key={technology.name}><div className="technology-text"><strong>{technology.name}</strong><p><b>선택 이유</b> {technology.why}</p><p><b>적용 방식</b> {technology.how}</p></div>{technology.detail && <DetailModalButton {...MODAL_DETAILS[technology.detail]} />}</div>)}</div><div className="architecture-block"><h4>Architecture</h4><Mermaid value={project.architecture} /></div><div className="code-block"><h4>Implementation excerpt</h4><pre><code>{project.code}</code></pre></div><div className="project-bottom"><div className="project-details">{project.metrics.map((metric) => <span key={metric}>{metric}</span>)}</div></div><p className="project-result-line"><span>Result</span>{project.result}</p></div></article>)}</div></div></section>
 
-        <section className="portfolio-section side-projects-section"><div className="container"><div className="section-heading section-heading-left"><p className="eyebrow">Side projects</p><h2>사이드 프로젝트</h2></div><div className="project-list">{SIDE_PROJECTS.map((project) => <article className="project-item project-detail-item" key={project.title}><div className="project-index">{project.label}</div><div className="project-main"><h3>{project.title}</h3><p className="project-summary">{project.summary}</p><div className="project-context"><div><small>Problem</small><p>{project.problem}</p></div><div><small>My role</small><p>{project.role}</p></div></div><div className="technology-proof"><h4>기술 선택과 구현</h4>{project.technologies.map((technology) => <div className="technology-item" key={technology.name}><strong>{technology.name}</strong><p><b>선택 이유</b> {technology.why}</p><p><b>적용 방식</b> {technology.how}</p></div>)}</div><div className="architecture-block"><h4>Architecture</h4><Mermaid value={project.architecture} /></div><div className="code-block"><h4>Implementation excerpt</h4><pre><code>{project.code}</code></pre></div><div className="project-bottom"><div className="project-details">{project.metrics.map((metric) => <span key={metric}>{metric}</span>)}</div></div><p className="project-result-line"><span>Result</span>{project.result}</p></div></article>)}</div></div></section>
+        <section className="portfolio-section side-projects-section"><div className="container"><div className="section-heading section-heading-left"><p className="eyebrow">Side projects</p><h2>사이드 프로젝트</h2></div><div className="project-list">{SIDE_PROJECTS.map((project) => <article className="project-item project-detail-item" key={project.title}><div className="project-index">{project.label}</div><div className="project-main"><h3>{project.title}</h3><p className="project-summary">{project.summary}</p><div className="project-context"><div><small>Problem</small><p>{project.problem}</p></div><div><small>My role</small><p>{project.role}</p></div></div><div className="technology-proof"><h4>기술 선택과 구현</h4>{project.technologies.map((technology) => <div className={technology.detail ? 'technology-item technology-item--action' : 'technology-item'} key={technology.name}><div className="technology-text"><strong>{technology.name}</strong><p><b>선택 이유</b> {technology.why}</p><p><b>적용 방식</b> {technology.how}</p></div>{technology.detail && <DetailModalButton {...MODAL_DETAILS[technology.detail]} />}</div>)}</div><div className="architecture-block"><h4>Architecture</h4><Mermaid value={project.architecture} /></div><div className="code-block"><h4>Implementation excerpt</h4><pre><code>{project.code}</code></pre></div><div className="project-bottom"><div className="project-details">{project.metrics.map((metric) => <span key={metric}>{metric}</span>)}</div></div><p className="project-result-line"><span>Result</span>{project.result}</p></div></article>)}</div></div></section>
 
         <section className="portfolio-section supporting-section"><div className="container"><div className="section-heading section-heading-left"><p className="eyebrow">Cross-cutting work</p><h2>전 서비스에 공통 적용한 개선</h2></div><div className="supporting-list">{SUPPORTING_PROJECTS.map((project) => <article className="supporting-item" key={project.title}><div><span className="project-index">{project.tech}</span><h3>{project.title}</h3><p>{project.detail}</p></div><div className="supporting-proof"><small>Why</small><p>{project.reason}</p><strong>{project.result}</strong></div></article>)}</div></div></section>
 
