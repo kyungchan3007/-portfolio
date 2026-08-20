@@ -26,7 +26,7 @@ h1, h2, h3, h4 { word-break: keep-all; text-wrap: balance; }
 .button-primary { background: var(--mint); color: var(--ink); }
 .button-ghost { border: 1px solid var(--line); color: var(--ink); }
 .hero-portrait-wrap { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 460px; }
-.portrait-glow { position: absolute; top: 50%; left: 50%; width: 340px; height: 340px; transform: translate(-50%, -60%); border-radius: 50%; background: var(--mint); opacity: .4; filter: blur(46px); }
+.portrait-glow { position: absolute; top: 50%; left: 50%; width: 320px; height: 320px; transform: translate(-50%, -58%); border-radius: 50%; background: var(--mint); opacity: .16; filter: blur(54px); }
 .hero-portrait { position: relative; width: 300px; height: 300px; object-fit: cover; object-position: 51% 18%; border: 6px solid rgba(87, 224, 189, .6); border-radius: 50%; box-shadow: 0 18px 44px rgba(16, 34, 31, .16); }
 .portrait-caption { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--ink); }
 .portrait-caption span { font-size: 11px; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }

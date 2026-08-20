@@ -70,7 +70,7 @@ const config: Config = {
     footer: {
       style: 'dark',
       links: [],
-      copyright: `Copyright © ${new Date().getFullYear()} 박경찬. Built with Docusaurus.`,
+      copyright: `© ${new Date().getFullYear()} 박경찬`,
     },
     prism: {
       theme: prismThemes.github,

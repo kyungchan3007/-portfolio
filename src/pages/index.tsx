@@ -186,7 +186,7 @@ export default function Home() {
 
         <section className="portfolio-section supporting-section"><div className="container"><div className="section-heading section-heading-left"><p className="eyebrow">Cross-cutting work</p><h2>전 서비스에 공통 적용한 개선</h2></div><div className="supporting-list">{SUPPORTING_PROJECTS.map((project) => <article className="supporting-item" key={project.title}><div><span className="project-index">{project.tech}</span><h3>{project.title}</h3><p>{project.detail}</p></div><div className="supporting-proof"><small>Why</small><p>{project.reason}</p><strong>{project.result}</strong></div></article>)}</div></div></section>
 
-        <footer className="portfolio-footer"><div className="container footer-inner"><div><p className="eyebrow">Let&apos;s work together</p><h2>좋은 문제를 함께 풀고 싶습니다.</h2></div><div className="footer-links"><a href="mailto:developfff@gmail.com">developfff@gmail.com</a><a href="https://github.com/kyungchan3007" target="_blank" rel="noreferrer">GitHub ↗</a></div></div></footer>
+        <footer className="portfolio-footer"><div className="container footer-inner"><div><p className="eyebrow">Let&apos;s work together</p></div><div className="footer-links"><a href="mailto:developfff@gmail.com">developfff@gmail.com</a><a href="https://github.com/kyungchan3007" target="_blank" rel="noreferrer">GitHub ↗</a></div></div></footer>
       </main>
     </Layout>
   );
