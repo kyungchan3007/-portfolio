@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Mermaid from '@theme/Mermaid';
 import type { DetailSlide } from './detailSlides';
 
@@ -11,9 +11,18 @@ type Props = {
 export default function DetailModalButton({ slides, eyebrow, label }: Props) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+  const modalRef = useRef<HTMLDivElement | null>(null);
   const count = slides.length;
   const go = useCallback((i: number) => setIndex((i + count) % count), [count]);
   const close = useCallback(() => setOpen(false), []);
+  const scrollToBottom = useCallback(() => {
+    if (!modalRef.current) return;
+    modalRef.current.scrollTo({
+      top: modalRef.current.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -31,6 +40,38 @@ export default function DetailModalButton({ slides, eyebrow, label }: Props) {
     };
   }, [open, count, close]);
 
+  useEffect(() => {
+    if (!open || !modalRef.current) return;
+
+    const node = modalRef.current;
+    const updateScrollHint = () => {
+      const isScrollable = node.scrollHeight > node.clientHeight + 4;
+      const isNearBottom = node.scrollTop + node.clientHeight >= node.scrollHeight - 16;
+      setShowScrollHint(isScrollable && !isNearBottom);
+    };
+
+    node.scrollTop = 0;
+    updateScrollHint();
+
+    const raf1 = window.requestAnimationFrame(updateScrollHint);
+    const raf2 = window.setTimeout(updateScrollHint, 120);
+    const raf3 = window.setTimeout(updateScrollHint, 320);
+    const resizeObserver = new ResizeObserver(updateScrollHint);
+    resizeObserver.observe(node);
+
+    node.addEventListener('scroll', updateScrollHint, { passive: true });
+    window.addEventListener('resize', updateScrollHint);
+
+    return () => {
+      window.cancelAnimationFrame(raf1);
+      window.clearTimeout(raf2);
+      window.clearTimeout(raf3);
+      resizeObserver.disconnect();
+      node.removeEventListener('scroll', updateScrollHint);
+      window.removeEventListener('resize', updateScrollHint);
+    };
+  }, [open, index]);
+
   const slide = slides[index];
 
   return (
@@ -43,7 +84,7 @@ export default function DetailModalButton({ slides, eyebrow, label }: Props) {
 
       {open && (
         <div className="ai-modal-overlay" onClick={close}>
-          <div className="ai-modal" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
+          <div className="ai-modal" ref={modalRef} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
             <button type="button" className="ai-modal__close" onClick={close} aria-label="닫기">✕</button>
             <div className="ai-modal__head">
               <span className="ai-modal__no">{slide.no}</span>
@@ -73,6 +114,17 @@ export default function DetailModalButton({ slides, eyebrow, label }: Props) {
               </div>
               <button type="button" className="ai-modal__arrow" onClick={() => go(index + 1)} aria-label="다음">→</button>
             </div>
+            {showScrollHint && (
+              <button
+                type="button"
+                className="ai-modal__scroll-hint"
+                onClick={scrollToBottom}
+                aria-label="모달 하단으로 스크롤"
+              >
+                <span className="ai-modal__scroll-hint-label">계속 보기</span>
+                <span className="ai-modal__scroll-hint-arrow" aria-hidden="true">↓</span>
+              </button>
+            )}
           </div>
         </div>
       )}
