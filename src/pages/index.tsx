@@ -37,44 +37,53 @@ const PROJECTS: Project[] = [
   {
     label: '01 · AI & QUALITY',
     title: 'FMS 시설물 관리 서비스',
-    summary: 'AI Harness를 구축해 구현·검증·리뷰의 기준을 통일하고, 팀의 개발 생산성과 품질을 함께 높였습니다.',
+    summary: '요청의 목표와 원인 가설을 분리하는 AI Harness를 구축해 구현·검증·리뷰의 기준을 통일하고, 팀의 개발 생산성과 품질을 함께 높였습니다.',
     problem: '도메인이 확장되면서 요구사항, API, 검증 기준이 단계마다 달라졌습니다. 구현 방식이 사람마다 제각각이 되고 반복적인 협의와 QA 비용도 커졌습니다.',
     role: '2인 개발 체제에서 프론트엔드 구조와 AI 협업 프로세스를 주도했습니다.',
     technologies: [
-      { name: 'AI Harness', why: ['같은 지시에도 AI의 결과 편차가 컸고, 작업 경계가 명확하지 않으면 결과를 통제하기 어려웠습니다.', '기성 프레임워크나 에이전트는 빠르게 시작할 수 있지만, 컨텍스트가 늘어날수록 작업자의 의도와 결과를 맞추기 어려웠습니다.', '초기 구축 비용을 감수하더라도 규칙을 정형화한 체계가 필요하다고 판단했습니다.'], how: ['aiagent.yaml 온톨로지로 개념과 규칙을 정형화하고, 4개 역할의 에이전트를 evidence-gated 8단계 루프로 구성했습니다.', 'Claude는 UI/UX, Codex는 비즈니스 로직을 담당하도록 역할을 나누고, 단일 진실 소스를 기준으로 병렬 협업했습니다.', '역할에 필요한 컨텍스트만 불러와 토큰 비용을 약 30% 줄였습니다.'], detail: 'ai-harness' },
+      { name: 'AI Harness', why: ['같은 목표를 가진 요청이라도 사용자가 설명하는 원인이 다르면, AI가 설명을 사실로 받아들여 잘못된 방향으로 구현할 수 있었습니다.', '목표와 원인을 구분하지 않으면 상태 중복·ID 중복처럼 서로 다른 가설을 같은 수정으로 처리하게 되어 재작업이 발생했습니다.', '목표와 acceptance criteria를 먼저 고정하고, 원인 가설은 evidence로 검증한 뒤 확인된 원인만 수정하는 흐름이 필요했습니다.'], how: ['Intent Capture에서 목표와 acceptance criteria를 고정하고, Context Load와 Plan 단계에서 원인 가설과 검증 범위를 분리했습니다.', 'Implement 전에 로그·데이터·재현 케이스로 가설을 검증하고, Evidence Run·Validate·Report까지 이어지는 evidence-gated 8단계 루프로 운영했습니다.', 'aiagent.yaml 온톨로지로 Agent·Task·Loop·Gate·Policy·Evidence를 정형화하고, Claude는 UI/UX, Codex는 비즈니스 로직을 담당하도록 역할을 나눴습니다.'], detail: 'ai-harness' },
+      { name: 'Spec 기반 개발', why: ['모호한 요구사항을 그대로 구현하면 AI와 작업자마다 결과가 달라지고, 검증 기준도 흔들릴 수 있었습니다.', '요구사항을 PRD·SDD·Acceptance Criteria로 고정해 구현과 검증의 기준을 먼저 맞출 필요가 있었습니다.'], how: ['요구사항을 검증 가능한 스펙과 수용조건 체크리스트로 정리해 하네스 Eval 완료 판정에 연결했습니다.', '정의와 실제 구현이 어긋나면 코드를 임시 보정하기보다 스펙과 기준 문서를 먼저 갱신하는 피드백 루프로 운영했습니다.'] },
       { name: 'OpenAPI · Zod', why: ['API 규약이 사람마다 달라 생기는 계약 불일치를 사전에 없애기 위해 선택했습니다.'], how: ['OpenAPI·Zod로 API 규약을 정의하고, 계약 테스트로 프론트와 백엔드의 어긋남을 배포 전에 차단했습니다.'], detail: 'openapi-zod' },
       { name: 'Playwright · Storybook', why: ['운영 결함은 수정 비용이 크고, 사람의 리뷰만으로는 반복적으로 검증하기 어려웠습니다.', '품질 검증을 자동화된 게이트로 만들어 같은 기준을 반복 적용해야 한다고 판단했습니다.'], how: ['Vitest·Playwright에 하네스 완료 판정(Eval) 게이트를 추가해, 검증을 통과한 변경만 머지되도록 구성했습니다.', 'Storybook으로 공통 UI를 검증해 품질 체크리스트 90% 달성 기간을 1개월에서 2주로 단축했습니다.'] },
       { name: 'pnpm 모노레포 · Design System', why: ['화면마다 UI와 API 규약을 따로 관리해 공통 자원을 재사용하기 어려웠습니다.', '팀이 함께 사용할 수 있는 공통 기반을 표준화해야 개발 속도와 품질을 함께 높일 수 있다고 판단했습니다.'], how: ['pnpm 모노레포로 디자인 토큰·UI·계약 패키지를 분리했습니다.', 'Headless UI로 공통 UI 동작을 재사용하고, Storybook의 접근성 애드온으로 ARIA·키보드 동작을 검증했습니다.'], detail: 'design-system' },
       { name: 'GitHub Actions · PR 자동 리뷰', why: ['모든 PR을 사람이 처음부터 검토하면 시간이 오래 걸리고, AI에게 최종 승인을 맡기는 것은 위험하다고 판단했습니다.', 'AI가 1차 검토를 담당하고 최종 판단은 사람이 내리는 구조가 적절하다고 판단했습니다.'], how: ['GitHub Actions·OpenAI로 PR diff를 자동 리뷰하고, 실행 가능한 지적만 인라인 코멘트로 남겨 팀이 최종 승인하도록 구성했습니다.', '보안을 위해 코드를 실행하지 않는 pull_request_target에서 diff와 메타데이터만 읽도록 제한했습니다.'] },
     ],
     architecture: `flowchart LR
-  A[요구사항] --> B[Skill 선택]
-  B --> C[Claude 구현]
-  C --> D[OpenAPI · Zod 검증]
-  D --> E[Codex 리뷰]
-  E --> F[Playwright · 품질 체크]
-  F --> G[배포]`,
-    code: `// 구현과 검증의 책임을 분리한 작업 흐름
-const workflow = {
-  implement: ['requirements', 'skill', 'claude'],
-  verify: ['openapi', 'zod', 'playwright', 'codex'],
-};`,
+  A[Intent Capture] --> B[Context Load]
+  B --> C[Plan · Boundary]
+  C --> D[Implement]
+  D --> E[Self Check]
+  E --> F[Evidence Run]
+  F --> G[Validate]
+  G --> H[Report]`,
+    code: `// 목표는 고정하고, 원인은 증거로 확인한 뒤 구현
+const intent = captureIntent(request);
+const hypotheses = deriveHypotheses(intent);
+const evidence = runEvidence(hypotheses);
+
+if (!evidence.confirmedCause) {
+  return report({ status: 'needs-evidence', intent, evidence });
+}
+
+const result = implement(intent, evidence.confirmedCause);
+return validateAndReport(result, intent.acceptanceCriteria);`,
     result: 'AI를 단순한 도구로 사용하는 데서 그치지 않고, 팀의 구현·검증 기준으로 정착시켰습니다.',
     metrics: ['개발 생산성 50% 향상', '프로젝트 기간 5개월 → 3개월', '품질 체크리스트 50% → 90%', '컨텍스트 토큰 비용 30% 이상 절감'],
     improvements: {
       intro: '하네스는 한 번 설계하고 끝나는 구조가 아니라, 운영 중 발견한 실패를 다음 기준에 반영하며 개선했습니다.',
       items: [
-        { title: '실패를 기록하고 분류했습니다', points: ['먼저 관측 로그와 실패 유형을 정의해 반복되는 문제를 같은 기준으로 기록했습니다.', '같은 유형의 실패가 두 번 이상 반복되면 개선 후보로 올렸습니다.', '분류한 실패를 지침 개선으로 연결해 다음 작업에 반영했습니다.'] },
-        { title: '컨텍스트 선택 기준을 만들었습니다', points: ['실패를 분석하는 과정에서, 작업자마다 필요한 문서를 선택하는 기준이 달라질 수 있음을 확인했습니다.', '작업 유형·트리거·필요 문서를 표준 매트릭스로 매핑했습니다.', '이 기준을 시작 전 프리플라이트 체크에 연결해 필요한 문서만 불러오도록 했습니다.'] },
-        { title: '작업 규모에 따라 루프를 나눴습니다', points: ['컨텍스트 기준을 적용해 보니, 작은 수정에도 8단계 루프를 모두 실행하면 문서 비용이 구현 비용보다 커졌습니다.', '작업 시작 시 Quick과 Full 중 하나를 선택하도록 바꿨습니다.', '작업 범위가 커지면 Quick에서 Full로 승격하도록 경량 루프를 분리했습니다.'] },
-        { title: '문서 변경을 자동으로 추적했습니다', points: ['루프를 나눈 뒤 문서가 늘어나면서, 어떤 문서를 함께 수정해야 하는지 추적하는 비용이 커졌습니다.', 'docs-lint와 owner·last_reviewed·depends_on 메타 필드를 도입해 문서 간 의존성을 관리했습니다.', '깨진 참조와 미사용 문서를 자동 탐지해 앞 단계의 기준이 오래된 문서에 남지 않도록 보완했습니다.'] },
+        { title: '목표와 원인 가설을 분리했습니다', points: ['같은 목표를 설명하는 요청이라도 원인에 대한 설명은 가설로 남기고, Intent Capture에서 변경 목표와 acceptance criteria를 먼저 고정했습니다.', '상태 중복·ID 중복처럼 서로 다른 원인 후보를 Context Load와 Plan 단계에서 분리하고, 각 가설을 확인할 로그·데이터·재현 케이스를 정했습니다.', 'Evidence Run에서 실제 원인을 확인한 뒤 검증된 가설만 구현 대상으로 삼고, 기각된 가설과 남은 리스크까지 Report에 기록했습니다.'] },
+        { title: '컨텍스트 선택 기준을 만들었습니다', points: ['FMS는 설비 등록·스케줄 등록·작업 등록·관리자 기능처럼 입력 필드와 팝업 레이어가 많은 기능이 섞여 있었고, 스케줄 등록은 작업 등록과 참조 관계로 연결되어 하나의 수정이 다른 화면과 등록 흐름에 영향을 줄 수 있었습니다.', '실패 사례를 분석하며 작업자마다 먼저 읽는 문서가 달라 같은 요청에도 서로 다른 문맥을 참조하는 문제를 확인했습니다. 작업 요청을 아키텍처·구현·테스트·검증·보고 유형과 SSR·client state·shared UI·성능 트리거로 분류하고, 필요한 intent·agent·guide·domain·harness 문서를 우선순위대로 선택하는 컨텍스트 매트릭스를 설계했습니다.', '예를 들어 스케줄 등록 수정 요청이 들어오면 스케줄 상태 변경인지, 작업 등록과의 참조 관계에 영향이 있는지, 관리자 경로까지 확인해야 하는지를 먼저 판단하도록 프리플라이트 체크에 연결했습니다.'] },
+        { title: '작업 규모에 따라 루프를 나눴습니다', points: ['컨텍스트 매트릭스를 적용한 뒤에도 작은 수정에 8단계 루프를 모두 수행하면 문서 확인과 검증 비용이 구현 비용보다 커졌습니다.', '설비 등록이나 관리자 기능의 단순 입력 수정은 Quick Loop로, 스케줄·작업 등록 연결처럼 경계 영향이 있는 변경은 Full Loop로 처리하도록 작업 시작 시 수정 범위와 영향도를 판단했습니다.', '파일 2개 이하의 국소 수정은 경량 self-check와 최소 evidence만 요구하고, 작업 중 shared 계약·등록·수정 흐름·참조 관계의 영향이 확인되면 Full Loop로 승격하도록 분리했습니다.'] },
+        { title: '문서 의존성을 자동으로 관리했습니다', points: ['루프를 분리한 뒤 intent·guide·report 문서가 함께 늘어나면서, 어떤 기준 문서를 같이 수정해야 하는지 수동으로 추적하는 비용이 커졌습니다.', '설비·스케줄·작업·관리자 기능이 연결된 FMS 도메인에서 한 기능의 기준이 바뀌면 연관 문서도 함께 확인할 수 있도록 docs-lint와 owner·last_reviewed·depends_on 메타 필드를 도입했습니다.', '깨진 참조, 오래된 참조와 검토되지 않은 문서를 자동 탐지해 오래된 문서가 이후 판단에 다시 참조되지 않도록 보완했습니다.'] },
       ],
     },
     tradeoff: {
       title: '검증 게이트의 한계',
       points: [
-        '단위 테스트·E2E·PR AI 리뷰를 검증 게이트로 연결해 반복 결함의 80% 이상을 차단했습니다.',
+        '단위 테스트·E2E·PR AI 리뷰를 검증 게이트로 연결해 반복 결함을 개발 단계에서 조기에 확인했습니다.',
         '공용 함수 중복이나 아키텍처 경계 위반처럼 역할 분리가 필요한 문제는 AI만으로 판단하기 어려워, 사람이 PR에서 최종 확인했습니다.',
+        '로그·데이터·재현 케이스가 부족하면 AI가 원인 가설을 확정할 수 없으므로, 증거가 부족한 작업은 추가 확인 대상으로 남겼습니다.',
       ],
     },
   },
@@ -92,12 +101,11 @@ const workflow = {
       { name: 'i18n 다국어', why: ['영어·한국어 사용 환경을 함께 지원해야 했기 때문에 선택했습니다.'], how: ['ko/en 리소스를 분리해 UI 문자열을 국제화하고, 토글·셀렉트 기반 언어 전환 UI를 구현했습니다.'] },
     ],
     architecture: `flowchart LR
-  A[Next.js Server Component] --> B[초기 데이터 SSR]
-  B --> C[React 화면]
-  C --> D[실시간 데이터 수신]
-  D --> E[Web Worker]
-  E --> F[Delta Update 계산]
-  F --> G[Zustand patch 반영]`,
+  A[Next.js Server Component] --> B[초기 3시간 API]
+  B --> C[SSR HTML]
+  C --> D[React 화면]
+  D --> E[SSE 실시간 변경분]
+  E --> F[상태 반영]`,
     code: `// 변경분만 계산하고 다음 상태에 patch 적용
 const nextPatch = calculateDelta(previousData, incomingData);
 worker.postMessage({ type: 'APPLY_PATCH', payload: nextPatch });
@@ -132,29 +140,48 @@ requestAnimationFrame(() => applyPatch(nextPatch));`,
     problem: '네트워크 재전송과 중복 메시지로 제어 상태가 어긋났고, 실시간 연결 문제를 추적하는 데 많은 시간이 필요했습니다.',
     role: '실시간 메시지 처리, 소켓 연결 구조, 운영 관측 흐름과 배포 절차를 설계하고 개선했습니다.',
     technologies: [
-      { name: 'MQTT 멱등성', why: ['MQTT의 at-least-once 특성 때문에 제어 응답이 장비별로 중복 도착했고, 장비가 10대를 넘으면 처리량이 빠르게 늘어났습니다.', '중복을 클라이언트마다 처리하기보다 서버에서 한 번 정리해야 상태 정합성을 유지할 수 있었습니다.'], how: ['AWS Lambda에서 하드웨어 ID·시간·컬럼을 기준으로 중복 응답을 제거해 웹 제어 반영 시간을 5초에서 1초 이내로 단축했습니다.'] },
+      { name: 'MQTT 멱등성', why: ['MQTT의 at-least-once 특성 때문에 제어 응답이 장비별로 중복 도착했고, 다수 장비를 동시에 제어하면 처리량이 빠르게 늘어났습니다.', '중복을 클라이언트마다 처리하기보다 서버에서 한 번 정리해야 상태 정합성을 유지할 수 있었습니다.'], how: ['AWS Lambda에서 하드웨어 ID·시간·컬럼을 기준으로 중복 응답을 제거해 웹 제어 반영 시간을 5초에서 1초 이내로 단축했습니다.'] },
       { name: 'WebSocket', why: ['브라우저가 IoT Core를 직접 구독하고 컴포넌트마다 소켓을 열어, 필요하지 않은 메시지까지 모든 화면이 처리하고 있었습니다.', '구독을 한 곳에서 관리하고 필요한 화면에만 전달하는 구조가 필요했습니다.'], how: ['Node.js WebSocket 게이트웨이에서 topic별 구독을 관리하고, 명시적 구독·해제·ack·재연결 시 재구독을 처리했습니다.', '단일 사용자 환경에 맞춰 topic을 화면 단위로 전달하도록 설계했습니다.'] },
       { name: 'S3 · Athena · CloudWatch 관측', why: ['장애 원인을 파악하는 데 며칠이 걸렸지만, 상시 서버 관측을 도입하기에는 비용 부담이 컸습니다.', '이벤트성 로그는 서버리스 환경에서 정기적으로 분석하는 편이 효율적이라고 판단했습니다.'], how: ['제어·상태 로그를 S3에 적재하고 CloudWatch 스케줄로 Lambda와 Athena를 정기 실행했습니다.', '이상 징후를 Slack으로 선제 알림해 장애 대응 시간을 3일에서 1일로 단축했습니다.'] },
-      { name: 'GitHub Actions CI/CD', why: ['수동 배포는 느리고 실수가 발생하기 쉬웠으며, 서비스 중단 없이 변경 사항을 반영해야 했습니다.', '구성 요소의 특성에 맞춰 자동 배포와 무중단 배포를 적용해야 한다고 판단했습니다.'], how: ['GitHub Actions에서 단위 테스트·E2E·AI 리뷰를 거친 뒤 EC2로 자동 배포하도록 구성했습니다.', '소켓 서버는 PM2 graceful reload로 다운타임을 없애고, 프론트엔드는 nginx 교체 방식으로 배포했습니다.'] },
+      { name: 'GitHub Actions CI/CD', why: ['수동 배포는 느리고 실수가 발생하기 쉬웠으며, 소켓 연결을 사용하는 서버와 정적 프론트엔드의 배포 방식을 나눌 필요가 있었습니다.', '구성 요소별 특성에 맞춰 배포 영향을 줄이는 방식을 적용해야 한다고 판단했습니다.'], how: ['GitHub Actions에서 단위 테스트·E2E·AI 리뷰를 거친 뒤 EC2로 자동 배포하도록 구성했습니다.', '소켓 서버는 PM2 graceful reload로 기존 연결 영향을 줄이고, 프론트엔드는 nginx에서 빌드 파일을 교체했습니다.'] },
     ],
     architecture: `flowchart LR
-  A[장비] --> B[MQTT]
-  B --> C[AWS IoT Core]
-  C --> D[Lambda]
-  D --> E{messageId 중복 검사}
-  E -->|신규| F[DynamoDB]
-  E -->|중복| G[폐기]
-  F --> H[WebSocket]
-  H --> I[프론트 상태 반영]`,
-    code: `// 동일 명령은 저장·전달하지 않음
-if (await alreadyProcessed(message.messageId)) {
-  return { statusCode: 200, body: 'duplicate' };
-}
+  A[프론트엔드 WebSocket 요청] --> B[Node.js 게이트웨이]
+  B --> C[AWS IoT 제어 topic]
+  C --> D[장비]
+  D --> E[AWS IoT 제어 응답 topic]
+  E --> F[Lambda 중복 제거]
+  F --> G[제어 결과 topic]
+  G --> B
+  F --> H[DynamoDB 저장]
+  B --> I[프론트 success·fail]`,
+    code: `// 장비·시간·컬럼 기준으로 중복 응답을 한 번만 처리
+const key = [message.deviceId, message.occurredAt, message.column].join(':');
+if (await alreadyProcessed(key)) return;
 
-await markProcessed(message.messageId);
-await saveDeviceState(message);`,
+await markProcessed(key);
+await saveDeviceState(message);
+await publishControlResult(message);`,
     result: '실시간 기능을 연결 문제로만 보지 않고 메시지 정합성·저장·관측의 흐름으로 분리했습니다.',
     metrics: ['제어 지연 5초 → 1초 이내', '중복 제어 방지', '실시간 반영 지연 50% 이상 개선', '장애 대응 3일 → 1일 이내', 'CI/CD 자동 배포'],
+    improvements: {
+      intro: '장비 제어 실패를 사후 확인에 의존하지 않고, 메시지 정리·게이트웨이·알림·사용자 상태 처리까지 운영 흐름을 단계적으로 개선했습니다.',
+      items: [
+        { title: '장애를 사후 확인에서 선제 감지로 전환했습니다', points: ['초기에는 상대 측 제보 이후 주 1회 직접 테스트하고 로그를 확인해야 장비 오류를 파악할 수 있었습니다.', '장비 ID·발생 시간·오류 메시지를 S3에 적재하고, AWS 예약 실행으로 하루 두 번 Athena 분석을 수행했습니다.', '같은 장비에서 지연을 의미하는 오류 로그가 연속 3회 발생하면 장애로 판단해 Slack으로 알렸습니다.', '수동 테스트 전에 오류를 감지하고 상대 측에 먼저 확인을 요청하는 장애 대응 흐름을 만들었습니다.'] },
+        { title: 'MQTT 중복 응답을 서버에서 정리했습니다', points: ['전체 제어 토글 한 번으로 다수 장비에 개별 제어 명령이 실행되면서, 장비별 응답이 중복되어 수십 개의 메시지가 동시에 유입됐습니다.', '응답이 5초 이상 지연되거나 유실되는 문제를 줄이기 위해 AWS Lambda에서 장비 ID·시간·컬럼 값을 기준으로 동일 응답을 멱등 처리했습니다.', '중복 제거한 결과는 DynamoDB에 저장하고 별도 제어 결과 topic으로 발행해, Node.js 게이트웨이가 구독 후 프론트엔드로 전달하도록 구성했습니다.'] },
+        { title: 'Node.js 게이트웨이로 AWS 통신을 중앙 관리했습니다', points: ['기존에는 컴포넌트마다 AWS IoT를 직접 구독해 연결과 구독 생명주기가 분산되어 있었습니다.', '프론트엔드는 AWS에 직접 연결하지 않고 Node.js 게이트웨이에만 WebSocket으로 연결하도록 분리했습니다.', '게이트웨이에서 에너지 데이터와 제어 상태의 AWS 통신을 분리해 필요한 메시지만 프론트엔드에 전달했습니다.', '전체 제어의 장비별 success·fail 결과를 도착 순서대로 전달해 부분 성공·실패를 화면에 반영했습니다.'] },
+        { title: '제어 결과를 사용자 상태와 복구 흐름으로 연결했습니다', points: ['장비 응답까지 약 1초가 걸리는 환경을 고려해 제어 요청 직후 로딩 상태를 표시했습니다.', '게이트웨이에서 전달한 success·fail 결과에 따라 로딩을 해제하고 성공·실패 토스트를 표시했습니다.', '10초 이상 응답이 없으면 서버 오류로 안내하고 WebSocket 재연결 버튼을 제공해 다시 제어할 수 있도록 했습니다.'] },
+        { title: '배포 방식에 맞춰 연결 복구 흐름을 분리했습니다', points: ['WebSocket 연결을 관리하는 Node.js 서버는 프로세스 교체에 따른 연결 영향을 줄이기 위해 PM2 graceful reload로 배포했습니다.', '기존 연결이 종료되면 프론트엔드는 게이트웨이에 재접속하고 현재 화면 채널을 다시 등록하도록 구성했습니다.', '정적 프론트엔드는 nginx에서 빌드 파일만 교체해 Node.js 게이트웨이를 재시작하지 않고 화면 변경을 반영했습니다.'] },
+      ],
+    },
+    tradeoff: {
+      title: '중앙 WebSocket 게이트웨이 선택에 따른 운영 비용',
+      points: [
+        '장비별 비동기 응답과 부분 성공·실패를 전달할 수 있었지만, 별도의 WebSocket 게이트웨이와 화면별 채널 관리가 필요했습니다.',
+        '부분 성공·실패와 타임아웃까지 관리해야 해 상태 관리가 복잡해졌습니다.',
+        'Node.js 게이트웨이를 추가하면서 AWS 통신·장비 상태·제어 결과를 관리하는 계층이 하나 늘어 유지보수 범위가 커졌습니다.',
+      ],
+    },
   },
 ];
 
